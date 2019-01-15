@@ -17,18 +17,21 @@
 # Prep
 factpal <- colorFactor(palette = 'YlGnBu', popunits_simple$STATUS) # Assign scheme -- to be replaced with SEO default
 
-# Generate leaflet map
+# Generate leaflet map showing status of grizzly population units
 grizzmap <- leaflet() %>%
-  addProviderTiles(providers$Stamen.Terrain) %>%
+  addProviderTiles(providers$Stamen.TerrainBackground) %>%
+  #addMarkers(data = popunits_simple, lng = ~ X, lat = ~Y, popup = popunits_simple$DISPLAY_NAME) %>%
+  addLegend("bottomright", pal = factpal, values = popunits_simple$STATUS,
+            title = "Conservation Status",
+            opacity = 1) %>%
   addPolygons(data = popunits_simple,
               stroke = T, weight = 1, color = "white",
-              fillOpacity = 0.3,
+              fillOpacity = 0.2,
               fillColor = ~factpal(popunits_simple$STATUS),
               highlight = highlightOptions(
                 weight = 3,
                 color = "yellow",
-                bringToFront = T
-              ))
-grizzmap
+                bringToFront = T))
+grizzmap # Plot the map
 
 
