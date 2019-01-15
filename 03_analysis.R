@@ -15,7 +15,7 @@
 ## --
 
 # Prep
-factpal <- colorFactor(palette = 'YlGnBu', popunits_simple$STATUS) # Assign scheme -- to be replaced with SEO default
+factpal <- colorFactor(palette = 'magma', popunits_simple$STATUS) # Assign scheme -- to be replaced with SEO default
 
 # Generate leaflet map showing status of grizzly population units
 grizzmap <- leaflet() %>%
