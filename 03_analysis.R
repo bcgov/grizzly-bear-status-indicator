@@ -18,8 +18,9 @@
 pal <- colorNumeric("viridis", NULL) # Assign scheme -- to be replaced with SEO default
 
 # Generate leaflet map
-grizzmap <- leaflet(popunits_simple) %>%
+grizzmap <- leaflet() %>%
   addProviderTiles(providers$Stamen.Terrain) %>%
-  addPolygons()
+  addPolygons(data = popunits_simple, stroke = F, fillOpacity = 1)
 grizzmap
+
 
