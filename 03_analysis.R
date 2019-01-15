@@ -15,12 +15,20 @@
 ## --
 
 # Prep
-pal <- colorNumeric("viridis", NULL) # Assign scheme -- to be replaced with SEO default
+factpal <- colorFactor(palette = 'YlGnBu', popunits_simple$STATUS) # Assign scheme -- to be replaced with SEO default
 
 # Generate leaflet map
 grizzmap <- leaflet() %>%
   addProviderTiles(providers$Stamen.Terrain) %>%
-  addPolygons(data = popunits_simple, stroke = F, fillOpacity = 1)
+  addPolygons(data = popunits_simple,
+              stroke = T, weight = 1, color = "white",
+              fillOpacity = 0.3,
+              fillColor = ~factpal(popunits_simple$STATUS),
+              highlight = highlightOptions(
+                weight = 3,
+                color = "yellow",
+                bringToFront = T
+              ))
 grizzmap
 
 
