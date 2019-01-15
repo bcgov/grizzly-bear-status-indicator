@@ -3,3 +3,8 @@
 .RData
 .Ruserdata
 .DS_Store
+/temp
+/out
+/data
+^Rplots.pdf$
+README.html
