@@ -16,7 +16,7 @@ Packages <- c("sf", "tidyverse", "dplyr", "maptools", "devtools","bcmaps",
 lapply(Packages, library, character.only = TRUE)
 
 ## Get British Columbia grizzly bear population unit boundaries from B.C. Data Catalogue
-## from https://catalogue.data.gov.bc.ca/dataset/24c899ee-ef73-44a2-8569-a0d6b094e60c
+## from https://catalogue.data.gov.bc.ca/dataset/2bf91935-9158-4f77-9c2c-4310480e6c29
 ## Data is released under the Open Government License - British Columbia
 ## https://www2.gov.bc.ca/gov/content?id=A519A56BC2BF44E4A008B33FCF527F61
 
