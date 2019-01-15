@@ -10,10 +10,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-# Simplify
+# Simplify using mapshaper
 popunits_simple <- ms_simplify(popunits, keep = 0.25) # reduce number of vertices
-plot(popunits_simple) # check the result for 'population name'
-class(popunits_simple)
+plot(popunits_simple[3]) # check the result for 'population name'
 
 # Change to lat/long (4326)
 popunits_simple <- st_transform(popunits_simple, crs = 4326)
+
