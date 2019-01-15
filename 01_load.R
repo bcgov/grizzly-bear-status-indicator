@@ -32,7 +32,7 @@ bears <- read.csv("https://catalogue.data.gov.bc.ca/dataset/2bf91935-9158-4f77-9
 
 # Load grizzly bear population units as an sfc object
 popunits <- st_read("GCPB_GRIZZLY_BEAR_POP_UNITS_SP.geojson") # saved locally - need to add to bcmaps
-popunits <- st_geometry(popunits)
+popunits_sfc <- st_geometry(popunits)
 
 # Alternative method: Reading in geojson as sp object
 # popunits_sp <- geojsonio::geojson_read("GCPB_GRIZZLY_BEAR_POP_UNITS_SP.geojson", what = "sp")
