@@ -33,6 +33,6 @@ popcoords <- st_coordinates(popcentroid) # changes to a matrix
 joined <- cbind(popunits_simple, popcoords) # cbind coords and polygons
 
 # Rename lat and lng columns
-joined <- rename(joined, lat = X)
-joined <- rename(joined, lng = Y)
+joined <- rename(joined, lng = X)
+joined <- rename(joined, lat = Y)
 joined <- st_transform(joined, crs = 4326) # convert to lat/long
