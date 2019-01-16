@@ -20,6 +20,10 @@ lapply(Packages, library, character.only = TRUE)
 ## Data is released under the Open Government License - British Columbia
 ## https://www2.gov.bc.ca/gov/content?id=A519A56BC2BF44E4A008B33FCF527F61
 
+## --
+## Acquiring data
+## --
+
 # Get BC boundary
 bc <- bc_bound()
 plot(st_geometry(bc))
@@ -36,16 +40,3 @@ popunits_sfc <- st_geometry(popunits)
 
 # Alternative method: Reading in geojson as sp object
 # popunits_sp <- geojsonio::geojson_read("GCPB_GRIZZLY_BEAR_POP_UNITS_SP.geojson", what = "sp")
-
-# Find centroid of polygons - might be useful for labelling
-popcentroid <- st_centroid(popunits$geometry)
-
-# Calculate coordinates for centroid of polygons
-popcoords <- st_coordinates(popcoords) # changes to a matrix -- ughhh
-
-# Convert to sf object
-popcoords <- popcoords %>%
-  as.data.frame %>%
-  sf::st_as_sf(coords = c(1,2)) # gets rid of XY columns :(
-
-# Spatial join
