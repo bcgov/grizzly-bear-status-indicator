@@ -18,17 +18,21 @@ plot(popunits_simple[3]) # check the result for 'population name'
 popunits_simple <- st_transform(popunits_simple, crs = 4326)
 
 ## --
-## Spatial conversions
+## Conversions for spatial data
 ## --
 
-# Find centroid of polygons - might be useful for labelling
+# Find centroid of polygons (for labelling)
 # Note: 'popunits' w/ BC Albers CRS used because lat/long not accepted by st_centroid
 popcentroid <- st_centroid(popunits$geometry)
 popcentroid <- st_transform(popcentroid, crs = 4326) # convert to lat/long
 
 # Calculate coordinates for centroid of polygons
-# popcoords <- st_coordinates(popcentroid) # changes to a matrix -- ughhh
+popcoords <- st_coordinates(popcentroid) # changes to a matrix
 
 # Spatial join
-popcentroid <- st_sf(popcentroid) # convert sfc to sf
-joined <- cbind(popunits_simple, popcentroid) # add coordinates of polygon centroids to sf
+joined <- cbind(popunits_simple, popcoords) # cbind coords and polygons
+
+# Rename lat and lng columns
+joined <- rename(joined, lat = X)
+joined <- rename(joined, lng = Y)
+joined <- st_transform(joined, crs = 4326) # convert to lat/long
