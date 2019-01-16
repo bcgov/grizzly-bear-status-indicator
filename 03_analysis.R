@@ -17,7 +17,7 @@
 # Prep
 factpal <- colorFactor(palette = 'magma', popunits_simple$STATUS) # Assign scheme -- to be replaced with SEO default
 
-# Generate leaflet map showing status of grizzly population units
+# Generate leaflet map showing conservation status of grizzly population units
 grizzmap <- leaflet() %>%
   addProviderTiles(providers$Stamen.TerrainBackground) %>%
   #addMarkers(data = popunits_simple, lng = ~ X, lat = ~Y, popup = popunits_simple$DISPLAY_NAME) %>%
@@ -25,10 +25,10 @@ grizzmap <- leaflet() %>%
             title = "Conservation Status",
             opacity = 1) %>%
   addPolygons(data = popunits_simple,
-              stroke = T, weight = 1, color = "white",
-              fillOpacity = 0.2,
+              stroke = T, weight = 1, color = "white", # Add border to polygons
+              fillOpacity = 0.2, # Polygon fill
               fillColor = ~factpal(popunits_simple$STATUS),
-              highlight = highlightOptions(
+              highlight = highlightOptions( # Highlight interaction for mouse hover
                 weight = 3,
                 color = "yellow",
                 bringToFront = T))
