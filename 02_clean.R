@@ -29,3 +29,6 @@ popcentroid <- st_transform(popcentroid, crs = 4326) # convert to lat/long
 # Calculate coordinates for centroid of polygons
 # popcoords <- st_coordinates(popcentroid) # changes to a matrix -- ughhh
 
+# Spatial join
+popcentroid <- st_sf(popcentroid) # convert sfc to sf
+joined <- cbind(popunits_simple, popcentroid) # add coordinates of polygon centroids to sf
