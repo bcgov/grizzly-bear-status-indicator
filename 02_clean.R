@@ -22,18 +22,10 @@ popunits_simple <- st_transform(popunits_simple, crs = 4326)
 ## --
 
 # Find centroid of polygons - might be useful for labelling
-popcentroid <- st_centroid(popunits_simple$geometry)
+# Note: 'popunits' w/ BC Albers CRS used because lat/long not accepted by st_centroid
+popcentroid <- st_centroid(popunits$geometry)
+popcentroid <- st_transform(popcentroid, crs = 4326) # convert to lat/long
 
 # Calculate coordinates for centroid of polygons
-popcoords <- st_coordinates(popcentroid) # changes to a matrix -- ughhh
-
-# Convert to tibble
-tibble::as.tibble(popcoords)
-
-# Convert to sf object
-popcoords <- popcoords %>%
-  as.data.frame %>%
-  sf::st_as_sf(coords = c(1,2)) # gets rid of XY columns :(
-
-# Spatial join
+# popcoords <- st_coordinates(popcentroid) # changes to a matrix -- ughhh
 
