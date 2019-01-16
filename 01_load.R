@@ -36,3 +36,16 @@ popunits_sfc <- st_geometry(popunits)
 
 # Alternative method: Reading in geojson as sp object
 # popunits_sp <- geojsonio::geojson_read("GCPB_GRIZZLY_BEAR_POP_UNITS_SP.geojson", what = "sp")
+
+# Find centroid of polygons - might be useful for labelling
+popcentroid <- st_centroid(popunits$geometry)
+
+# Calculate coordinates for centroid of polygons
+popcoords <- st_coordinates(popcoords) # changes to a matrix -- ughhh
+
+# Convert to sf object
+popcoords <- popcoords %>%
+  as.data.frame %>%
+  sf::st_as_sf(coords = c(1,2)) # gets rid of XY columns :(
+
+# Spatial join
