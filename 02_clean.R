@@ -17,3 +17,23 @@ plot(popunits_simple[3]) # check the result for 'population name'
 # Change to lat/long (4326)
 popunits_simple <- st_transform(popunits_simple, crs = 4326)
 
+## --
+## Spatial conversions
+## --
+
+# Find centroid of polygons - might be useful for labelling
+popcentroid <- st_centroid(popunits_simple$geometry)
+
+# Calculate coordinates for centroid of polygons
+popcoords <- st_coordinates(popcentroid) # changes to a matrix -- ughhh
+
+# Convert to tibble
+tibble::as.tibble(popcoords)
+
+# Convert to sf object
+popcoords <- popcoords %>%
+  as.data.frame %>%
+  sf::st_as_sf(coords = c(1,2)) # gets rid of XY columns :(
+
+# Spatial join
+
