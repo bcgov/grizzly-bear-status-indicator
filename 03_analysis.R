@@ -19,6 +19,24 @@ staticmap <- ggplot(popunits_simple) +
 #  geom_sf_label(aes(label = GRIZZLY_BEAR_POP_UNIT_ID))
 staticmap # plot map
 
+# Summarise total pop estimate per management unit
+by_gbpu <- bears %>%
+  group_by(GBPU) %>%
+  summarise(Estimate = sum(Estimate)) %>%
+  arrange(desc(Estimate), GBPU)
+glimpse(by_gbpu)
+
+# Basic population estimate per management unit plot
+popestimate <- ggplot(by_gbpu) +
+  geom_col(aes(x = reorder(GBPU, -Estimate), y = Estimate)) +
+  theme_soe() +
+  scale_y_continuous("Population Estimate") +
+  scale_x_discrete("Population Unit") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0)) + # rotate labels
+  ggtitle("Grizzly Bear Population Estimate per Unit") +
+  theme(plot.title = element_text(hjust = 0.5))
+popestimate
+
 # Create bounding box
 bc_bbox <- st_as_sfc(st_bbox(bc)) # convert to sfc
 bc_bbox <- st_bbox(bc_bbox) # convert to bbox
