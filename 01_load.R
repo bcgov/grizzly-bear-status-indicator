@@ -10,14 +10,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
+
 # Loading R libraries
 Packages <- c("sf", "tidyverse", "dplyr", "maptools", "devtools","bcmaps",
               "ggplot2", "leaflet", "rmapshaper", "jsonlite", "geojsonio",
               "mapview", "readr", "bcdata", "kableExtra")
 lapply(Packages, library, character.only = TRUE)
 
-# Source functions
-source("R/funcs.R")
 
 ## Get British Columbia grizzly bear population unit boundaries from B.C. Data Catalogue
 ## from https://catalogue.data.gov.bc.ca/dataset/2bf91935-9158-4f77-9c2c-4310480e6c29
@@ -45,7 +44,7 @@ popunits <- bcdc_get_geodata("grizzly-bear-population-units",
 
 plot(st_geometry(popunits))
 
-# # Load grizzly bear population units as an sfc object
+# Load grizzly bear population units as an sfc object
 # popunits <- st_read("GCPB_GRIZZLY_BEAR_POP_UNITS_SP.geojson") # saved locally - need to add to bcmaps
 # popunits_sfc <- st_geometry(popunits)
 
