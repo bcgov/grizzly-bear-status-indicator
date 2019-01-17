@@ -12,12 +12,16 @@
 
 # Loading R libraries
 Packages <- c("sf", "tidyverse", "dplyr", "maptools", "devtools","bcmaps",
-              "ggplot2", "leaflet", "rmapshaper", "jsonlite", "geojsonio", "mapview")
+              "ggplot2", "leaflet", "rmapshaper", "jsonlite", "geojsonio",
+              "mapview", "readr")
 lapply(Packages, library, character.only = TRUE)
+
+# Source functions
+source("R/funcs.R")
 
 ## Get British Columbia grizzly bear population unit boundaries from B.C. Data Catalogue
 ## from https://catalogue.data.gov.bc.ca/dataset/2bf91935-9158-4f77-9c2c-4310480e6c29
-## Data is released under the Open Government License - British Columbia
+## Data is released under the Open Government Licence - British Columbia
 ## https://www2.gov.bc.ca/gov/content?id=A519A56BC2BF44E4A008B33FCF527F61
 
 ## --
@@ -32,11 +36,15 @@ plot(st_geometry(bc))
 bec <- bec()
 
 # Get grizzly pop estimate data (dated version - 2012)
-bears <- read.csv("https://catalogue.data.gov.bc.ca/dataset/2bf91935-9158-4f77-9c2c-4310480e6c29/resource/4eca8c5c-ed25-46c1-835c-3d9f84b807e1/download/grizzlypopulationestimate2012.csv")
+bears <- read_csv("https://catalogue.data.gov.bc.ca/dataset/2bf91935-9158-4f77-9c2c-4310480e6c29/resource/4eca8c5c-ed25-46c1-835c-3d9f84b807e1/download/grizzlypopulationestimate2012.csv")
 
-# Load grizzly bear population units as an sfc object
-popunits <- st_read("GCPB_GRIZZLY_BEAR_POP_UNITS_SP.geojson") # saved locally - need to add to bcmaps
-popunits_sfc <- st_geometry(popunits)
+# Load grizzly bear population units as an sf object using `bcdc_map`
+popunits <- bcdc_map("WHSE_WILDLIFE_INVENTORY.GCPB_GRIZZLY_BEAR_POP_UNITS_SP")
+plot(st_geometry(popunits))
+
+# # Load grizzly bear population units as an sfc object
+# popunits <- st_read("GCPB_GRIZZLY_BEAR_POP_UNITS_SP.geojson") # saved locally - need to add to bcmaps
+# popunits_sfc <- st_geometry(popunits)
 
 # Alternative method: Reading in geojson as sp object
 # popunits_sp <- geojsonio::geojson_read("GCPB_GRIZZLY_BEAR_POP_UNITS_SP.geojson", what = "sp")
