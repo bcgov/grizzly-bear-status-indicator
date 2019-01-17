@@ -15,13 +15,13 @@ grizzmap <- leaflet() %>%
             opacity = 1) %>%
   addPolygons(data = popunits_simple,
               stroke = T, weight = 1, color = "white", # Add border to polygons
-              fillOpacity = 0.3, # Polygon fill
+              fillOpacity = 0.4, # Polygon fill
               fillColor = ~factpal(popunits_simple$STATUS),
               highlight = highlightOptions( # Highlight interaction for mouse hover
                 weight = 3,
                 color = "yellow",
                 bringToFront = T))
-grizzmap # Plot the map
+grizzmap # View leaflet
 
 # Not finished:
 #  addLabelOnlyMarkers(data = popunits_2012,
