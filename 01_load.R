@@ -42,7 +42,6 @@ glimpse(bears)
 # Load grizzly bear population units as an sf object using `bcdc_map`
 popunits <- bcdc_get_geodata("grizzly-bear-population-units",
                              query = "VERSION_NAME='2012'")
-
 plot(st_geometry(popunits))
 
 # Load grizzly bear population units as an sfc object
