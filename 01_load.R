@@ -14,7 +14,8 @@
 # Loading R libraries
 Packages <- c("sf", "tidyverse", "dplyr", "maptools", "devtools","bcmaps",
               "ggplot2", "leaflet", "rmapshaper", "jsonlite", "geojsonio",
-              "mapview", "readr", "bcdata", "kableExtra")
+              "mapview", "readr", "bcdata", "kableExtra", "envreportutils",
+              "viridis", "ggmap")
 lapply(Packages, library, character.only = TRUE)
 
 
