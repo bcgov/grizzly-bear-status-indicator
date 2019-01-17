@@ -12,7 +12,7 @@
 
 # Simplify using mapshaper
 popunits_simple <- ms_simplify(popunits, keep = 0.25) # reduce number of vertices
-plot(popunits_simple[3]) # check the result for 'population name'
+plot(popunits_simple[4]) # check the result for 'population name'
 
 # Change to lat/long (4326)
 popunits_simple <- st_transform(popunits_simple, crs = 4326)
@@ -36,3 +36,6 @@ joined <- cbind(popunits_simple, popcoords) # cbind coords and polygons
 joined <- rename(joined, lng = X)
 joined <- rename(joined, lat = Y)
 joined <- st_transform(joined, crs = 4326) # convert to lat/long
+
+# Extract most recent iteration of popunits (there are multiple)
+popunits_2012 <- filter(joined, VERSION_NAME == "2012")
