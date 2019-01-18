@@ -22,12 +22,12 @@ staticmap # plot map
 # Summarise total pop estimate per management unit
 by_gbpu <- bears %>%
   group_by(GBPU) %>%
-  summarise(Estimate = sum(Estimate)) %>%
+  summarise(Estimate = sum(Estimate), Density = sum(Density)) %>% # Does this make sense to sum up density?
   arrange(desc(Estimate), GBPU)
 glimpse(by_gbpu)
 
-# Basic population estimate per management unit plot
-popestimate <- ggplot(by_gbpu) +
+# Plot for basic POPULATION estimate per management unit
+popplot <- ggplot(by_gbpu) +
   geom_col(aes(x = reorder(GBPU, -Estimate), y = Estimate)) +
   theme_soe() +
   scale_y_continuous("Population Estimate") +
@@ -35,7 +35,18 @@ popestimate <- ggplot(by_gbpu) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0)) + # rotate labels
   ggtitle("Grizzly Bear Population Estimate per Unit") +
   theme(plot.title = element_text(hjust = 0.5))
-popestimate
+popplot
+
+# Plot for basic DENSITY estimate per management unit
+densplot <- ggplot(by_gbpu) +
+  geom_col(aes(x = reorder(GBPU, -Density), y = Density)) +
+  theme_soe() +
+  scale_y_continuous("Population Density Estimate") +
+  scale_x_discrete("Population Unit") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0)) + # rotate labels
+  ggtitle("Grizzly Bear Population Density Estimate per Unit") +
+  theme(plot.title = element_text(hjust = 0.5))
+densplot
 
 # Create bounding box
 bc_bbox <- st_as_sfc(st_bbox(bc)) # convert to sfc
