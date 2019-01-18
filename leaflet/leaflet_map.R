@@ -11,7 +11,7 @@ grizzmap <- leaflet() %>%
   addProviderTiles(providers$Stamen.TerrainBackground) %>%
   #addMarkers(data = popunits_simple, lng = ~ X, lat = ~Y, popup = popunits_simple$DISPLAY_NAME) %>%
   addLegend("bottomright", pal = factpal, values = popunits_simple$STATUS,
-            title = "Conservation Status",
+            title = "Population Status",
             opacity = 1) %>%
   addPolygons(data = popunits_simple,
               stroke = T, weight = 1, color = "white", # Add border to polygons
