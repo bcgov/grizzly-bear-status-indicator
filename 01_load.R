@@ -46,7 +46,6 @@ plot(st_geometry(bc))
 # Get biogeoclimatic zones
 bec <- bec()
 
-
 # Load grizzly bear population units as an sfc object
 # popunits <- st_read("GCPB_GRIZZLY_BEAR_POP_UNITS_SP.geojson") # saved locally - need to add to bcmaps
 # popunits_sfc <- st_geometry(popunits)
