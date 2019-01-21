@@ -10,16 +10,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-# Simplify using mapshaper
+# Simplify population unit polygons using mapshaper
 popunits_simple <- ms_simplify(popunits, keep = 0.25) # reduce number of vertices
 plot(popunits_simple[4]) # check the result for 'population name'
 
 # Change to lat/long (4326)
 popunits_simple <- st_transform(popunits_simple, crs = 4326)
-
-## --
-## Conversions for spatial data
-## --
 
 # Find centroid of polygons (for labelling)
 # Note: 'popunits' w/ BC Albers CRS used because lat/long not accepted by st_centroid
