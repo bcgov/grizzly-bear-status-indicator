@@ -14,7 +14,7 @@
 results <- "C:/dev/plot-results"
 
 # List of plots
-plots <- list()
+plotlist <- list()
 
 # Create plot function
 Mortality <- function(mort_gbpu) {
@@ -41,9 +41,15 @@ Mortality <- function(mort_gbpu) {
                              , "' Population Unit"
                              , ", 1976-2017"
                              ,sep = ""))
+    plotlist[[i]] = plot
 
     # Print plots
     print(plot)
+
+    # Save
+    #ggsave(plot, file = paste(results,
+    #                          'grizzly_graphs/',
+    #                          gbpu_list[i], ".png", sep = '', scale = 2))
 
   }
 }
