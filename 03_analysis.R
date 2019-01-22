@@ -14,15 +14,16 @@
 pal <- c("Extirpated" = "firebrick2", "Threatened" = "yellow1", "Viable" = "forestgreen")
 
 # Build basic static map for grizzly popunits/status
-staticmap <- ggplot(popunits_simple) +
+staticmap <- ggplot(joined) +
   geom_sf(aes(fill = STATUS), color = "white", size = 0.1) +
   labs(title = "Conservation Status of Grizzly Bear Population Units in BC") +
   scale_fill_brewer(palette = "Set2") +
   theme_soe()
-  #geom_label(aes(label = POPULATION_NAME))
-#scale_fill_manual(values = pal) +
-
 staticmap # plot map
+
+# Add labels
+staticmap +
+  geom_text(aes(label = POPULATION_NAME, x = lng, y = lat), size = 2)
 
 # Summarise total pop estimate per management unit
 by_gbpu <- bears %>%
@@ -58,8 +59,8 @@ bc_bbox <- st_as_sfc(st_bbox(bc)) # convert to sfc
 bc_bbox <- st_bbox(bc_bbox) # convert to bbox
 bc_bbox
 
-# Stamen map (terrain background)
-#map <- get_stamenmap(bbox = c(left = 275942.4, bottom = 367537.4, right = 1867409.2,
+# Get stamen map
+# map <- get_map(bbox = c(left = 275942.4, bottom = 367537.4, right = 1867409.2,
 #                              top = 1735251.6 ), maptype = "terrain-background", zoom = 1)
 
 ## --
