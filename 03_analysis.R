@@ -10,13 +10,18 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
+# Assign colour palette
+pal <- c("Extirpated" = "firebrick2", "Threatened" = "yellow1", "Viable" = "forestgreen")
+
 # Build basic static map for grizzly popunits/status
 staticmap <- ggplot(popunits_simple) +
-  geom_sf(aes(fill = STATUS)) +
-  scale_fill_viridis(discrete = T, option = "magma") +
-  theme_bw() +
-  ggtitle("Conservation Status of Grizzly Bear Population Units in BC")
-#  geom_sf_label(aes(label = GRIZZLY_BEAR_POP_UNIT_ID))
+  geom_sf(aes(fill = STATUS), color = "white", size = 0.1) +
+  labs(title = "Conservation Status of Grizzly Bear Population Units in BC") +
+  scale_fill_brewer(palette = "Set2") +
+  theme_soe()
+  #geom_label(aes(label = POPULATION_NAME))
+#scale_fill_manual(values = pal) +
+
 staticmap # plot map
 
 # Summarise total pop estimate per management unit
@@ -62,7 +67,7 @@ bc_bbox
 ## --
 
 # Create colour palette for all the plots
-chartFill <- (palette = 'viridis')
+chartFill <- brewer.pal(7, "Set2")
 names(chartFill) <- levels(mort_gbpu$KILL_CODE)
 plot.fillScale <- scale_fill_manual(values=chartFill)
 
@@ -74,14 +79,13 @@ bab <- mort_gbpu %>% filter(GBPU_NAME == "Babine")
 glimpse(mort_gbpu)
 
 # Plot for basic POPULATION estimate per management unit
-mortplot <- ggplot(bab, aes(x = HUNT_YEAR, y = COUNT,
+mortplot <- ggplot(mort_gbpu, aes(x = HUNT_YEAR, y = COUNT,
                             group = KILL_CODE, fill = KILL_CODE)) +
   geom_bar(stat = "identity") + # Add bar for each year w/ fill = kill type
   theme_soe() +
-  scale_fill_viridis(discrete = T, option = "plasma") +
+  scale_fill_brewer(type = "seq", palette = "Set2") +
   scale_x_continuous(breaks=seq(1970, 2017, by = 5)) +
-  labs(title = "Grizzly Bear Mortality per Population Unit", x = "Year",
+  labs(title = "Grizzly Bear Mortality for the Province of BC, 1976-2017", x = "Year",
        y = "Number of Grizzly Bears Killed", fill = "Mortality Type") +
   theme(plot.title = element_text(hjust = 0.5))
-
 mortplot
