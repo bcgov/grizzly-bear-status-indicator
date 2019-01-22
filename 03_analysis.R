@@ -53,7 +53,7 @@ bc_bbox <- st_as_sfc(st_bbox(bc)) # convert to sfc
 bc_bbox <- st_bbox(bc_bbox) # convert to bbox
 bc_bbox
 
-# Stamen map (background) -- ends up being vector of 4gb - ah!
+# Stamen map (terrain background)
 #map <- get_stamenmap(bbox = c(left = 275942.4, bottom = 367537.4, right = 1867409.2,
 #                              top = 1735251.6 ), maptype = "terrain-background", zoom = 1)
 
@@ -61,19 +61,27 @@ bc_bbox
 ## MORTALITY DATA
 ## --
 
+# Create colour palette for all the plots
+chartFill <- (palette = 'viridis')
+names(chartFill) <- levels(mort_gbpu$KILL_CODE)
+plot.fillScale <- scale_fill_manual(values=chartFill)
+
 # Summarise # of bears killed per kill type + management unit
 mort_gbpu <- bearmort %>%
   group_by(GBPU_NAME, KILL_CODE, HUNT_YEAR) %>%
-  summarise(Count = n())
+  summarise(COUNT = n())
+bab <- mort_gbpu %>% filter(GBPU_NAME == "Babine")
 glimpse(mort_gbpu)
 
 # Plot for basic POPULATION estimate per management unit
-mortplot <- ggplot(mort_gbpu) +
-  geom_col(aes(x = reorder(GBPU, -Estimate), y = Estimate)) +
+mortplot <- ggplot(bab, aes(x = HUNT_YEAR, y = COUNT,
+                            group = KILL_CODE, fill = KILL_CODE)) +
+  geom_bar(stat = "identity") + # Add bar for each year w/ fill = kill type
   theme_soe() +
-  scale_y_continuous("Population Estimate") +
-  scale_x_discrete("Population Unit") +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0)) + # rotate labels
-  ggtitle("Grizzly Bear Population Estimate per Unit") +
+  scale_fill_viridis(discrete = T, option = "plasma") +
+  scale_x_continuous(breaks=seq(1970, 2017, by = 5)) +
+  labs(title = "Grizzly Bear Mortality per Population Unit", x = "Year",
+       y = "Number of Grizzly Bears Killed", fill = "Mortality Type") +
   theme(plot.title = element_text(hjust = 0.5))
-popplot
+
+mortplot
