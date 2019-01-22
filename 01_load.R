@@ -15,7 +15,7 @@
 Packages <- c("sf", "tidyverse", "dplyr", "maptools", "devtools","bcmaps",
               "ggplot2", "leaflet", "rmapshaper", "jsonlite", "geojsonio",
               "mapview", "readr", "bcdata", "kableExtra", "envreportutils",
-              "viridis", "ggmap")
+              "viridis", "ggmap", "RColorBrewer", "ggspatial")
 lapply(Packages, library, character.only = TRUE)
 
 ## --
@@ -30,7 +30,6 @@ lapply(Packages, library, character.only = TRUE)
 # Get grizzly pop estimate data (dated version - 2012)
 bears <- read_csv("https://catalogue.data.gov.bc.ca/dataset/2bf91935-9158-4f77-9c2c-4310480e6c29/resource/4eca8c5c-ed25-46c1-835c-3d9f84b807e1/download/grizzlypopulationestimate2012.csv")
 glimpse(bears)
-class(bears)
 
 # Load grizzly bear population units as an sf object using `bcdc_map`
 popunits <- bcdc_get_geodata("grizzly-bear-population-units",
