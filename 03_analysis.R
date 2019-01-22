@@ -21,9 +21,10 @@ staticmap <- ggplot(joined) +
   theme_soe()
 staticmap # plot map
 
-# Add labels
+# Add labels - very cramped. ggrepel is promising, but shifts labels around
 staticmap +
-  geom_text(aes(label = POPULATION_NAME, x = lng, y = lat), size = 2)
+  geom_text(aes(label = POPULATION_NAME, x = lng, y = lat),
+                  size = 2)
 
 # Summarise total pop estimate per management unit
 by_gbpu <- bears %>%
