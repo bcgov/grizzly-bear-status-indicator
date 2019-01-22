@@ -96,7 +96,7 @@ babplot <- ggplot(bab, aes(x = HUNT_YEAR, y = COUNT,
   theme_soe() +
   scale_fill_brewer(type = "seq", palette = "Set2") +
   scale_x_continuous(breaks=seq(1970, 2017, by = 5)) +
-  labs(title = "Grizzly Bear Mortality for the Province of BC, 1976-2017", x = "Year",
+  labs(title = , x = "Year",
        y = "Number of Grizzly Bears Killed", fill = "Mortality Type") +
   theme(plot.title = element_text(hjust = 0.5))
 babplot
