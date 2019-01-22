@@ -18,13 +18,10 @@ staticmap <- ggplot(joined) +
   geom_sf(aes(fill = STATUS), color = "white", size = 0.1) +
   labs(title = "Conservation Status of Grizzly Bear Population Units in BC") +
   scale_fill_brewer(palette = "Set2") +
-  theme_soe()
+  theme_minimal() +
+  geom_text_repel(aes(label = POPULATION_NAME, x = lng, y = lat),
+                  size = 2, force =  0.5) # Needs some tweaking - some labels off polygons
 staticmap # plot map
-
-# Add labels - very cramped. ggrepel is promising, but shifts labels around
-staticmap +
-  geom_text(aes(label = POPULATION_NAME, x = lng, y = lat),
-                  size = 2)
 
 # Summarise total pop estimate per management unit
 by_gbpu <- bears %>%
