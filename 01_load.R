@@ -15,7 +15,7 @@
 Packages <- c("sf", "tidyverse", "dplyr", "maptools", "devtools","bcmaps",
               "ggplot2", "leaflet", "rmapshaper", "jsonlite", "geojsonio",
               "mapview", "readr", "bcdata", "kableExtra", "envreportutils",
-              "viridis", "ggmap", "RColorBrewer", "ggspatial")
+              "viridis", "ggmap", "RColorBrewer", "ggspatial", "ggrepel")
 lapply(Packages, library, character.only = TRUE)
 
 ## --
