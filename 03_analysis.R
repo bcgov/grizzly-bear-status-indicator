@@ -14,7 +14,7 @@
 pal <- c("Extirpated" = "firebrick2", "Threatened" = "yellow1", "Viable" = "forestgreen")
 
 # Build basic static map for grizzly popunits/status
-staticmap <- ggplot(joined) +
+staticmap <- ggplot(popunits_xy) +
   geom_sf(aes(fill = STATUS), color = "white", size = 0.1) +
   labs(title = "Conservation Status of Grizzly Bear Population Units in BC") +
   scale_fill_brewer(palette = "Set2") +
@@ -23,16 +23,9 @@ staticmap <- ggplot(joined) +
                   size = 2, force =  0.5) # Needs some tweaking - some labels off polygons
 staticmap # plot map
 
-# Summarise total pop estimate per management unit
-by_gbpu <- bears %>%
-  group_by(GBPU) %>%
-  summarise(Estimate = sum(Estimate), Density = sum(Density)) %>% # Does this make sense to sum up density?
-  arrange(desc(Estimate), GBPU)
-glimpse(by_gbpu)
-
 # Plot for basic POPULATION estimate per management unit
 popplot <- ggplot(by_gbpu) +
-  geom_col(aes(x = reorder(GBPU, -Estimate), y = Estimate)) +
+  geom_col(aes(x = reorder(POPULATION_NAME, -Estimate), y = Estimate)) +
   theme_soe() +
   scale_y_continuous("Population Estimate") +
   scale_x_discrete("Population Unit") +
@@ -43,7 +36,7 @@ popplot # Display plot
 
 # Plot for basic DENSITY estimate per management unit
 densplot <- ggplot(by_gbpu) +
-  geom_col(aes(x = reorder(GBPU, -Density), y = Density)) +
+  geom_col(aes(x = reorder(POPULATION_NAME, -Density), y = Density)) +
   theme_soe() +
   scale_y_continuous("Population Density Estimate") +
   scale_x_discrete("Population Unit") +
@@ -52,10 +45,15 @@ densplot <- ggplot(by_gbpu) +
   theme(plot.title = element_text(hjust = 0.5))
 densplot # Display plot
 
-# Create bounding box
-bc_bbox <- st_as_sfc(st_bbox(bc)) # convert to sfc
-bc_bbox <- st_bbox(bc_bbox) # convert to bbox
-bc_bbox
+# Build  static grizzly population density chloropleth
+grizzlydensity <- ggplot(popunits_xy) +
+  geom_sf(aes(fill = Density), color = "white", size = 0.1) +
+  labs(title = "Grizzly Bear Population Density in BC") +
+  theme_minimal() + theme(plot.title = element_text(hjust = 0.5)) +
+  scale_fill_viridis(option = "plasma") +
+  geom_text(aes(label = POPULATION_NAME, x = lng, y = lat),
+            position = position_dodge(width = 0.8), size = 3) # Needs some tweaking - some labels off polygons
+grizzlydensity # plot map
 
 # Get stamen map
 # map <- get_map(bbox = c(left = 275942.4, bottom = 367537.4, right = 1867409.2,
@@ -88,15 +86,4 @@ mortplot <- ggplot(mort_gbpu, aes(x = HUNT_YEAR, y = COUNT,
   theme(plot.title = element_text(hjust = 0.5))
 mortplot
 
-# Make a sample plot using Babine data
-bab <- mort_gbpu %>% filter(GBPU_NAME == "Babine")
-babplot <- ggplot(bab, aes(x = HUNT_YEAR, y = COUNT,
-                                  group = KILL_CODE, fill = KILL_CODE)) +
-  geom_bar(stat = "identity") + # Add bar for each year w/ fill = kill type
-  theme_soe() +
-  scale_fill_brewer(type = "seq", palette = "Set2") +
-  scale_x_continuous(breaks=seq(1970, 2017, by = 5)) +
-  labs(title = , x = "Year",
-       y = "Number of Grizzly Bears Killed", fill = "Mortality Type") +
-  theme(plot.title = element_text(hjust = 0.5))
-babplot
+
