@@ -11,7 +11,7 @@
 # See the License for the specific language governing permissions and limitations under the License.
 
 # Folder to put plot results
-results <- "C:/dev/plot-results"
+# results <- "C:/dev/plot-results"
 
 # List of plots
 plotlist <- list()
