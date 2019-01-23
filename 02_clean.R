@@ -26,9 +26,9 @@ popcentroid <- st_transform(popcentroid, crs = 4326) # convert to lat/long
 popcoords <- st_coordinates(popcentroid) # changes to a matrix
 
 # Spatial join
-joined <- cbind(popunits_simple, popcoords) # cbind coords and polygons
+popunits_xy <- cbind(popunits_simple, popcoords) # cbind coords and polygons
 
 # Rename lat and lng columns
-joined <- rename(joined, lng = X)
-joined <- rename(joined, lat = Y)
-joined <- st_transform(joined, crs = 4326) # convert to lat/long
+popunits_xy <- rename(popunits_xy, lng = X)
+popunits_xy <- rename(popunits_xy, lat = Y)
+popunits_xy <- st_transform(joined, crs = 4326) # convert to lat/long
