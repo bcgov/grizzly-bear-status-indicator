@@ -17,13 +17,13 @@ pal <- c("Extirpated" = "firebrick2", "Threatened" = "yellow1", "Viable" = "fore
 staticmap <- ggplot(popunits_xy) +
   geom_sf(aes(fill = STATUS), color = "white", size = 0.1) +
   labs(title = "Conservation Status of Grizzly Bear Population Units in BC") +
-  scale_fill_brewer(palette = "Set2") +
+  scale_fill_viridis(discrete = T, alpha = 0.8, direction = -1) +
   theme_minimal() +
   geom_text_repel(aes(label = POPULATION_NAME, x = lng, y = lat),
                   size = 2, force =  0.5) # Needs some tweaking - some labels off polygons
 staticmap # plot map
 
-# Plot for basic POPULATION estimate per management unit
+# Plot basic POPULATION estimate per management unit
 popplot <- ggplot(by_gbpu) +
   geom_col(aes(x = reorder(POPULATION_NAME, -Estimate), y = Estimate)) +
   theme_soe() +
@@ -34,7 +34,7 @@ popplot <- ggplot(by_gbpu) +
   theme(plot.title = element_text(hjust = 0.5))
 popplot # Display plot
 
-# Plot for basic DENSITY estimate per management unit
+# Plot basic DENSITY estimate per management unit
 densplot <- ggplot(by_gbpu) +
   geom_col(aes(x = reorder(POPULATION_NAME, -Density), y = Density)) +
   theme_soe() +
@@ -45,14 +45,16 @@ densplot <- ggplot(by_gbpu) +
   theme(plot.title = element_text(hjust = 0.5))
 densplot # Display plot
 
-# Build  static grizzly population density chloropleth
+# Build  static grizzly population density choropleth
 grizzlydensity <- ggplot(popunits_xy) +
-  geom_sf(aes(fill = Density), color = "white", size = 0.1) +
+  geom_sf(aes(fill = Density)) +
   labs(title = "Grizzly Bear Population Density in BC") +
   theme_minimal() + theme(plot.title = element_text(hjust = 0.5)) +
-  scale_fill_viridis(option = "plasma") +
-  geom_text(aes(label = POPULATION_NAME, x = lng, y = lat),
-            position = position_dodge(width = 0.8), size = 3) # Needs some tweaking - some labels off polygons
+  scale_fill_viridis_c(trans = "sqrt", alpha = .5) +
+  geom_text_repel(aes(label = POPULATION_NAME, x = lng, y = lat),
+                  size = 2, force =  0.5)
+  #geom_text(aes(label = POPULATION_NAME, x = lng, y = lat),
+            #position = position_dodge(width = 0.8), size = 3) # Needs some tweaking - some labels off polygons
 grizzlydensity # plot map
 
 # Get stamen map
