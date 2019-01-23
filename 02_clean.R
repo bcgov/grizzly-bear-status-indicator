@@ -15,7 +15,7 @@ popunits_simple <- ms_simplify(popunits, keep = 0.25) # reduce number of vertice
 plot(popunits_simple[4]) # check the result for 'population name'
 
 # Change to lat/long (4326)
-popunits_simple <- st_transform(popunits_simple, crs = 4326)
+popunits_simplify <- st_transform(popunits_simple, crs = 4326)
 
 # Find centroid of polygons (for labelling)
 # Note: 'popunits' w/ BC Albers CRS used because lat/long not accepted by st_centroid
@@ -26,7 +26,7 @@ popcentroid <- st_transform(popcentroid, crs = 4326) # convert to lat/long
 popcoords <- st_coordinates(popcentroid) # changes to a matrix
 
 # Spatial join
-popunits_xy <- cbind(popunits_simple, popcoords) # cbind coords and polygons
+popunits_xy <- cbind(popunits_simplify, popcoords) # cbind coords and polygons
 
 # Rename lat and lng columns
 popunits_xy <- rename(popunits_xy, lng = X)
@@ -34,7 +34,7 @@ popunits_xy <- rename(popunits_xy, lat = Y)
 popunits_xy <- st_transform(joined, crs = 4326) # convert to lat/long
 
 # Summarise total pop estimate per management unit
-by_gbpu <- bears %>%
+by_gbpu <- grizzlypop_raw %>%
   group_by(GBPU) %>%
   summarise(Estimate = sum(Estimate), Density = sum(Density)) %>% # Does this make sense to sum up density?
   rename(POPULATION_NAME = GBPU)
@@ -42,3 +42,8 @@ glimpse(by_gbpu)
 
 # Join population + density estimates
 popunits_xy <- left_join(popunits_xy, by_gbpu, by = "POPULATION_NAME")
+glimpse(popunits_xy)
+
+# Mortality data - basic checks
+table(is.na(bearmort$GBPU_NAME))
+
