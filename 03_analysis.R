@@ -45,21 +45,31 @@ densplot <- ggplot(by_gbpu) +
   theme(plot.title = element_text(hjust = 0.5))
 densplot # Display plot
 
-# Build  static grizzly population density choropleth
-grizzlydensity <- ggplot(popunits_xy) +
+# Build  static grizzly  density choropleth
+grizzlydensmap <- ggplot(popunits_xy) +
   geom_sf(aes(fill = Density)) +
-  labs(title = "Grizzly Bear Population Density in BC") +
+  labs(title = "Grizzly Bear Population Density in British Columbia") +
   theme_minimal() + theme(plot.title = element_text(hjust = 0.5)) +
   scale_fill_viridis_c(trans = "sqrt", alpha = .5) +
   geom_text_repel(aes(label = POPULATION_NAME, x = lng, y = lat),
                   size = 2, force =  0.5)
   #geom_text(aes(label = POPULATION_NAME, x = lng, y = lat),
             #position = position_dodge(width = 0.8), size = 3) # Needs some tweaking - some labels off polygons
-grizzlydensity # plot map
+grizzlydensmap # plot map
 
 # Get stamen map
 # map <- get_map(bbox = c(left = 275942.4, bottom = 367537.4, right = 1867409.2,
 #                              top = 1735251.6 ), maptype = "terrain-background", zoom = 1)
+
+# Build static grizzly population choropleth
+grizzlypopmap <- ggplot(popunits_xy) +
+  geom_sf(aes(fill = Estimate)) +
+  labs(title = "Grizzly Bear Population Estimates for British Columbia") +
+  theme_minimal() + theme(plot.title = element_text(hjust = 0.5)) +
+  scale_fill_viridis_c(trans = "sqrt", alpha = .5) +
+  geom_text_repel(aes(label = POPULATION_NAME, x = lng, y = lat),
+                  size = 2, force =  0.5)
+grizzlypopmap # plot map
 
 ## --
 ## MORTALITY DATA
