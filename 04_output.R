@@ -31,8 +31,7 @@ Mortality <- function(mort_gbpu) {
                     aes(x = HUNT_YEAR, y = COUNT,
                         fill = KILL_CODE)) +
                geom_bar(stat = "identity") + # Add bar for each year w/ fill = kill type
-               theme_soe() +
-               scale_fill_brewer(7, palette = "Set2") +
+               scale_fill_brewer("Mortality Type", palette = "Set2") +
                scale_x_continuous(breaks=seq(1970, 2017, by = 5)) +
                labs(x = "Year", y = "Number of Grizzly Bears Killed",
                     fill = "Mortality Type") +
@@ -40,7 +39,9 @@ Mortality <- function(mort_gbpu) {
                              ,gbpu_list[i]
                              , "' Population Unit"
                              , ", 1976-2017"
-                             ,sep = ""))
+                             ,sep = "")) +
+      theme_bw() + theme(plot.title = element_text(hjust = 0.5))
+
     plotlist[[i]] = plot
 
     # Print plots
