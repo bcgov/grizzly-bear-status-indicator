@@ -28,8 +28,8 @@ lapply(Packages, library, character.only = TRUE)
 ## https://www2.gov.bc.ca/gov/content?id=A519A56BC2BF44E4A008B33FCF527F61
 
 # Get grizzly pop estimate data (2012)
-gbpu <- read_csv("https://catalogue.data.gov.bc.ca/dataset/2bf91935-9158-4f77-9c2c-4310480e6c29/resource/4eca8c5c-ed25-46c1-835c-3d9f84b807e1/download/grizzlypopulationestimate2012.csv")
-glimpse(gbpu)
+grizzlypop_raw <- read_csv("https://catalogue.data.gov.bc.ca/dataset/2bf91935-9158-4f77-9c2c-4310480e6c29/resource/4eca8c5c-ed25-46c1-835c-3d9f84b807e1/download/grizzlypopulationestimate2012.csv")
+glimpse(grizzlypop_raw)
 
 # Load grizzly bear population units as an sf object using `bcdc_map`
 popunits <- bcdc_get_geodata("grizzly-bear-population-units",
