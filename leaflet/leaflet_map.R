@@ -21,7 +21,7 @@ grizzmap <- leaflet() %>%
                 color = "yellow",
                 bringToFront = T)) %>%
   addMarkers(data = popunits_xy, lng = ~lng, lat = ~lat,
-                   label = popunits_xy$DISPLAY_NAME, icon = circleicon,
+                   label = popunits_xy$POPULATION_NAME, icon = circleicon,
              labelOptions = labelOptions(noHide = F, textOnly = F))
 
 grizzmap # View leaflet
