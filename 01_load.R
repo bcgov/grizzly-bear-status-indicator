@@ -19,7 +19,7 @@ Packages <- c("sf", "tidyverse", "dplyr", "maptools", "devtools","bcmaps",
 lapply(Packages, library, character.only = TRUE)
 
 ## --
-## Data
+## Data Downloads
 ## --
 
 ## Get British Columbia grizzly bear population unit boundaries from B.C. Data Catalogue
@@ -40,3 +40,8 @@ bearmort <- read_csv("https://catalogue.data.gov.bc.ca/dataset/4bc13aa2-80c9-441
 
 # Get biogeoclimatic zones
 bec <- bec()
+
+# Create bounding box
+bc_bbox <- st_as_sfc(st_bbox(bc)) # convert to sfc
+bc_bbox <- st_bbox(bc_bbox) # convert to bbox
+bc_bbox
