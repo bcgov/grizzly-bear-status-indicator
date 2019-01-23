@@ -32,3 +32,13 @@ popunits_xy <- cbind(popunits_simple, popcoords) # cbind coords and polygons
 popunits_xy <- rename(popunits_xy, lng = X)
 popunits_xy <- rename(popunits_xy, lat = Y)
 popunits_xy <- st_transform(joined, crs = 4326) # convert to lat/long
+
+# Summarise total pop estimate per management unit
+by_gbpu <- bears %>%
+  group_by(GBPU) %>%
+  summarise(Estimate = sum(Estimate), Density = sum(Density)) %>% # Does this make sense to sum up density?
+  rename(POPULATION_NAME = GBPU)
+glimpse(by_gbpu)
+
+# Join population + density estimates
+popunits_xy <- left_join(popunits_xy, by_gbpu, by = "POPULATION_NAME")
