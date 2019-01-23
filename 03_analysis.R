@@ -75,16 +75,16 @@ grizzlypopmap # plot map
 ## MORTALITY DATA
 ## --
 
-# Create colour palette for all the plots
-chartFill <- brewer.pal(7, "Set2")
-names(chartFill) <- levels(mort_gbpu$KILL_CODE)
-plot.fillScale <- scale_fill_manual(values=chartFill)
-
 # Summarise # of bears killed per kill type + management unit
 mort_gbpu <- bearmort %>%
   group_by(GBPU_NAME, KILL_CODE, HUNT_YEAR) %>%
   summarise(COUNT = n())
 glimpse(mort_gbpu)
+
+# Create colour palette for all the plots
+chartFill <- brewer.pal(7, "Set2")
+names(chartFill) <- levels(mort_gbpu$KILL_CODE)
+plot.fillScale <- scale_fill_manual(values=chartFill)
 
 # Plot for basic POPULATION estimate per management unit
 mortplot <- ggplot(mort_gbpu, aes(x = HUNT_YEAR, y = COUNT,
