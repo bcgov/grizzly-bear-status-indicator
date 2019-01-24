@@ -36,6 +36,10 @@ popunits_xy <- rename(popunits_xy, lng = X)
 popunits_xy <- rename(popunits_xy, lat = Y)
 popunits_xy <- st_transform(popunits_xy, crs = 4326) # convert to lat/long
 
+# Set column names to lower case
+popunits_xy <- popunits_xy %>% rename_all(tolower)
+glimpse(popunits_xy) # View
+
 # Summarise total pop estimate per management unit
 by_gbpu <- grizzlypop_raw %>%
   group_by(GBPU) %>%
@@ -45,11 +49,7 @@ by_gbpu <- grizzlypop_raw %>%
 glimpse(by_gbpu)
 
 # Join population + density estimates
-popunits_xy <- left_join(popunits_xy, by_gbpu, by = "POPULATION_NAME")
-
-# Change names to all lower case
-popunits_xy <- popunits_xy %>% rename_all(tolower)
-glimpse(popunits_xy) # View
+popunits_xy <- left_join(popunits_xy, by_gbpu, by = "population_name")
 
 ## --
 ## MORTALITY DATA CLEANING
@@ -60,7 +60,7 @@ table(is.na(bearmort_raw$GBPU_NAME)) # check for NAs in name column
 gbpu_rawlist <- bearmort_raw %>% distinct(GBPU_NAME) # Make list of unique names
 
 # Change names in new df to all lower case
-bearmort <- bearmort %>% rename_all(tolower)
+bearmort <- bearmort_raw %>% rename_all(tolower)
 
 # There are multiple observations w/ different spellings of NA-Extirpated; combine these
 bearmort$gbpu_name[ bearmort$gbpu_name == "N/A - extirpated"] <- "Extirpated" # Rename rows
@@ -68,9 +68,3 @@ bearmort$gbpu_name[ bearmort$gbpu_name == "NA - extirpated"] <- "Extirpated" # R
 
 # Make list of names for new df
 gbpu_cleanlist <- bearmort %>% distinct(gbpu_name) # Still NA column, but others combined
-
-
-
-
-
-
