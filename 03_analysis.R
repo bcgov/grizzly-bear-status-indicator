@@ -116,4 +116,4 @@ mortplot <- ggplot(mort_gbpu, aes(x = hunt_year, y = count,
 mortplot # Display figure
 
 # Save figure
-ggsave(file = "mortplot1.svg", plot = mortplot, width = 10, height= 8)
+# ggsave(file = "mortplot1.svg", plot = mortplot, width = 10, height= 8)
