@@ -31,7 +31,7 @@ popunits_xy <- cbind(popunits_simplify, popcoords) # cbind coords and polygons
 # Rename lat and lng columns
 popunits_xy <- rename(popunits_xy, lng = X)
 popunits_xy <- rename(popunits_xy, lat = Y)
-popunits_xy <- st_transform(joined, crs = 4326) # convert to lat/long
+popunits_xy <- st_transform(popunits_xy, crs = 4326) # convert to lat/long
 
 # Summarise total pop estimate per management unit
 by_gbpu <- grizzlypop_raw %>%
