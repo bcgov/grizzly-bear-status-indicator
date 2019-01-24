@@ -34,14 +34,15 @@ Mortality <- function(mort_gbpu) {
                scale_fill_brewer("Mortality Type", palette = "Set2") +
                scale_x_continuous(breaks=seq(1970, 2017, by = 5)) +
                labs(x = "Year", y = "Number of Grizzly Bears Killed",
-                    fill = "Mortality Type") + # Legend text
+                    fill = "Mortality Type", caption = caption.text) + # Legend text
                ggtitle(paste("Mortality History for the '"
                              ,gbpu_list[i]
                              , "' Population Unit"
                              , ", 1976-2017"
                              ,sep = "")) +
       theme_bw() + theme(plot.title = element_text(hjust = 0.5), # Centre main title
-                         legend.position = "bottom")
+                         legend.position = "bottom",
+                         plot.caption = element_text(hjust = 0)) # Left-align caption
 
     plotlist <- c(plotlist, list(plot))
 
