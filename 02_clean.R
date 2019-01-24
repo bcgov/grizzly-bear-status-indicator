@@ -40,7 +40,8 @@ popunits_xy <- st_transform(popunits_xy, crs = 4326) # convert to lat/long
 by_gbpu <- grizzlypop_raw %>%
   group_by(GBPU) %>%
   summarise(POP_ESTIMATE = sum(Estimate), POP_DENSITY = sum(Density)) %>% # Does this make sense to sum up density?
-  rename(POPULATION_NAME = GBPU)
+  rename(POPULATION_NAME = GBPU) %>%
+  rename_all(tolower) # Set to lower case
 glimpse(by_gbpu)
 
 # Join population + density estimates
