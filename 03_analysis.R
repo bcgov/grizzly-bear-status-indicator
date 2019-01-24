@@ -95,7 +95,7 @@ plot.fillScale <- scale_fill_manual(values=chartFill)
 # Caption text
 caption.text <- paste("*Note that prior to 2004, road and rail kills",
                       " were not distinguished and were documented with",
-                      " 'Pick Ups'\nA Limited Entry Hunt (LEH) was",
+                      " 'Pick Ups'.\nA Limited Entry Hunt (LEH) was",
                       " instituted province-wide for grizzly bears in",
                       " 1996.\nThere was a province-wide moratorium on",
                       " hunting grizzly bears in the spring of 2001."
@@ -108,9 +108,10 @@ mortplot <- ggplot(mort_gbpu, aes(x = hunt_year, y = count,
   theme_bw() +
   scale_fill_brewer(type = "qual", palette = "Set2") +
   scale_x_continuous(breaks=seq(1970, 2017, by = 5)) +
-  labs(title = "Grizzly Bear Mortality for the Province of BC, 1976-2017", x = "Year",
-       y = "Number of Grizzly Bears Killed", fill = "Mortality Type") +
-  theme(plot.title = element_text(hjust = 0.5), legend.position = "bottom") +
-  labs(caption = caption.text)
+  labs(title = "Grizzly Bear Mortality for the Province of BC, 1976-2017",
+       caption = caption.text,
+       x = "Year", y = "Number of Grizzly Bears Killed", fill = "Mortality Type") +
+  theme(plot.title = element_text(hjust = 0.5), legend.position = "bottom",
+        plot.caption = element_text(hjust = 0))
 mortplot # Display figure
 
