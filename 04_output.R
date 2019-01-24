@@ -11,7 +11,7 @@
 # See the License for the specific language governing permissions and limitations under the License.
 
 # Folder to put plot results
-# results <- "C:/dev/plot-results"
+results <- "/dev/plot-results"
 
 # List of plots
 plotlist <- list()
@@ -41,16 +41,15 @@ Mortality <- function(mort_gbpu) {
                              , ", 1976-2017"
                              ,sep = "")) +
       theme_bw() + theme(plot.title = element_text(hjust = 0.5))
-
-    plotlist[[i]] = plot
+    plotlist <- c(plotlist, list(plot))
 
     # Print plots
-    print(plot)
+    #print(plot)
 
     # Save
-    #ggsave(plot, file = paste(results,
-    #                          'grizzly_graphs/',
-    #                          gbpu_list[i], ".png", sep = '', scale = 2))
+    ggsave(plot, file = paste(results,
+                              'grizzly_graphs/',
+                              gbpu_list[i]), plot = image, width = 10, height = 8)
 
   }
 }
