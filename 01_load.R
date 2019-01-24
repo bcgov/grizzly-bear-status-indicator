@@ -15,7 +15,7 @@
 Packages <- c("sf", "tidyverse", "dplyr", "maptools", "devtools","bcmaps",
               "ggplot2", "leaflet", "rmapshaper", "jsonlite", "geojsonio",
               "mapview", "readr", "bcdata", "kableExtra", "envreportutils",
-              "viridis", "ggmap", "RColorBrewer", "ggspatial", "ggrepel", "svglite")
+              "viridis", "ggmap", "RColorBrewer", "ggspatial", "ggrepel", "svglite", "Cairo")
 lapply(Packages, library, character.only = TRUE)
 
 ## --
@@ -39,9 +39,9 @@ popunits <- bcdc_get_geodata("grizzly-bear-population-units",
 bearmort_raw <- read_csv("https://catalogue.data.gov.bc.ca/dataset/4bc13aa2-80c9-441b-8f46-0b9574109b93/resource/c5fc42c7-67d3-4669-b281-61dc50fdef22/download/grizzlybearmortalityhistory_1976_2017.csv")
 
 # Get biogeoclimatic zones
-bec <- bec()
+# bec <- bec()
 
 # Create bounding box
-bc_bbox <- st_as_sfc(st_bbox(bc)) # convert to sfc
-bc_bbox <- st_bbox(bc_bbox) # convert to bbox
-bc_bbox
+# bc_bbox <- st_as_sfc(st_bbox(bc)) # convert to sfc
+# bc_bbox <- st_bbox(bc_bbox) # convert to bbox
+# bc_bbox
