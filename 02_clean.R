@@ -44,6 +44,20 @@ glimpse(by_gbpu)
 popunits_xy <- left_join(popunits_xy, by_gbpu, by = "POPULATION_NAME")
 glimpse(popunits_xy)
 
+## --
+## MORTALITY DATA CLEANING
+## --
+
 # Mortality data - basic checks
-table(is.na(bearmort$GBPU_NAME))
+table(is.na(bearmort_raw$GBPU_NAME)) # check for NAs in name column
+gbpu_rawlist <- bearmort_raw %>% distinct(GBPU_NAME) # Three rows corresponding to NA in raw data
+bearmort$GBPU_NAME[ bearmort$GBPU_NAME == "N/A - extirpated"] <- "Extirpated" # Rename rows
+bearmort$GBPU_NAME[ bearmort$GBPU_NAME == "NA - extirpated"] <- "Extirpated" # Rename rows
+bearmort$GBPU_NAME[ bearmort$GBPU_NAME == "NA"] <- "Extirpated" # Rename rows
+
+# Make list of names for new df
+gbpu_cleanlist <- bearmort %>% distinct(GBPU_NAME)
+
+
+
 
