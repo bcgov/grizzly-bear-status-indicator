@@ -11,11 +11,14 @@
 # See the License for the specific language governing permissions and limitations under the License.
 
 # Simplify population unit polygons using mapshaper
-popunits_simple <- ms_simplify(popunits, keep = 0.25) # reduce number of vertices
-plot(popunits_simple[4]) # check the result for 'population name'
+popunits_simplify <- ms_simplify(popunits, keep = 0.25) # reduce number of vertices
+plot(popunits_simplify[4]) # check the result for 'population name'
 
 # Change to lat/long (4326)
-popunits_simplify <- st_transform(popunits_simple, crs = 4326)
+popunits_simplify <- st_transform(popunits_simplify, crs = 4326)
+
+# Drop unused metadata columns
+popunits_simplify <- select(popunits_simplify, -c(id, SE_ANNO_CAD_DATA, VERSION_YEAR_MODIFIED, OBJECTID))
 
 # Find centroid of polygons (for labelling)
 # Note: 'popunits' w/ BC Albers CRS used because lat/long not accepted by st_centroid
@@ -36,13 +39,16 @@ popunits_xy <- st_transform(popunits_xy, crs = 4326) # convert to lat/long
 # Summarise total pop estimate per management unit
 by_gbpu <- grizzlypop_raw %>%
   group_by(GBPU) %>%
-  summarise(Estimate = sum(Estimate), Density = sum(Density)) %>% # Does this make sense to sum up density?
+  summarise(POP_ESTIMATE = sum(Estimate), POP_DENSITY = sum(Density)) %>% # Does this make sense to sum up density?
   rename(POPULATION_NAME = GBPU)
 glimpse(by_gbpu)
 
 # Join population + density estimates
 popunits_xy <- left_join(popunits_xy, by_gbpu, by = "POPULATION_NAME")
-glimpse(popunits_xy)
+
+# Change names to all lower case
+popunits_xy <- popunits_xy %>% rename_all(tolower)
+glimpse(popunits_xy) # View
 
 ## --
 ## MORTALITY DATA CLEANING
@@ -50,13 +56,19 @@ glimpse(popunits_xy)
 
 # Mortality data - basic checks
 table(is.na(bearmort_raw$GBPU_NAME)) # check for NAs in name column
-gbpu_rawlist <- bearmort_raw %>% distinct(GBPU_NAME) # Three rows corresponding to NA in raw data
-bearmort$GBPU_NAME[ bearmort$GBPU_NAME == "N/A - extirpated"] <- "Extirpated" # Rename rows
-bearmort$GBPU_NAME[ bearmort$GBPU_NAME == "NA - extirpated"] <- "Extirpated" # Rename rows
-bearmort$GBPU_NAME[ bearmort$GBPU_NAME == "NA"] <- "Extirpated" # Rename rows
+gbpu_rawlist <- bearmort_raw %>% distinct(GBPU_NAME) # Make list of unique names
+
+# Change names in new df to all lower case
+bearmort <- bearmort %>% rename_all(tolower)
+
+# There are multiple observations w/ different spellings of NA-Extirpated; combine these
+bearmort$gbpu_name[ bearmort$gbpu_name == "N/A - extirpated"] <- "Extirpated" # Rename rows
+bearmort$gbpu_name[ bearmort$gbpu_name == "NA - extirpated"] <- "Extirpated" # Rename rows
 
 # Make list of names for new df
-gbpu_cleanlist <- bearmort %>% distinct(GBPU_NAME)
+gbpu_cleanlist <- bearmort %>% distinct(gbpu_name) # Still NA column, but others combined
+
+
 
 
 
