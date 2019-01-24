@@ -108,7 +108,7 @@ mortplot <- ggplot(mort_gbpu, aes(x = hunt_year, y = count,
   theme_bw() +
   scale_fill_brewer(type = "qual", palette = "Set2") +
   scale_x_continuous(breaks=seq(1970, 2017, by = 5)) +
-  labs(title = "Grizzly Bear Mortality for the Province of BC, 1976-2017",
+  labs(title = "Grizzly Bear Mortality for the Province of British Columbia, 1976-2017",
        caption = caption.text,
        x = "Year", y = "Number of Grizzly Bears Killed", fill = "Mortality Type") +
   theme(plot.title = element_text(hjust = 0.5), legend.position = "bottom",
