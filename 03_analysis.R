@@ -13,6 +13,18 @@
 # Create colour palette for future mapping (not currently used)
 # pal <- c("Extirpated" = "firebrick2", "Threatened" = "yellow1", "Viable" = "forestgreen")
 
+# Get stamen basemap (terrain) - bbox extent larger than we need
+require(ggmap)
+stamenbc <- get_stamenmap(bbox = c(-139.658203,48.806863,-113.071289,60.261617),
+                          zoom = 7, maptype = "terrain-background", where = "/dev/stamen")
+plot(stamenbc) # test - clearly too big
+ggmap(stamenbc) + geom_sf(data = popunits_xy, inherit.aes = F) # plot with boundary
+plot(boundbc)
+
+# Clip + mask raster to BC boundary
+stamenbc_crop <- raster::crop(stamenbc, bc_boundary)
+class(bc_boundary)
+
 # Build basic static map for grizzly popunits/status
 staticmap <- ggplot(popunits_xy) +
   geom_sf(aes(fill = status), color = "white", size = 0.1) +
@@ -59,12 +71,6 @@ grizzlydensmap <- ggplot(popunits_xy) +
   #geom_text(aes(label = POPULATION_NAME, x = lng, y = lat),
             #position = position_dodge(width = 0.8), size = 3) # Needs some tweaking - some labels off polygons
 grizzlydensmap # plot map
-
-# Get stamen map
-require(ggmap)
-stamenbc <- get_stamenmap(bbox = c(-139.746094,48.107431,-119.707031,60.152442),
-                          zoom = 8, maptype = "terrain-background", where = "/dev/stamen")
-plot(stamenbc)
 
 # Build static grizzly population choropleth
 grizzlypopmap <- ggplot(popunits_xy) +
