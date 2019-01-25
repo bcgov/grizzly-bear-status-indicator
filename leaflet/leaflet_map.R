@@ -10,13 +10,13 @@ tree <- makeAwesomeIcon(
   iconColor = 'white')
 
 # Prep - colour palettes
-factpal <- colorFactor(palette = 'magma', popunits$STATUS) # Assign scheme -- to be replaced with SEO default
+factpal <- colorFactor(palette = 'magma', popunits$status) # Assign scheme -- to be replaced with SEO default
 
 # Generate leaflet map showing conservation status of grizzly population units
 # Note: All years included
 # Generate leaflet map showing conservation status of grizzly population units
 grizzmap <- leaflet() %>%
-  addProviderTiles(providers$Stamen.Terrain) %>%
+  addProviderTiles(providers$Stamen.TerrainBackground) %>%
   addLegend("bottomright", pal = factpal, values = popunits_xy$status,
             title = "Population Status",
             opacity = 1) %>%
@@ -35,12 +35,12 @@ grizzmap <- leaflet() %>%
 grizzmap # View leaflet
 
 # Create custom icons - will need to be hosted on the web
-xicon <- makeIcon("/Users/JGALLOWA/AppData/Local/Temp/x-square.svg",
-                  iconWidth = 24,
-                  iconHeight = 30)
-circleicon <- makeIcon("/Users/JGALLOWA/AppData/Local/Temp/circle.svg",
-                       iconWidth = 10,
-                       iconHeight = 10)
+#xicon <- makeIcon("/Users/JGALLOWA/AppData/Local/Temp/x-square.svg",
+#                  iconWidth = 24,
+#                  iconHeight = 30)
+#circleicon <- makeIcon("/Users/JGALLOWA/AppData/Local/Temp/circle.svg",
+#                       iconWidth = 10,
+#                       iconHeight = 10)
 
 #   addLabelOnlyMarkers(data = grizzxy,
 #                      lng = ~lng, lat = ~lat,
