@@ -23,9 +23,9 @@ plot(stamenbc)
 
 static_ggmap <- ggmap(stamenbc) + # Generate new map
   geom_sf(data = popunits_xy, aes(fill = status), inherit.aes = F, color = "white", size = 0.1) + # plot with boundary
-  theme_bw() + scale_fill_viridis(discrete = T, alpha = 0.4, option = "plasma", direction = -1) +
+  theme_bw() + scale_fill_viridis(discrete = T, alpha = 0.4, option = "D", direction = -1) +
   labs(title = "Conservation Status of Grizzly Bear Population Units in BC", fill = "Status") +
-  theme(plot.title = element_text(hjust = 0.5))
+  theme(plot.title = element_text(hjust = 0.5), axis.title.x = element_blank(), axis.title.y = element_blank())
   #geom_text(aes(label = popunits_xy$population_name, x = popunits_xy$lng, y = popunits_xy$lat))
 plot(static_ggmap)
 

@@ -68,4 +68,3 @@ bearmort$gbpu_name[ bearmort$gbpu_name == "NA - extirpated"] <- "Extirpated" # R
 
 # Make list of names for new df
 gbpu_cleanlist <- bearmort %>% distinct(gbpu_name) # Still NA column, but others combined
-
