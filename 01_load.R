@@ -39,8 +39,11 @@ popunits <- bcdc_get_geodata("grizzly-bear-population-units",
 # Get grizzly mortality data
 bearmort_raw <- read_csv("https://catalogue.data.gov.bc.ca/dataset/4bc13aa2-80c9-441b-8f46-0b9574109b93/resource/c5fc42c7-67d3-4669-b281-61dc50fdef22/download/grizzlybearmortalityhistory_1976_2017.csv")
 
+# Get BC boundary
+boundbc <- bc_bound()
+
 # Get biogeoclimatic zones
-# bec <- bec()
+bec <- bec()
 
 # Create bounding box
 # bc_bbox <- st_as_sfc(st_bbox(bc)) # convert to sfc
