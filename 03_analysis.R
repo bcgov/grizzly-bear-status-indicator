@@ -60,14 +60,10 @@ grizzlydensmap <- ggplot(popunits_xy) +
             #position = position_dodge(width = 0.8), size = 3) # Needs some tweaking - some labels off polygons
 grizzlydensmap # plot map
 
-vicmap <- ggmap(get_stamenmap(location = c(-123.534,48.397,-123.191,48.537), zoom = 10,
-                        maptype = "toner-lite"))
-plot(vicmap)
-
 # Get stamen map
 require(ggmap)
-stamenbc <- get_stamenmap(location = c(-139.746094,48.107431,-119.707031,60.152442),
-                          zoom = 1, maptype = "watercolor")
+stamenbc <- get_stamenmap(bbox = c(-139.746094,48.107431,-119.707031,60.152442),
+                          zoom = 8, maptype = "terrain-background", where = "/dev/stamen")
 plot(stamenbc)
 
 # Build static grizzly population choropleth
