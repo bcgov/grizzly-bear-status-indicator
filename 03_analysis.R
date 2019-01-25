@@ -17,14 +17,23 @@
 require(ggmap)
 stamenbc <- get_stamenmap(bbox = c(-139.658203,48.806863,-113.071289,60.261617),
                           zoom = 7, maptype = "terrain-background", where = "/dev/stamen")
-plot(stamenbc) # test - clearly too big
-ggmap(stamenbc) + geom_sf(data = popunits_xy, inherit.aes = F) # plot with boundary
-plot(boundbc)
+# saveRDS(stamenbc, file = "/dev/stamen.Rds")
+# readRDS(stamenbc)
+plot(stamenbc)
+
+static_ggmap <- ggmap(stamenbc) + # Generate new map
+  geom_sf(data = popunits_xy, aes(fill = status), inherit.aes = F, color = "white", size = 0.1) + # plot with boundary
+  theme_bw() + scale_fill_viridis(discrete = T, alpha = 0.4, option = "plasma", direction = -1) +
+  labs(title = "Conservation Status of Grizzly Bear Population Units in BC", fill = "Status") +
+  theme(plot.title = element_text(hjust = 0.5))
+  #geom_text(aes(label = popunits_xy$population_name, x = popunits_xy$lng, y = popunits_xy$lat))
+plot(static_ggmap)
 
 # Clip + mask raster to BC boundary
 stamenbc_crop <- raster::crop(stamenbc, bc_boundary)
 class(bc_boundary)
 
+#
 # Build basic static map for grizzly popunits/status
 staticmap <- ggplot(popunits_xy) +
   geom_sf(aes(fill = status), color = "white", size = 0.1) +
