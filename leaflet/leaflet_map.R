@@ -4,7 +4,7 @@
 
 # Create custom icons
 pawicon <- makeIcon("/Users/JGALLOWA/AppData/Local//Temp/icons8-bear-footprint-filled-30-1.png",
-                    iconWidth = 24, iconHeight = 30)
+                    iconWidth = 24, iconHeight = 24)
 tree <- makeAwesomeIcon(
   icon = 'tree-conifer', library = 'glyphicon', markerColor = NULL,
   iconColor = 'white')
