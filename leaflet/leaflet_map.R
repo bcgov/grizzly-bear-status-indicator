@@ -5,6 +5,9 @@
 # Create custom icons
 pawicon <- makeIcon("/Users/JGALLOWA/AppData/Local//Temp/icons8-bear-footprint-filled-30-1.png",
                     iconWidth = 24, iconHeight = 30)
+tree <- makeAwesomeIcon(
+  icon = 'tree-conifer', library = 'glyphicon', markerColor = NULL,
+  iconColor = 'white')
 
 # Prep - colour palettes
 factpal <- colorFactor(palette = 'magma', popunits$STATUS) # Assign scheme -- to be replaced with SEO default
