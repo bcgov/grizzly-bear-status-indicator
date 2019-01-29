@@ -13,27 +13,6 @@
 # Create colour palette for future mapping (not currently used)
 # pal <- c("Extirpated" = "firebrick2", "Threatened" = "yellow1", "Viable" = "forestgreen")
 
-# Get stamen basemap (terrain) - bbox extent larger than we need
-require(ggmap)
-stamenbc <- get_stamenmap(bbox = c(-139.658203,48.806863,-113.071289,60.261617),
-                          zoom = 7, maptype = "terrain-background", where = "/dev/stamen")
-# saveRDS(stamenbc, file = "/dev/stamen.Rds")
-# readRDS(stamenbc)
-plot(stamenbc)
-
-static_ggmap <- ggmap(stamenbc) + # Generate new map
-  geom_sf(data = popunits_xy, aes(fill = status), inherit.aes = F, color = "white", size = 0.1) + # plot with boundary
-  theme_bw() + scale_fill_viridis(discrete = T, alpha = 0.4, option = "D", direction = -1) +
-  labs(title = "Conservation Status of Grizzly Bear Population Units in BC", fill = "Status") +
-  theme(plot.title = element_text(hjust = 0.5), axis.title.x = element_blank(), axis.title.y = element_blank())
-  #geom_text(aes(label = popunits_xy$population_name, x = popunits_xy$lng, y = popunits_xy$lat))
-plot(static_ggmap)
-
-# Clip + mask raster to BC boundary
-stamenbc_crop <- raster::crop(stamenbc, bc_boundary)
-class(bc_boundary)
-
-#
 # Build basic static map for grizzly popunits/status
 staticmap <- ggplot(popunits_xy) +
   geom_sf(aes(fill = status), color = "white", size = 0.1) +
@@ -43,6 +22,28 @@ staticmap <- ggplot(popunits_xy) +
   geom_text_repel(aes(label = population_name, x = lng, y = lat),
                   size = 2, force =  0.5) # Needs some tweaking - some labels off polygons
 staticmap # plot map
+# Get stamen basemap (terrain) - bbox extent larger than we need
+require(ggmap)
+stamenbc <- get_stamenmap(bbox = c(-139.658203,48.806863,-113.071289,60.261617),
+                          zoom = 7, maptype = "terrain-background", where = "/dev/stamen")
+# saveRDS(stamenbc, file = "/dev/stamen.Rds")
+# readRDS(stamenbc)
+plot(stamenbc)
+
+# Plot stamen map with terrain basemap
+static_ggmap <- ggmap(stamenbc) + # Generate new map
+  geom_sf(data = popunits_xy, aes(fill = status), inherit.aes = F, color = "white", size = 0.1) + # plot with boundary
+  theme_bw() + scale_fill_viridis(discrete = T, alpha = 0.3, option = "D", direction = -1) +
+  labs(title = "Conservation Status of Grizzly Bear Population Units in BC", fill = "Status") +
+  theme(plot.title = element_text(hjust = 0.5), axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        legend.background = element_rect(
+          fill = "lightgrey", size = 0.5, linetype = "solid", colour = "darkgrey"))
+#geom_text(aes(label = popunits_xy$population_name, x = popunits_xy$lng, y = popunits_xy$lat))
+plot(static_ggmap)
+
+# Clip + mask raster to BC boundary
+# stamenbc_crop <- raster::crop(stamenbc, bc_boundary)
 
 # Plot basic POPULATION estimate per management unit
 popplot <- ggplot(by_gbpu) +
