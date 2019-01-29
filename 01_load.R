@@ -15,7 +15,8 @@
 Packages <- c("sf", "tidyverse", "dplyr", "maptools", "devtools","bcmaps",
               "ggplot2", "leaflet", "rmapshaper", "jsonlite", "geojsonio",
               "mapview", "readr", "bcdata", "kableExtra", "envreportutils",
-              "viridis", "ggmap", "RColorBrewer", "ggspatial", "ggrepel", "svglite", "Cairo")
+              "viridis", "ggmap", "RColorBrewer", "ggspatial", "ggrepel",
+              "svglite", "Cairo", "purrr")
 lapply(Packages, library, character.only = TRUE)
 # devtools::install_github("dkahle/ggmap", force = T)
 
