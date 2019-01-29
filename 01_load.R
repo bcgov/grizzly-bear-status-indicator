@@ -44,7 +44,7 @@ bearmort_raw <- read_csv("https://catalogue.data.gov.bc.ca/dataset/4bc13aa2-80c9
 boundbc <- bc_bound()
 
 # Get biogeoclimatic zones
-bec <- bec()
+# bec <- bec()
 
 # Create bounding box
 # bc_bbox <- st_as_sfc(st_bbox(bc)) # convert to sfc
