@@ -22,7 +22,8 @@ staticmap <- ggplot(popunits_xy) +
   geom_text_repel(aes(label = population_name, x = lng, y = lat),
                   size = 2, force =  0.5) # Needs some tweaking - some labels off polygons
 staticmap # plot map
-# Get stamen basemap (terrain) - bbox extent larger than we need
+
+# Get stamen basemap (terrain)
 require(ggmap)
 stamenbc <- get_stamenmap(bbox = c(-139.658203,48.806863,-113.071289,60.261617),
                           zoom = 7, maptype = "terrain-background", where = "/dev/stamen")
