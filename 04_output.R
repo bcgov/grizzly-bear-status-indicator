@@ -50,9 +50,7 @@ Mortality <- function(mort_gbpu) {
     print(plot)
 
     # Save
-    #ggsave(plot, file = paste(results,
-     #                         'grizzly_graphs/',
-      #                        gbpu_list[i]), plot = image, width = 10, height = 8)
+    #ggsave(plot, file = paste0(gbpu_list[i]), ".svg")
 
   }
 }
