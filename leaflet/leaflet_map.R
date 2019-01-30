@@ -3,14 +3,17 @@
 ## --
 
 # Create custom icons
-pawicon <- makeIcon("/Users/JGALLOWA/AppData/Local//Temp/icons8-bear-footprint-filled-30-1.png",
-                    iconWidth = 24, iconHeight = 24)
+# pawicon <- makeIcon("/Users/JGALLOWA/AppData/Local//Temp/icons8-bear-footprint-filled-30-1.png",
+#                    iconWidth = 24, iconHeight = 24)
+paw <- makeAwesomeIcon(
+  icon = 'paw', library = "fa", markerColor = 'black', iconColor = 'white')
+plot(paw)
 tree <- makeAwesomeIcon(
-  icon = 'tree-conifer', library = 'glyphicon', markerColor = NULL,
+  icon = 'tree-conifer', library = 'glyphicon', markerColor = 'black',
   iconColor = 'white')
 
 # Prep - colour palettes
-factpal <- colorFactor(palette = 'magma', popunits$status) # Assign scheme -- to be replaced with SEO default
+factpal <- colorFactor(palette = 'magma', popunits_xy$status) # Assign scheme
 
 # Generate leaflet map showing conservation status of grizzly population units
 # Note: All years included
@@ -28,10 +31,9 @@ grizzmap <- leaflet() %>%
                 weight = 3,
                 color = "yellow",
                 bringToFront = T)) %>%
-  addMarkers(data = popunits_xy, lng = ~lng, lat = ~lat,
-             label = popunits_xy$population_name, icon = pawicon,
+  addAwesomeMarkers(data = popunits_xy, lng = ~lng, lat = ~lat,
+             label = popunits_xy$population_name, icon = tree,
              labelOptions = labelOptions(noHide = F, textOnly = F))
-
 grizzmap # View leaflet
 
 # Create custom icons - will need to be hosted on the web
