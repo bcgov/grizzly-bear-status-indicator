@@ -21,7 +21,6 @@ server <- function(input, output, session) {
       addMarkers(data = grizzdata, lng = ~lng, lat = ~lat,
                  label = grizzdata$population_name, icon = tree,
                  labelOptions = labelOptions(noHide = F, textOnly = F))
-    grizzmap
   })
 }
 
