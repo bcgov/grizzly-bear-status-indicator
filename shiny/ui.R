@@ -27,14 +27,18 @@ ui <- function() {
     navbarMenu("More",
                tabPanel("About"),
                tabPanel("Summary")),
-    tags$style(type = 'text/css',
+    tags$style(HTML(
                '.navbar { background-color: #003366;}',
                '.navbar-default .navbar-brand {color: white;}',
-               '.nav-tabs { background-color: #38598a;}',
-               '.nav navbar-nav li.active:hover a, .nav navbar-nav li.active a {
-               color: #fff !important;
-               background-color: #5475a7 !important;
+               '.navbar { border-bottom: 2px solid #fcba19;}',
+               '.navbar .nav-tabs { background-color: #5475a7;}',
+               '.tabbable > .nav > li > a { background-color: #5475a7; color: #fff }',
+               '.navbar-nav li a:hover, .navbar-nav > .active > a {
+                 color: #fff !important;
+                   background-color: #5475a7 !important;
+                   background-image: none !important;
                }'
-               )
+               ))
+  ))
   )
 }
