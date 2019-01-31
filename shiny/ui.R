@@ -39,6 +39,5 @@ ui <- function() {
                    background-image: none !important;
                }'
                ))
-  ))
   )
 }
