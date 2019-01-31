@@ -3,20 +3,6 @@
 #
 #    http://shiny.rstudio.com/
 #
-# Loading R libraries
-Packages <- c("tidyverse", "shiny", "devtools", "bcmaps",
-              "ggplot2", "leaflet", "rmapshaper", "viridis",
-              "bcdata", "envreportutils","ggspatial", "ggrepel")
-lapply(Packages, library, character.only = TRUE)
-
-# Load data
-grizzdata <- popunits_xy
-
-# Custom icon from 'www' reference file in shiny
-pawicon <- makeIcon("grizzly_paw_icon.png", iconWidth = 24, iconHeight = 24)
-
-# Custom icon from glyphicon
-tree <- icon("glyphicon-tree-conifer", lib = "glyphicon")
 
 # Basic UI
 ui <- navbarPage(title = div(img(src = "http://www2.gov.bc.ca/assets/gov/home/gov3_bc_logo.png"),
@@ -30,19 +16,25 @@ ui <- navbarPage(title = div(img(src = "http://www2.gov.bc.ca/assets/gov/home/go
 )
 
 # UI with custom CSS
-ui <- navbarPage(
-    title = div(img(src = "http://www2.gov.bc.ca/assets/gov/home/gov3_bc_logo.png"),
-                        "Grizzly Bear Conservation Status in British Columbia"),
-    tags$style(type = 'text/css', ' .navbar { background-color: #f2f2f2;
-               font.family = Arial;
-               font-size = 13px;
-               color: white }'),
+ui <- function() {
+  navbarPage(
+    title = div(img(src = "http://www2.gov.bc.ca/assets/gov/home/gov3_bc_logo.png",
+                    height = 30, style = "margin: 10 px 10 px"),
+                "Grizzly Bear Conservation Status in British Columbia"),
     tabPanel("Interactive Map"),
     tabPanel("Data Explorer"),
     mainPanel(leafletOutput(outputId = "grizzmap")),
     navbarMenu("More",
                tabPanel("About"),
-               tabPanel("Summary"))
-)
-
-
+               tabPanel("Summary")),
+    tags$style(type = 'text/css',
+               '.navbar { background-color: #003366;}',
+               '.navbar-default .navbar-brand {color: white;}',
+               '.nav-tabs { background-color: #38598a;}',
+               '.nav navbar-nav li.active:hover a, .nav navbar-nav li.active a {
+               color: #fff !important;
+               background-color: #5475a7 !important;
+               }'
+               )
+  )
+}
