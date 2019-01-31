@@ -28,8 +28,9 @@ ui <- function() {
                tabPanel("About"),
                tabPanel("Summary")),
     tags$style(HTML(
-               '.navbar { background-color: #003366;}',
-               '.navbar-default .navbar-brand {color: white;}',
+               '.navbar { background-color: #003366;}', # navbar background
+               '.navbar-default .navbar-brand {color: white; font.family: Calibri}', # navbar text col
+               '.navbar-default .navbar-nav > li > a {color:white}', #
                '.navbar { border-bottom: 2px solid #fcba19;}',
                '.navbar .nav-tabs { background-color: #5475a7;}',
                '.tabbable > .nav > li > a { background-color: #5475a7; color: #fff }',
@@ -41,3 +42,4 @@ ui <- function() {
                ))
   )
 }
+
