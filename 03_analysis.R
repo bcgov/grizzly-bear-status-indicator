@@ -14,7 +14,7 @@
 # pal <- c("Extirpated" = "firebrick2", "Threatened" = "yellow1", "Viable" = "forestgreen")
 
 # Build basic static map for grizzly popunits/status
-staticmap <- ggplot(popunits_xy) +
+staticmap <- ggplot(grizzdata_full) +
   geom_sf(aes(fill = status), color = "white", size = 0.1) +
   labs(title = "Conservation Status of Grizzly Bear Population Units in BC") +
   scale_fill_viridis(discrete = T, alpha = 0.8, direction = -1) +
@@ -33,7 +33,7 @@ plot(stamenbc)
 
 # Plot stamen map with terrain basemap
 static_ggmap <- ggmap(stamenbc) + # Generate new map
-  geom_sf(data = popunits_xy, aes(fill = status), inherit.aes = F, color = "white", size = 0.1) + # plot with boundary
+  geom_sf(data = grizzdata_full, aes(fill = status), inherit.aes = F, color = "white", size = 0.1) + # plot with boundary
   theme_bw() + scale_fill_viridis(discrete = T, alpha = 0.4, option = "magma") +
   labs(title = "Conservation Status of Grizzly Bear Population Units in BC", fill = "Status") +
   theme(plot.title = element_text(hjust = 0.5), axis.title.x = element_blank(),
@@ -69,7 +69,7 @@ densplot <- ggplot(by_gbpu) +
 densplot # Display plot
 
 # Build  static grizzly  density choropleth
-grizzlydensmap <- ggplot(popunits_xy) +
+grizzlydensmap <- ggplot(grizzdata_full) +
   geom_sf(aes(fill = pop_density)) +
   labs(title = "Grizzly Bear Population Density in British Columbia",
        fill = "Population Density") + # Legend title
@@ -84,7 +84,7 @@ grizzlydensmap <- ggplot(popunits_xy) +
 grizzlydensmap # plot map
 
 # Build static grizzly population choropleth
-grizzlypopmap <- ggplot(popunits_xy) +
+grizzlypopmap <- ggplot(grizzdata_full) +
   geom_sf(aes(fill = pop_estimate)) +
   labs(title = "Grizzly Bear Population Estimates for British Columbia",
        fill = "Population Estimate") +
