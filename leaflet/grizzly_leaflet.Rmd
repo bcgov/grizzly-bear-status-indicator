@@ -2,6 +2,8 @@
 output: 
 html_document:
   css: "assets/grizzleaflet_style.css"
+params:
+  add_popups: true
 ---
 <!--
 Copyright 2018 Province of British Columbia
@@ -21,7 +23,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r leaflet, include = FALSE}
 
 # # Loading R libraries
-Packages <- c("sf", "tidyverse", "maptools", "devtools","bcmaps",
+Packages <- c("sf", "tidyverse", "maptools", "devtools","bcmaps", "htmltools", "here",
               "ggplot2", "leaflet", "rmapshaper", "bcdata", "envreportutils","viridis")
 lapply(Packages, library, character.only = TRUE)
 
@@ -35,10 +37,8 @@ glimpse(grizzlypop_raw)
 
 
 # Simplify population unit polygons using mapshaper
-popunits_simplify <- ms_simplify(popunits, keep = 0.25) # reduce number of vertices
-
-# Change to lat/long (4326)
-popunits_simplify <- st_transform(popunits_simplify, crs = 4326)
+popunits_simplify <- ms_simplify(popunits, keep = 0.25) %>% # reduce number of vertices
+  st_transform(popunits_simplify, crs = 4326) # change projection
 
 # Drop unused metadata columns
 popunits_simplify <- select(popunits_simplify, -c(id, SE_ANNO_CAD_DATA, VERSION_YEAR_MODIFIED, OBJECTID))
@@ -57,16 +57,59 @@ popunits_xy <- cbind(popunits_simplify, popcoords) # cbind coords and polygons
 # Rename lat and lng columns
 popunits_xy <- rename(popunits_xy, lng = X)
 popunits_xy <- rename(popunits_xy, lat = Y)
-popunits_xy <- st_transform(popunits_xy, crs = 4326) # convert to lat/long
+
 
 # Set column names to lower case
-popunits_xy <- popunits_xy %>% rename_all(tolower)
-glimpse(popunits_xy) # View
+popunits_xy <- popunits_xy %>% rename_all(tolower) %>%
+  st_transform(popunits_xy, crs = 4326) # convert to lat/long
 
-# Generate leaflet map showing conservation status of grizzly population units
-grizzmap <- leaflet() %>%     # generate leaflet
+by_gbpu <- grizzlypop_raw %>%
+  group_by(GBPU) %>%
+  summarise(POP_ESTIMATE = sum(Estimate), POP_DENSITY = sum(Density)) %>% # Does this make sense to sum up density?
+  rename(POPULATION_NAME = GBPU) %>%
+  rename_all(tolower) # Set to lower case
+glimpse(by_gbpu)
+
+# Join population + density estimates
+popunits_xy <- left_join(popunits_xy, by_gbpu, by = "population_name")
+```
+
+# Setup
+``` {r, warning = FALSE}
+
+plot_list = list()
+if (params$add_popups) {
+  # get plot list 
+  plot_list <- readRDS(here("tmp/plotlist.rds"))[popunits_xy$population_name]
+}
+
+popupGraph_list <- imap(plot_list, ~ {
+    .x$barchart + 
+      .x$map +
+      plot_layout(widths = c(1, 1.5)) +
+      plot_annotation(title = tools::toTitleCase(tolower(.y)),
+                      theme = theme(title = element_text(size = 18)))
+  })
+  
+popups <-  popupGraph(popupGraph_list, type = "svg", width = 700,
+                        height = 400)
+popup_options <-  popupOptions(maxWidth = "100%", autoPan = TRUE,
+                                 keepInView = TRUE,
+                                 zoomAnimation = FALSE,
+                                 closeOnClick = TRUE,
+                                 autoPanPaddingTopLeft = c(120, 10),
+                                 autoPanPaddingBottomRight = c(10,10))
+} else {
+  popups <- popup_options <- NULL
+}
+```
+
+``` {r leaflet, warning = F}
+grizzmap <- leaflet() %>%   # generate leaflet map
   addProviderTiles(providers$Stamen.TerrainBackground, group = "Terrain") %>%
   addTiles(group = "OSM (Default") %>%
+  add_bc_home_button() %>%
+  set_bc_view_on_close() %>% # re-centre map on popup close
   addLegend("bottomright", pal = factpal, values = grizzdata$status,
             title = "Population Status",
             opacity = 1) %>%
@@ -84,15 +127,6 @@ grizzmap <- leaflet() %>%     # generate leaflet
              label = grizzdata$population_name, icon = tree,
              labelOptions = labelOptions(noHide = F, textOnly = F))
 grizzmap # View leaflet
-
-# In progress:
-#  addLabelOnlyMarkers(data = popunits_2012,
-#                      label = as.character(popunits_2012$POPULATION_NAME),
-#                      labelOptions = leaflet::labelOptions(
-#                        noHide = F,
-#                        direction = 'top',
-#                        textOnly = T,
-#                        opacity = 1))
 
 ```
 
