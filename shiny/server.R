@@ -19,7 +19,7 @@ server <- function(input, output, session) {
       addLayersControl(
         baseGroups = c("Terrain", "OSM (Default")) %>%
       addMarkers(data = grizzdata, lng = ~lng, lat = ~lat,
-                 label = grizzdata$population_name, icon = tree,
+                 label = grizzdata$population_name, icon = glyphtree,
                  labelOptions = labelOptions(noHide = F, textOnly = F))
   })
 }
