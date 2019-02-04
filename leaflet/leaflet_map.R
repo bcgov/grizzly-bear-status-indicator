@@ -1,6 +1,6 @@
-## --
+##**************
 ## LEAFLET
-## --
+##**************
 
 # Create custom icons
 tree <- makeAwesomeIcon(
@@ -10,13 +10,20 @@ tree <- makeAwesomeIcon(
 # Prep - colour palettes
 factpal <- colorFactor(palette = 'magma', popunits_xy$status) # Assign scheme
 
-# Generate leaflet map showing conservation status of grizzly population units
-# Note: All years included
-# Generate leaflet map showing conservation status of grizzly population units
+# Popups
+grizz_popup <- mutate(popup = )
 
-grizzmap <- leaflet() %>%     # generate leaflet
+
+#plot_list <- readr::write_rds(plot_list, "tmp/plotlist.rds")
+
+##********
+## SETUP
+##********
+grizzmap <- leaflet() %>%   # generate leaflet map
   addProviderTiles(providers$Stamen.TerrainBackground, group = "Terrain") %>%
   addTiles(group = "OSM (Default") %>%
+  add_bc_home_button() %>%
+  set_bc_view_on_close() %>% # re-centre map on popup close
   addLegend("bottomright", pal = factpal, values = grizzdata$status,
             title = "Population Status",
             opacity = 1) %>%
@@ -30,8 +37,8 @@ grizzmap <- leaflet() %>%     # generate leaflet
                 bringToFront = T)) %>%
   addLayersControl(
     baseGroups = c("Terrain", "OSM (Default")) %>%
-  addMarkers(data = grizzdata, lng = ~lng, lat = ~lat,
-             label = grizzdata$population_name, icon = tree,
-             labelOptions = labelOptions(noHide = F, textOnly = F))
+  addMarkers(data = grizzdata, group = "Population Unit",lng = ~lng, lat = ~lat,
+             label = ~population_name, icon = tree,
+             labelOptions = labelOptions(noHide = F, textOnly = F, sticky = F))
 grizzmap # View leaflet
 
