@@ -29,16 +29,16 @@ popcentroid <- st_transform(popcentroid, crs = 4326) # convert to lat/long
 popcoords <- st_coordinates(popcentroid) # changes to a matrix
 
 # Spatial join
-popunits_xy <- cbind(popunits_simplify, popcoords) # cbind coords and polygons
+grizzdata_full <- cbind(popunits_simplify, popcoords) # cbind coords and polygons
 
 # Rename lat and lng columns
-popunits_xy <- rename(popunits_xy, lng = X)
-popunits_xy <- rename(popunits_xy, lat = Y)
-popunits_xy <- st_transform(popunits_xy, crs = 4326) # convert to lat/long
+grizzdata_full <- rename(grizzdata_full, lng = X)
+grizzdata_full <- rename(grizzdata_full, lat = Y)
+grizzdata_full <- st_transform(grizzdata_full, crs = 4326) # convert to lat/long
 
 # Set column names to lower case
-popunits_xy <- popunits_xy %>% rename_all(tolower)
-glimpse(popunits_xy) # View
+grizzdata_full <- grizzdata_full %>% rename_all(tolower)
+glimpse(grizzdata_full) # View
 
 # Summarise total pop estimate per management unit
 by_gbpu <- grizzlypop_raw %>%
@@ -49,7 +49,7 @@ by_gbpu <- grizzlypop_raw %>%
 glimpse(by_gbpu)
 
 # Join population + density estimates
-popunits_xy <- left_join(popunits_xy, by_gbpu, by = "population_name")
+grizzdata_full <- left_join(grizzdata_full, by_gbpu, by = "population_name")
 
 ## --
 ## MORTALITY DATA CLEANING
