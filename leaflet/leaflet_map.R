@@ -10,12 +10,6 @@ tree <- makeAwesomeIcon(
 # Prep - colour palettes
 factpal <- colorFactor(palette = 'magma', popunits_xy$status) # Assign scheme
 
-# Popups
-grizz_popup <- mutate(popup = )
-
-
-#plot_list <- readr::write_rds(plot_list, "tmp/plotlist.rds")
-
 ##********
 ## SETUP
 ##********
