@@ -3,7 +3,7 @@
 ## --
 
 # Create custom icons
-glyphtree <- makeAwesomeIcon(
+tree <- makeAwesomeIcon(
   icon = 'tree-conifer', library = 'glyphicon', markerColor = 'black',
   iconColor = 'white')
 
@@ -13,40 +13,25 @@ factpal <- colorFactor(palette = 'magma', popunits_xy$status) # Assign scheme
 # Generate leaflet map showing conservation status of grizzly population units
 # Note: All years included
 # Generate leaflet map showing conservation status of grizzly population units
-grizzmap <- leaflet() %>%
-  addProviderTiles(providers$Stamen.TerrainBackground) %>%
-  addLegend("bottomright", pal = factpal, values = popunits_xy$status,
+
+grizzmap <- leaflet() %>%     # generate leaflet
+  addProviderTiles(providers$Stamen.TerrainBackground, group = "Terrain") %>%
+  addTiles(group = "OSM (Default") %>%
+  addLegend("bottomright", pal = factpal, values = grizzdata$status,
             title = "Population Status",
             opacity = 1) %>%
-  addPolygons(data = popunits_xy,
-              stroke = T, weight = 1, color = "white", # Add border to polygons
+  addPolygons(data = grizzdata,
+              stroke = T, weight = 1, color = "black", # Add border to polygons
               fillOpacity = 0.4, # Polygon fill
-              fillColor = ~factpal(popunits_xy$status),
+              fillColor = ~factpal(grizzdata$status),
               highlight = highlightOptions( # Highlight interaction for mouse hover
-                weight = 3,
+                weight = 4,
                 color = "yellow",
                 bringToFront = T)) %>%
-  addAwesomeMarkers(data = popunits_xy, lng = ~lng, lat = ~lat,
-             label = popunits_xy$population_name, icon = glyphtree,
+  addLayersControl(
+    baseGroups = c("Terrain", "OSM (Default")) %>%
+  addMarkers(data = grizzdata, lng = ~lng, lat = ~lat,
+             label = grizzdata$population_name, icon = tree,
              labelOptions = labelOptions(noHide = F, textOnly = F))
 grizzmap # View leaflet
-
-# Create custom icons - will need to be hosted on the web
-#xicon <- makeIcon("/Users/JGALLOWA/AppData/Local/Temp/x-square.svg",
-#                  iconWidth = 24,
-#                  iconHeight = 30)
-#circleicon <- makeIcon("/Users/JGALLOWA/AppData/Local/Temp/circle.svg",
-#                       iconWidth = 10,
-#                       iconHeight = 10)
-
-#   addLabelOnlyMarkers(data = grizzxy,
-#                      lng = ~lng, lat = ~lat,
-#                      label = as.character(grizzxy$DISPLAY_NAME),
-#                      labelOptions = leaflet::labelOptions(
-#                        noHide = F,
-#                        direction = "top",
-#                        opacity = 1
-#                       )
-#                     )
-
 
