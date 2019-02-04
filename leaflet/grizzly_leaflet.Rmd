@@ -1,6 +1,7 @@
 ---
-title: "Grizzly Bear Population Status in B.C."
-output: html_document
+output: 
+html_document:
+  css: "assets/grizzleaflet_style.css"
 ---
 <!--
 Copyright 2018 Province of British Columbia
@@ -13,7 +14,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and limitations under the License.
 -->
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
@@ -21,37 +22,68 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # # Loading R libraries
 Packages <- c("sf", "tidyverse", "maptools", "devtools","bcmaps",
-              "ggplot2", "leaflet", "rmapshaper", "jsonlite", "geojsonio",
-              "mapview", "readr", "bcdata", "envreportutils","viridis")
+              "ggplot2", "leaflet", "rmapshaper", "bcdata", "envreportutils","viridis")
 lapply(Packages, library, character.only = TRUE)
 
-# Get grizzly pop data
+# Load grizzly bear population unit polygons as an sf object
 popunits <- bcdc_get_geodata("grizzly-bear-population-units",
                              query = "VERSION_NAME='2012'")
-popunits_simple <- ms_simplify(popunits, keep = 0.25) # reduce number of vertices
+
+# Load grizzly 
+grizzlypop_raw <- read_csv("https://catalogue.data.gov.bc.ca/dataset/2bf91935-9158-4f77-9c2c-4310480e6c29/resource/4eca8c5c-ed25-46c1-835c-3d9f84b807e1/download/grizzlypopulationestimate2012.csv")
+glimpse(grizzlypop_raw)
+
+
+# Simplify population unit polygons using mapshaper
+popunits_simplify <- ms_simplify(popunits, keep = 0.25) # reduce number of vertices
 
 # Change to lat/long (4326)
-popunits_simple <- st_transform(popunits_simple, crs = 4326)
+popunits_simplify <- st_transform(popunits_simplify, crs = 4326)
 
-# Prep - colour palettes
-factpal <- colorFactor(palette = 'magma', popunits$STATUS) # Assign scheme -- to be replaced with SEO default?
+# Drop unused metadata columns
+popunits_simplify <- select(popunits_simplify, -c(id, SE_ANNO_CAD_DATA, VERSION_YEAR_MODIFIED, OBJECTID))
+
+# Find centroid of polygons (for labelling)
+# Note: 'popunits' w/ BC Albers CRS used because lat/long not accepted by st_centroid
+popcentroid <- st_centroid(popunits$geometry)
+popcentroid <- st_transform(popcentroid, crs = 4326) # convert to lat/long
+
+# Calculate coordinates for centroid of polygons
+popcoords <- st_coordinates(popcentroid) # changes to a matrix
+
+# Spatial join
+popunits_xy <- cbind(popunits_simplify, popcoords) # cbind coords and polygons
+
+# Rename lat and lng columns
+popunits_xy <- rename(popunits_xy, lng = X)
+popunits_xy <- rename(popunits_xy, lat = Y)
+popunits_xy <- st_transform(popunits_xy, crs = 4326) # convert to lat/long
+
+# Set column names to lower case
+popunits_xy <- popunits_xy %>% rename_all(tolower)
+glimpse(popunits_xy) # View
 
 # Generate leaflet map showing conservation status of grizzly population units
-# Note: All years included
-grizzmap <- leaflet() %>%
-  addProviderTiles(providers$Stamen.TerrainBackground) %>%
-  #addMarkers(data = popunits_simple, lng = ~ X, lat = ~Y, popup = popunits_simple$DISPLAY_NAME) %>%
-  addLegend("bottomright", pal = factpal, values = popunits_simple$STATUS,
+grizzmap <- leaflet() %>%     # generate leaflet
+  addProviderTiles(providers$Stamen.TerrainBackground, group = "Terrain") %>%
+  addTiles(group = "OSM (Default") %>%
+  addLegend("bottomright", pal = factpal, values = grizzdata$status,
             title = "Population Status",
             opacity = 1) %>%
-  addPolygons(data = popunits_simple,
-              stroke = T, weight = 1, color = "white", # Add border to polygons
+  addPolygons(data = grizzdata,
+              stroke = T, weight = 1, color = "black", # Add border to polygons
               fillOpacity = 0.4, # Polygon fill
-              fillColor = ~factpal(popunits_simple$STATUS),
+              fillColor = ~factpal(grizzdata$status),
               highlight = highlightOptions( # Highlight interaction for mouse hover
-                weight = 3,
+                weight = 4,
                 color = "yellow",
-                bringToFront = T))
+                bringToFront = T)) %>%
+  addLayersControl(
+    baseGroups = c("Terrain", "OSM (Default")) %>%
+  addMarkers(data = grizzdata, lng = ~lng, lat = ~lat,
+             label = grizzdata$population_name, icon = tree,
+             labelOptions = labelOptions(noHide = F, textOnly = F))
+grizzmap # View leaflet
 
 # In progress:
 #  addLabelOnlyMarkers(data = popunits_2012,
