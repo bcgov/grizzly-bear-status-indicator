@@ -3,7 +3,7 @@
 ## --
 
 # Create custom icons
-tree <- makeAwesomeIcon(
+glyphtree <- makeAwesomeIcon(
   icon = 'tree-conifer', library = 'glyphicon', markerColor = 'black',
   iconColor = 'white')
 
@@ -27,7 +27,7 @@ grizzmap <- leaflet() %>%
                 color = "yellow",
                 bringToFront = T)) %>%
   addAwesomeMarkers(data = popunits_xy, lng = ~lng, lat = ~lat,
-             label = popunits_xy$population_name, icon = tree,
+             label = popunits_xy$population_name, icon = glyphtree,
              labelOptions = labelOptions(noHide = F, textOnly = F))
 grizzmap # View leaflet
 
