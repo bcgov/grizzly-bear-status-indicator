@@ -106,11 +106,6 @@ mort_summary  <- bearmort %>%
   summarise(count = n())
 glimpse(mort_summary )
 
-# Create colour palette for all the plots
-chartFill <- brewer.pal(7, "Dark2")
-names(chartFill) <- levels(mort_summary $kill_code)
-plot.fillScale <- scale_fill_manual(values=chartFill)
-
 # Caption text
 caption.text <- paste("*Note that prior to 2004, road and rail kills",
                       " were not distinguished and were documented with",
