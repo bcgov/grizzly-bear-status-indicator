@@ -10,9 +10,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-##*******************
-## OPTION 1: FOR LOOP
-##*******************
+##
+## OPTION 1: FOR LOOP ---------------------------------------------------------
+##
 # Create list of grizzly  population unit names
 gbpu_names <- unique(mort_summary$gbpu_name)
 
@@ -49,12 +49,12 @@ Mortality <- function(mort_summary) {
                          legend.position = "bottom",
                          plot.caption = element_text(hjust = 0)) # Left-align caption
 
-    list(barchart = mortality_plot)
-
     ggsave(mortality_plot, file = paste0("out/", gbpu_names[i], ".svg"))
 
     # Print plots
     print(mortality_plot)
+
+    grizz_plotlist[[i]] <<- mortality_plot
 
   }
 }
@@ -62,9 +62,19 @@ Mortality <- function(mort_summary) {
 # Run graphing function
 Mortality(mort_summary)
 
-##******************************
-## OPTION TWO: BARCHART FUNCTION
-##******************************
+# Save list
+saveRDS(grizz_plotlist, file = "out/grizz_plotlist.rds")
+
+##
+## OPTION TWO --------------------------------------------------------------------
+##
+
+## imap plot list?
+plot_list <- imap(gbpu_names, ~ {
+  print(.y)
+  svgplots <- Mortality(mort_summary)
+  list(plots = svgplots)
+})
 
 # Create list of GBPU
 gbpu_list <- unique(mort_gbpu$gbpu_name)
