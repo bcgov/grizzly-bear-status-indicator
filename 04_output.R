@@ -13,19 +13,26 @@
 ##*******************
 ## OPTION 1: FOR LOOP
 ##*******************
+# Create list of grizzly  population unit names
+gbpu_names <- unique(mort_summary$gbpu_name)
+
+# Make list of grizzly plots
+grizz_plotlist <- vector("list", length(gbpu_names))
+names(grizz_plotlist) <- gbpu_names # Assign names to vector
+glimpse(grizz_plotlist)
 
 # Create plot function
-Mortality <- function(mort_gbpu) {
+Mortality <- function(mort_summary) {
 
   # Create list of GBPU
-  gbpu_list <- unique(mort_gbpu$gbpu_name)
+  gbpu_list <- unique(mort_summary$gbpu_name)
 
   # Create ggplot graph loop
   for (i in seq_along(gbpu_list)) {
 
     # Create plot for each GBPU
-    plot <-
-      ggplot(subset(mort_gbpu, mort_gbpu$gbpu_name == gbpu_list[i]),
+    mortality_plot <-
+      ggplot(subset(mort_summary, mort_summary$gbpu_name == gbpu_list[i]),
                     aes(x = hunt_year, y = count,
                         fill = kill_code)) +
                geom_bar(stat = "identity") + # Add bar for each year w/ fill = kill type
@@ -42,24 +49,18 @@ Mortality <- function(mort_gbpu) {
                          legend.position = "bottom",
                          plot.caption = element_text(hjust = 0)) # Left-align caption
 
-    plotlist <- c(plotlist, list(plot))
+    list(barchart = mortality_plot)
+
+    ggsave(mortality_plot, file = paste0("out/", gbpu_names[i], ".svg"))
 
     # Print plots
-    #print(plot)
-
-    barchartnames <- file.path('/out/', paste0(n, "_barchart.svg"))
-
-    # Save
-    svg_px(file = barchartnames, width = 500, height = 500)
+    print(mortality_plot)
 
   }
 }
 
-# Output list
-
-
 # Run graphing function
-Mortality(mort_gbpu)
+Mortality(mort_summary)
 
 ##******************************
 ## OPTION TWO: BARCHART FUNCTION
