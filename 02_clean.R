@@ -12,7 +12,6 @@
 
 # Simplify population unit polygons using mapshaper
 popunits_simplify <- ms_simplify(popunits, keep = 0.25) # reduce number of vertices
-plot(popunits_simplify[4]) # check the result for 'population name'
 
 # Change to lat/long (4326)
 popunits_simplify <- st_transform(popunits_simplify, crs = 4326)
