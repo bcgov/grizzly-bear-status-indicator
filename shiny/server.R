@@ -31,5 +31,5 @@ server <- function(input, output, session) {
 # Run the application
 runApp(shinyApp(ui = ui, server = server), launch.browser = TRUE)
 
-# run app with dash
-shinyApp(ui = ui_dash, server = server)
+# Run condensed version of ui (no header)
+shinyApp(ui = ui_embedded, server = server)
