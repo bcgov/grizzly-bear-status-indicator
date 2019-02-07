@@ -10,19 +10,17 @@ tree <- makeAwesomeIcon(
 # Prep - colour palettes
 factpal <- colorFactor(palette = 'magma', grizzdata_full$status) # Assign scheme
 
-# gbpu_plots <- st_read(here("./out"), stringsAsFactors = FALSE)))
-
 ## ------
 ## POPUPS
 ## -------
 grizz_plotlist <- readRDS(here("out/grizz_plotlist.rds"))[grizzdata_full$population_name]
-popups <-  popupGraph(grizz_plotlist, type = "svg", width = 700,
-                      height = 400)
+popups <-  popupGraph(grizz_plotlist, type = "svg", width = 500,
+                      height = 300)
 popup_options <-  popupOptions(maxWidth = "100%", autoPan = TRUE,
                                keepInView = TRUE,
                                closeOnClick = TRUE,
                                autoPanPaddingTopLeft = c(120, 10),
-                               autoPanPaddingBottomRight = c(10,10))
+                               autoPanPaddingBottomRight = c(120,10))
 require(htmltools)
 plotlabs <- sprintf(
   "<strong>%s</strong>",
@@ -37,6 +35,7 @@ grizzmap <- leaflet(grizzdata_full, width = "900px", height = "500px") %>%   # g
   addProviderTiles(providers$Stamen.TerrainBackground, group = "Terrain") %>%
   addTiles(group = "OSM (Default") %>%
   add_bc_home_button() %>%
+  set_bc_view() %>%
   set_bc_view_on_close() %>% # re-centre map on popup close
   addLegend("bottomright", pal = factpal, values = grizzdata_full$status,
             title = "Population Status",
