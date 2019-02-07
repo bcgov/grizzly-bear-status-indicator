@@ -54,7 +54,7 @@ Mortality <- function(mort_summary) {
     # Print plots
     print(mortality_plot)
 
-    grizz_plotlist[[i]] <<- mortality_plot
+    #grizz_plotlist[[i]] <<- mortality_plot
 
   }
 }
