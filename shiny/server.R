@@ -2,10 +2,11 @@
 server <- function(input, output, session) {
 
   output$grizzmap <- renderLeaflet({
-    grizzmap <- leaflet(grizzdata_full, width = "900px", height = "500px") %>%   # generate leaflet map
+    grizzmap <- leaflet(grizzdata_full) %>%   # generate leaflet map
       addProviderTiles(providers$Stamen.TerrainBackground, group = "Terrain") %>%
       addTiles(group = "OSM (Default") %>%
       add_bc_home_button() %>%
+      set_bc_view() %>%
       set_bc_view_on_close() %>% # re-centre map on popup close
       addLegend("bottomright", pal = factpal, values = grizzdata_full$status,
                 title = "Population Status",
@@ -18,14 +19,17 @@ server <- function(input, output, session) {
                   label = plotlabs,
                   labelOptions = labelOptions(direction = "auto", textsize = "12px"),
                   highlight = highlightOptions( # Highlight interaction for mouse hover
-                    weight = 4,
+                    weight = 3,
                     color = "yellow",
                     bringToFront = T)) %>%
       addLayersControl(
         baseGroups = c("Terrain", "OSM (Default"))
   })
+  leafletOutput('grizzmap', width = "100%")
 }
 
 # Run the application
-shinyApp(ui = ui, server = server)
+runApp(shinyApp(ui = ui, server = server), launch.browser = TRUE)
 
+# run app with dash
+shinyApp(ui = ui_dash, server = server)
