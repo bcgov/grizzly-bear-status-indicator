@@ -36,8 +36,9 @@ ui <- function() {
                '.navbar-default .navbar-brand {color: white; font.family: Arial}', # navbar text col
                '.navbar-default .navbar-nav > li > a {color:white}', # navbar text color
                '.navbar { border-bottom: 2px solid #fcba19;}',
-               '.navbar .nav-tabs { background-color: #5475a7;}',
+               '.navbar .nav-tabs { color: #fff, background-color: #5475a7;}',
                '.tabbable > .nav > li > a { background-color: #5475a7; color: #fff }',
+               '.dropdown-menu {color: white; }',
                '.navbar-nav li a:hover, .navbar-nav > .active > a {
                  color: #fff !important;
                    background-color: #5475a7 !important;
