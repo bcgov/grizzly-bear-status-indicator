@@ -8,7 +8,11 @@ tree <- makeAwesomeIcon(
   iconColor = 'white')
 
 # Prep - colour palettes
-factpal <- colorFactor(palette = 'magma', grizzdata_full$status) # Assign scheme
+factpal <- colorFactor(palette = 'viridis', grizzdata_full$status, reverse = TRUE) # Assign scheme
+
+# Additional palettes
+poppal <- colorBin(palette = "viridis", grizzdata_full$pop_estimate,
+                   pretty = TRUE, reverse = TRUE, na.color = "#808080")
 
 ## ------
 ## POPUPS
@@ -30,7 +34,6 @@ plotlabs <- sprintf(
 ## ------
 ## SETUP
 ## ------
-
 grizzmap <- leaflet(grizzdata_full, width = "900px", height = "500px") %>%   # generate leaflet map
   addProviderTiles(providers$Stamen.TerrainBackground, group = "Terrain") %>%
   addTiles(group = "OSM (Default") %>%
@@ -41,14 +44,14 @@ grizzmap <- leaflet(grizzdata_full, width = "900px", height = "500px") %>%   # g
             title = "Population Status",
             opacity = 1) %>%
   addPolygons(stroke = T, weight = 1, color = "black", # Add border to polygons
-              fillOpacity = 0.4, # Polygon fill
+              fillOpacity = 0.5, # Polygon fill
               fillColor = ~factpal(grizzdata_full$status),
               popup = popups,
               popupOptions = popup_options,
               label = plotlabs,
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
               highlight = highlightOptions( # Highlight interaction for mouse hover
-                weight = 4,
+                weight = 3,
                 color = "yellow",
                 bringToFront = T)) %>%
   addLayersControl(
