@@ -11,7 +11,7 @@
 # See the License for the specific language governing permissions and limitations under the License.
 
 
-# Loading R libraries
+# Loading R libraries ---------------------------------------------------
 Packages <- c("sf", "tidyverse", "dplyr", "maptools", "devtools","bcmaps",
               "ggplot2", "leaflet", "rmapshaper", "jsonlite", "geojsonio",
               "mapview", "readr", "bcdata", "kableExtra", "envreportutils",
@@ -20,9 +20,8 @@ Packages <- c("sf", "tidyverse", "dplyr", "maptools", "devtools","bcmaps",
 lapply(Packages, library, character.only = TRUE)
 # devtools::install_github("dkahle/ggmap", force = T)
 
-## --
-## Data Downloads
-## --
+##
+## Data Downloads -------------------------------------------------------
 
 ## Get British Columbia grizzly bear population unit boundaries from B.C. Data Catalogue
 ## from https://catalogue.data.gov.bc.ca/dataset/2bf91935-9158-4f77-9c2c-4310480e6c29
