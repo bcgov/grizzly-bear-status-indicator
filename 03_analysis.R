@@ -96,9 +96,8 @@ grizzlypopmap <- ggplot(grizzdata_full) +
                   size = 2, force =  0.5)
 grizzlypopmap # plot map
 
-## --
-## MORTALITY DATA
-## --
+##
+## PLOTTING MORTALITY DATA  -----------------------------------------------
 
 # Summarise # of bears killed per kill type + management unit
 mort_summary  <- bearmort %>%
