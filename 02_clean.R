@@ -10,6 +10,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
+## SPATIAL DATA CLEANING ---------------------------------------------------------
 # Simplify population unit polygons using mapshaper
 popunits_simplify <- ms_simplify(popunits, keep = 0.25) # reduce number of vertices
 
@@ -51,9 +52,8 @@ glimpse(by_gbpu)
 # Join population + density estimates
 grizzdata_full <- left_join(grizzdata_full, by_gbpu, by = "population_name")
 
-## --
-## MORTALITY DATA CLEANING
-## --
+##
+## MORTALITY DATA CLEANING -----------------------------------------------------
 
 # Mortality data - basic checks
 table(is.na(bearmort_raw$GBPU_NAME)) # check for NAs in name column
