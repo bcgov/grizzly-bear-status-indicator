@@ -62,7 +62,9 @@ Mortality <- function(mort_summary) {
 # Run graphing function
 Mortality(mort_summary)
 
+
 # Save list
+dir.create("out", showWarnings = FALSE)
 saveRDS(grizz_plotlist, file = "out/grizz_plotlist.rds")
 
 ##
