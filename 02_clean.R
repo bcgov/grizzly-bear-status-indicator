@@ -47,7 +47,10 @@ glimpse(grizzdata_full) # View
 # Summarise total pop estimate per management unit
 by_gbpu <- grizzlypop_raw %>%
   group_by(GBPU) %>%
-  summarise(POP_ESTIMATE = sum(Estimate), POP_DENSITY = sum(Density)) %>% # Does this make sense to sum up density?
+  summarise(POP_ESTIMATE = sum(Estimate),
+            Total_Area = sum(Total_Area),
+            # Recalculate Density (bears / 1000 km^2)
+            POP_DENSITY = round(POP_ESTIMATE / (Total_Area / 1000))) %>%
   rename(POPULATION_NAME = GBPU) %>%
   rename_all(tolower) # Set to lower case
 glimpse(by_gbpu)
