@@ -31,14 +31,17 @@ popcoords <- st_coordinates(popcentroid) # changes to a matrix
 # Spatial join
 grizzdata_full <- cbind(popunits_simplify, popcoords) # cbind coords and polygons
 
+
 # Rename lat and lng columns
 grizzdata_full <- rename(grizzdata_full, lng = X)
 grizzdata_full <- rename(grizzdata_full, lat = Y)
-grizzdata_full$population_name[grizzdata_full$population_name == " "] <- "Extirpated"
-grizzdata_full <- st_transform(grizzdata_full, crs = 4326) # convert to lat/long
 
 # Set column names to lower case
 grizzdata_full <- grizzdata_full %>% rename_all(tolower)
+
+grizzdata_full$population_name[grizzdata_full$population_name == " "] <- "Extirpated"
+grizzdata_full <- st_transform(grizzdata_full, crs = 4326) # convert to lat/long
+
 glimpse(grizzdata_full) # View
 
 # Summarise total pop estimate per management unit
