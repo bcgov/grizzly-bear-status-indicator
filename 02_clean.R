@@ -31,10 +31,10 @@ popcoords <- st_coordinates(popcentroid) # changes to a matrix
 # Spatial join
 grizzdata_full <- cbind(popunits_simplify, popcoords) # cbind coords and polygons
 
-
 # Rename lat and lng columns
 grizzdata_full <- rename(grizzdata_full, lng = X)
 grizzdata_full <- rename(grizzdata_full, lat = Y)
+## check below:
 <<<<<<< HEAD
 grizzdata_full <- st_transform(grizzdata_full, crs = 4326) # convert to lat/long
 =======
