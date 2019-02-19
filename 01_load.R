@@ -46,6 +46,6 @@ boundbc <- bc_bound()
 # bec <- bec()
 
 # Create bounding box
-# bc_bbox <- st_as_sfc(st_bbox(bc)) # convert to sfc
+# bc_bbox <- st_as_sfc(st_bbox(boundbc)) # convert to sfc
 # bc_bbox <- st_bbox(bc_bbox) # convert to bbox
 # bc_bbox
