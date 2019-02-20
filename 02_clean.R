@@ -34,11 +34,6 @@ grizzdata_full <- cbind(popunits_simplify, popcoords) # cbind coords and polygon
 # Rename lat and lng columns
 grizzdata_full <- rename(grizzdata_full, lng = X)
 grizzdata_full <- rename(grizzdata_full, lat = Y)
-## check below:
-<<<<<<< HEAD
-grizzdata_full <- st_transform(grizzdata_full, crs = 4326) # convert to lat/long
-=======
->>>>>>> 5a5f0a1cd0b7b13b86ae4fb5cbab338c09bcc250
 
 # Set column names to lower case
 grizzdata_full <- grizzdata_full %>% rename_all(tolower)
