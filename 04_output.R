@@ -12,86 +12,73 @@
 
 ## OPTION 1: FOR LOOP ---------------------------------------------------------
 ##
-# Create list of grizzly  population unit names
-gbpu_names <- unique(mort_summary$gbpu_name)
-
-# Make list of grizzly plots
-grizz_plotlist <- vector("list", length(gbpu_names))
-names(grizz_plotlist) <- gbpu_names # Assign names to vector
-glimpse(grizz_plotlist)
-
-# Create plot function
-Mortality <- function(mort_summary) {
-
-  # Create list of GBPU
-  gbpu_list <- unique(mort_summary$gbpu_name)
-
-  # Create ggplot graph loop
-  for (i in seq_along(gbpu_list)) {
-
-    # Create plot for each GBPU
-    mortality_plot <-
-      ggplot(subset(mort_summary, mort_summary$gbpu_name == gbpu_list[i]),
-                    aes(x = hunt_year, y = count,
-                        fill = kill_code)) +
-               geom_bar(stat = "identity") + # Add bar for each year w/ fill = kill type
-               scale_fill_brewer("Mortality Type", palette = "Set2") +
-               scale_x_continuous(breaks=seq(1970, 2017, by = 5)) +
-               labs(x = "Year", y = "Number of Grizzly Bears Killed",
-                    fill = "Mortality Type", caption = caption.text) + # Legend text
-               ggtitle(paste("Mortality History for the '"
-                             ,gbpu_list[i]
-                             , "' Population Unit"
-                             , ", 1976-2017"
-                             ,sep = "")) +
-      theme_bw() + theme(plot.title = element_text(hjust = 0.5), # Centre main title
-                         legend.position = "bottom",
-                         plot.caption = element_text(hjust = 0)) # Left-align caption
-
-    ggsave(mortality_plot, file = paste0("out/", gbpu_names[i], ".svg"))
-
-    # Print plots
-    print(mortality_plot)
-
-    #grizz_plotlist[[i]] <<- mortality_plot
-
-  }
-}
-
-# Run graphing function
-Mortality(mort_summary)
-
 
 # Save list
 dir.create("out", showWarnings = FALSE)
-saveRDS(grizz_plotlist, file = "out/grizz_plotlist.rds")
 
-##
-## OPTION TWO --------------------------------------------------------------------
-##
+# Create list of GBPU
+gbpu_list <- unique(mort_summary$gbpu_name)
 
-# Create list of grizzly  population unit names
-gbpu_names <- unique(mort_summary$gbpu_name)
+# Create plot function
+Mortality <- function(data, name) {
+  # Create plot for a single GBPU
+  mortality_plot <- ggplot(data, aes(x = hunt_year, y = count, fill = kill_code)) +
+    geom_bar(stat = "identity") + # Add bar for each year w/ fill = kill type
+    scale_fill_brewer("Mortality Type", palette = "Set2") +
+    scale_x_continuous(breaks=seq(1970, 2017, by = 5)) +
+    labs(x = "Year", y = "Number of Grizzly Bears Killed",
+         fill = "Mortality Type", caption = caption.text) + # Legend text
+    ggtitle(paste("Mortality History for the '"
+                  , name
+                  , "' Population Unit"
+                  , ", 1976-2017"
+                  ,sep = "")) +
+    theme_soe() + theme(plot.title = element_text(hjust = 0.5), # Centre main title
+                        legend.position = "bottom",
+                        plot.caption = element_text(hjust = 0)) # Left-align caption
+  mortality_plot
+}
 
-# Make list of grizzly plots
-grizz_plotlist <- vector("list", length(gbpu_names))
-names(grizz_plotlist) <- gbpu_names # Assign names to vector
-glimpse(grizz_plotlist)
+data_for_one <- subset(mort_summary, mort_summary$gbpu_name == gbpu_list[1])
 
-# using nest
+# Run graphing function
+Mortality(data_for_one, "Friday")
+
+plot_list <- vector(length = length(gbpu_list), mode = "list")
+names(plot_list) <- gbpu_list
+
+# Create ggplot graph loop
+plots <- for (n in gbpu_list) {
+  print(n)
+  data <- filter(mort_summary, gbpu_name == n)
+  # print(head(data))
+  p <- Mortality(data, n)
+  plot_list[[n]] <- p
+  ggsave(p, file = paste0("out/", n, ".svg"))
+}
+
+plot_list[["Babine"]]
+
+
 plots <- mort_summary %>%
   group_by(gbpu_name) %>%
   nest() %>%
-  mutate(plot = map2(data, gbpu_name, ~ggplot(data = .x) +
-                       ggtitle(.y) +
-                       geom_bar(aes(x = hunt_year, fill = kill_code)) + # Add bar for each year w/ fill = kill type
-                       scale_fill_brewer("Mortality Type", palette = "Set2") +
-                       scale_x_continuous(breaks=seq(1970, 2017, by = 5)) +
-                       labs(x = "Year", y = "Number of Grizzly Bears Killed",
-                            fill = "Mortality Type", caption = caption.text)))
-print(plots)
+  mutate(plot = map2(data, gbpu_name, ~Mortality(data = .x, name = .y)))
 
-# Save plots to vector (list)
-map2(paste0(grizz_plotlist, ".svg"), plots$plot, ggsave)
-print(grizz_plotlist)
-warnings()
+# Save plots to png
+map2(plots$gbpu_name, plots$plot, ~ggsave(paste0("out/", .x, "_new.png"), .y))
+
+save_svg <- function(x, fname, ...) {
+  svg_px(file = fname, ...)
+  plot(x)
+  dev.off()
+}
+
+
+# iwalk
+iwalk(plot_list, ~ save_svg(.x, fname = paste0("out/", .y, ".svg"),
+                            width = 600, height = 300))
+
+
+
+saveRDS(plot_list, file = "out/grizz_plotlist.rds")
