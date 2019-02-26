@@ -93,7 +93,7 @@ grizzlypopmap <- ggplot(grizzdata_full) +
                           axis.title.y = element_blank()) +
   scale_fill_viridis_c(trans = "sqrt", alpha = .5) +
   geom_text_repel(aes(label = population_name, x = lng, y = lat),
-                  size = 2, force =  0.5)
+                  size = 2, force = 0.5)
 grizzlypopmap # plot map
 
 ##
