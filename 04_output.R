@@ -10,19 +10,21 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-## OPTION 1: FOR LOOP ---------------------------------------------------------
-##
-
-# Save list
+# Write directory for plot outputs
 dir.create("out", showWarnings = FALSE)
 
 # Create list of GBPU
 gbpu_list <- unique(mort_summary$gbpu_name)
 
-# Create plot function
+# Create list for plots
+plot_list <- vector(length = length(gbpu_list), mode = "list")
+names(plot_list) <- gbpu_list
+
+# Create plotting function
 Mortality <- function(data, name) {
   # Create plot for a single GBPU
-  mortality_plot <- ggplot(data, aes(x = hunt_year, y = count, fill = kill_code)) +
+  mortality_plot <- ggplot(data, aes(x = hunt_year, y = count,
+                                     fill = kill_code)) +
     geom_bar(stat = "identity") + # Add bar for each year w/ fill = kill type
     scale_fill_brewer("Mortality Type", palette = "Set2") +
     scale_x_continuous(breaks=seq(1970, 2017, by = 5)) +
@@ -33,19 +35,11 @@ Mortality <- function(data, name) {
                   , "' Population Unit"
                   , ", 1976-2017"
                   ,sep = "")) +
-    theme_soe() + theme(plot.title = element_text(hjust = 0.5), # Centre main title
+    theme_soe() + theme(plot.title = element_text(hjust = 0.5), # Centre title
                         legend.position = "bottom",
-                        plot.caption = element_text(hjust = 0)) # Left-align caption
+                        plot.caption = element_text(hjust = 0)) # L-align caption
   mortality_plot
 }
-
-data_for_one <- subset(mort_summary, mort_summary$gbpu_name == gbpu_list[1])
-
-# Run graphing function
-Mortality(data_for_one, "Friday")
-
-plot_list <- vector(length = length(gbpu_list), mode = "list")
-names(plot_list) <- gbpu_list
 
 # Create ggplot graph loop
 plots <- for (n in gbpu_list) {
@@ -57,28 +51,19 @@ plots <- for (n in gbpu_list) {
   ggsave(p, file = paste0("out/", n, ".svg"))
 }
 
-plot_list[["Babine"]]
+# Check result
+plot_list[["Valhalla"]]
 
-
-plots <- mort_summary %>%
-  group_by(gbpu_name) %>%
-  nest() %>%
-  mutate(plot = map2(data, gbpu_name, ~Mortality(data = .x, name = .y)))
-
-# Save plots to png
-map2(plots$gbpu_name, plots$plot, ~ggsave(paste0("out/", .x, "_new.png"), .y))
-
+# Svg function
 save_svg <- function(x, fname, ...) {
   svg_px(file = fname, ...)
   plot(x)
   dev.off()
 }
 
-
-# iwalk
+# Save svgs to plot list
 iwalk(plot_list, ~ save_svg(.x, fname = paste0("out/", .y, ".svg"),
                             width = 600, height = 300))
 
-
-
+# Save plots to file
 saveRDS(plot_list, file = "out/grizz_plotlist.rds")
