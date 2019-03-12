@@ -51,6 +51,14 @@ plots <- for (n in gbpu_list) {
   ggsave(p, file = paste0("out/", n, ".svg"))
 }
 
+# Map call to replace above loop:
+plot_list <- map(gbpu_list, ~ {
+  data <- filter(mort_summary, gbpu_name == .x)
+  Mortality(data, .x)
+})
+# name list
+names(plot_list) <- gbpu_list
+
 # Check result
 plot_list[["Valhalla"]]
 
