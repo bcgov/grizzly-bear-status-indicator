@@ -20,6 +20,10 @@ Packages <- c("sf", "tidyverse", "dplyr", "maptools", "devtools","bcmaps",
 lapply(Packages, library, character.only = TRUE)
 # devtools::install_github("dkahle/ggmap", force = T)
 
+# Install envreportutils
+remotes::install_github("bcgov/envreportutils", force = T)
+library(envreportutils)
+
 ##
 ## Data Downloads -------------------------------------------------------
 
