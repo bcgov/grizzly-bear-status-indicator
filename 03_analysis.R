@@ -33,7 +33,7 @@ plot(stamenbc)
 
 # Plot stamen map with terrain basemap
 static_ggmap <- ggmap(stamenbc) + # Generate new map
-  geom_sf(data = grizzdata_full, aes(fill = status), inherit.aes = F, color = "white", size = 0.1) + # plot with boundary
+  geom_sf(data = grizzdata_full, aes(fill = status), inherit.aes = F, color = "black", size = 0.05) + # plot with boundary
   theme_bw() + scale_fill_viridis(discrete = T, alpha = 0.4, option = "magma") +
   labs(title = "Conservation Status of Grizzly Bear Population Units in BC", fill = "Status") +
   theme(plot.title = element_text(hjust = 0.5), axis.title.x = element_blank(),
@@ -93,7 +93,7 @@ grizzlypopmap <- ggplot(grizzdata_full) +
                           axis.title.y = element_blank()) +
   scale_fill_viridis_c(trans = "sqrt", alpha = .5) +
   geom_text_repel(aes(label = population_name, x = lng, y = lat),
-                  size = 2, force =  0.5)
+                  size = 2, force = 0.5)
 grizzlypopmap # plot map
 
 ##

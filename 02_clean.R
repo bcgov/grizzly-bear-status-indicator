@@ -18,7 +18,8 @@ popunits_simplify <- ms_simplify(popunits, keep = 0.25) # reduce number of verti
 popunits_simplify <- st_transform(popunits_simplify, crs = 4326)
 
 # Drop unused metadata columns
-popunits_simplify <- select(popunits_simplify, -c(id, SE_ANNO_CAD_DATA, VERSION_YEAR_MODIFIED, OBJECTID))
+popunits_simplify <- select(
+  popunits_simplify, -c(id, SE_ANNO_CAD_DATA, VERSION_YEAR_MODIFIED, OBJECTID))
 
 # Find centroid of polygons (for labelling)
 # Note: 'popunits' w/ BC Albers CRS used because lat/long not accepted by st_centroid
@@ -37,9 +38,8 @@ grizzdata_full <- rename(grizzdata_full, lat = Y)
 
 # Set column names to lower case
 grizzdata_full <- grizzdata_full %>% rename_all(tolower)
-
-grizzdata_full$population_name[grizzdata_full$population_name == " "] <- "Extirpated"
 grizzdata_full <- st_transform(grizzdata_full, crs = 4326) # convert to lat/long
+grizzdata_full$population_name[grizzdata_full$population_name == " "] <- "Extirpated"
 
 glimpse(grizzdata_full) # View
 
