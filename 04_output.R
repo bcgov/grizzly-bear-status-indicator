@@ -52,16 +52,8 @@ names(plot_list) <- gbpu_list
 # Check result
 plot_list[["Valhalla"]]
 
-# Svg function
-save_svg <- function(x, fname, ...) {
-  svg_px(file = fname, ...)
-  plot(x)
-  dev.off()
-}
-
 # Save svgs to plot list
-iwalk(plot_list, ~ save_svg(.x, fname = paste0("out/", .y, ".svg"),
+iwalk(plot_list, ~ save_svg_px(.x, file = paste0("out/", .y, ".svg"),
                             width = 600, height = 300))
-
 # Save plots to file
 saveRDS(plot_list, file = "out/grizz_plotlist.rds")
