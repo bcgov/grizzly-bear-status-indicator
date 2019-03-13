@@ -17,7 +17,7 @@
 staticmap <- ggplot(grizzdata_full) +
   geom_sf(aes(fill = status), color = "white", size = 0.1) +
   labs(title = "Conservation Status of Grizzly Bear Population Units in BC") +
-  scale_fill_viridis(discrete = T, alpha = 0.8, direction = -1) +
+  scale_fill_viridis(discrete = T, alpha = 0.8, option = "cividis", direction = -1) +
   theme_minimal() +
   geom_text_repel(aes(label = population_name, x = lng, y = lat),
                   size = 2, force =  0.5) # Needs some tweaking - some labels off polygons
