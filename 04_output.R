@@ -41,16 +41,6 @@ Mortality <- function(data, name) {
   mortality_plot
 }
 
-# Create ggplot graph loop
-plots <- for (n in gbpu_list) {
-  print(n)
-  data <- filter(mort_summary, gbpu_name == n)
-  # print(head(data))
-  p <- Mortality(data, n)
-  plot_list[[n]] <- p
-  ggsave(p, file = paste0("out/", n, ".svg"))
-}
-
 # Map call to replace above loop:
 plot_list <- map(gbpu_list, ~ {
   data <- filter(mort_summary, gbpu_name == .x)
