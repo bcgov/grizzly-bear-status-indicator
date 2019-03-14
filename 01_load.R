@@ -21,8 +21,7 @@ lapply(Packages, library, character.only = TRUE)
 # devtools::install_github("dkahle/ggmap", force = T)
 
 # Install envreportutils
-remotes::install_github("bcgov/envreportutils", force = T)
-library(envreportutils)
+# remotes::install_github("bcgov/envreportutils", force = T)
 
 ##
 ## Data Downloads -------------------------------------------------------
@@ -36,7 +35,7 @@ library(envreportutils)
 grizzlypop_raw <- read_csv("https://catalogue.data.gov.bc.ca/dataset/2bf91935-9158-4f77-9c2c-4310480e6c29/resource/4eca8c5c-ed25-46c1-835c-3d9f84b807e1/download/grizzlypopulationestimate2012.csv")
 glimpse(grizzlypop_raw)
 
-# Load grizzly bear population units as an sf object using `bcdc_map`
+# Load grizzly bear population units as an sf object
 popunits <- bcdc_get_geodata("grizzly-bear-population-units",
                              query = "VERSION_NAME='2012'")
 
