@@ -57,6 +57,17 @@ glimpse(by_gbpu)
 # Join population + density estimates
 grizzdata_full <- left_join(grizzdata_full, by_gbpu, by = "population_name")
 
+# Classify overlapping GBPUs
+## FROM 2012 CODE:
+## For each MU that spans >1 GBPU, calculate the proportion in each GBPU.
+## Wrapping the calculation in data.frame allows naming of the new column
+## (for some unknown reason it doesn't name it otherwise)
+MU_GBPU.df <- ddply(MU_GBPU.df, .(ZONE_ID, ZONE_NAME, MU)
+                    , function(x) ddply(x, .(GBPU_ID, GBPU_NAME, Area_ha)
+                                        , function(y)
+                                          data.frame(PROP_MU = y$Area_ha/
+                                                       sum(x$Area_ha))))
+
 ##
 ## MORTALITY DATA CLEANING -----------------------------------------------------
 
