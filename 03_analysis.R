@@ -16,11 +16,16 @@
 # Build basic static map for grizzly popunits/status
 staticmap <- ggplot(grizzdata_full) +
   geom_sf(aes(fill = status), color = "white", size = 0.1) +
-  labs(title = "Conservation Status of Grizzly Bear Population Units in BC") +
+  labs(title = "Conservation Status of Grizzly Bear Population Units in BC", col = "Conservation Status") +
   scale_fill_viridis(discrete = T, alpha = 0.8, option = "cividis", direction = -1) +
-  theme_soe() +
-  geom_text_repel(aes(label = population_name, x = lng, y = lat),
-                  size = 2, force =  0.5) # Needs some tweaking - some labels off polygons
+  theme_soe() + theme(plot.title = element_text(hjust = 0.5), axis.title.x = element_blank(),
+                      axis.title.y = element_blank(),
+                      legend.background = element_rect(
+                        fill = "lightgrey", size = 0.5, linetype = "solid", colour = "darkgrey")) +
+  geom_text(aes(label = grizzdata_full$gbpu_name, x = grizzdata_full$lng,
+                y = grizzdata_full$lat), size = 2, check_overlap = T)
+  #geom_text_repel(aes(label = gbpu_name, x = lng, y = lat),
+                  #size = 2, force =  0.5) # Needs some tweaking - some labels off polygons
 staticmap # plot map
 
 # Get stamen basemap (terrain)
@@ -40,7 +45,7 @@ static_ggmap <- ggmap(stamenbc) + # Generate new map
         axis.title.y = element_blank(),
         legend.background = element_rect(
           fill = "lightgrey", size = 0.5, linetype = "solid", colour = "darkgrey"))
-#geom_text(aes(label = popunits_xy$population_name, x = popunits_xy$lng, y = popunits_xy$lat))
+  #geom_text(aes(label = grizzdata_full$gbpu_name, x = grizzdata_full$lng, y = grizzdata_full$lat))
 plot(static_ggmap)
 
 # Clip + mask raster to BC boundary
@@ -48,7 +53,7 @@ plot(static_ggmap)
 
 # Plot basic POPULATION estimate per management unit
 popplot <- ggplot(by_gbpu) +
-  geom_col(aes(x = reorder(population_name, -pop_estimate), y = pop_estimate)) +
+  geom_col(aes(x = reorder(gbpu_name, -pop_estimate), y = pop_estimate)) +
   theme_soe() +
   scale_y_continuous("Population Estimate") +
   scale_x_discrete("Population Unit") +
@@ -59,7 +64,7 @@ popplot # Display plot
 
 # Plot basic DENSITY estimate per management unit
 densplot <- ggplot(by_gbpu) +
-  geom_col(aes(x = reorder(population_name, -pop_density), y = pop_density)) +
+  geom_col(aes(x = reorder(gbpu_name, -pop_density), y = pop_density)) +
   theme_soe() +
   scale_y_continuous("Population Density Estimate") +
   scale_x_discrete("Population Unit") +
@@ -77,9 +82,9 @@ grizzlydensmap <- ggplot(grizzdata_full) +
                           axis.title.x = element_blank(), # Remove xy labels
                           axis.title.y = element_blank()) +
   scale_fill_viridis_c(trans = "sqrt", alpha = .5) + # Set colour (viridis)
-  geom_text_repel(aes(label = population_name, x = lng, y = lat),
+  geom_text_repel(aes(label = gbpu_name, x = lng, y = lat),
                   size = 2, force =  0.5) # Offset labels
-  #geom_text(aes(label = POPULATION_NAME, x = lng, y = lat),
+  #geom_text(aes(label = gbpu_name, x = lng, y = lat),
             #position = position_dodge(width = 0.8), size = 3) # Needs some tweaking - some labels off polygons
 grizzlydensmap # plot map
 
@@ -92,19 +97,12 @@ grizzlypopmap <- ggplot(grizzdata_full) +
                           axis.title.x = element_blank(),
                           axis.title.y = element_blank()) +
   scale_fill_viridis_c(trans = "sqrt", alpha = .5) +
-  geom_text_repel(aes(label = population_name, x = lng, y = lat),
+  geom_text_repel(aes(label = gbpu_name, x = lng, y = lat),
                   size = 2, force = 0.5)
 grizzlypopmap # plot map
 
 ##
 ## PLOTTING MORTALITY DATA  -----------------------------------------------
-
-# Summarise # of bears killed per kill type + management unit
-mort_summary  <- bearmort %>%
-  group_by(gbpu_name, kill_code, hunt_year) %>%
-  summarise(count = n())
-glimpse(mort_summary )
-
 # Caption text
 caption.text <- paste("*Note that prior to 2004, road and rail kills",
                       " were not distinguished and were documented with",
