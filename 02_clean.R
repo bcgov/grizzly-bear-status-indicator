@@ -50,14 +50,19 @@ by_gbpu <- grizzlypop_raw %>%
             Total_Area = sum(Total_Area),
             # Recalculate Density (bears / 1000 km^2)
             POP_DENSITY = round(POP_ESTIMATE / (Total_Area / 1000))) %>%
-  rename(POPULATION_NAME = GBPU) %>%
+  rename(gbpu_name = GBPU) %>%
   rename_all(tolower) # Set to lower case
 glimpse(by_gbpu)
 
 # Join population + density estimates
 grizzdata_full <- left_join(grizzdata_full, by_gbpu, by = "population_name")
 
-# Classify overlapping GBPUs
+# Rename 'population name' column
+grizzdata_full <- grizzdata_full %>%
+  rename(gbpu_name = population_name)
+grizzdata_full <- left_join(grizzdata_full, mort_summary, by = "gbpu_name")
+
+## Classify overlapping GBPUs
 ## FROM 2012 CODE:
 ## For each MU that spans >1 GBPU, calculate the proportion in each GBPU.
 ## Wrapping the calculation in data.frame allows naming of the new column
