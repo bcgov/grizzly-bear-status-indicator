@@ -43,6 +43,10 @@ grizzdata_full$population_name[grizzdata_full$population_name == " "] <- "Extirp
 
 glimpse(grizzdata_full) # View
 
+# Rename 'population name' column
+grizzdata_full <- grizzdata_full %>%
+  rename(gbpu_name = population_name)
+
 # Summarise total pop estimate per management unit
 by_gbpu <- grizzlypop_raw %>%
   group_by(GBPU) %>%
@@ -53,25 +57,6 @@ by_gbpu <- grizzlypop_raw %>%
   rename(gbpu_name = GBPU) %>%
   rename_all(tolower) # Set to lower case
 glimpse(by_gbpu)
-
-# Join population + density estimates
-grizzdata_full <- left_join(grizzdata_full, by_gbpu, by = "population_name")
-
-# Rename 'population name' column
-grizzdata_full <- grizzdata_full %>%
-  rename(gbpu_name = population_name)
-grizzdata_full <- left_join(grizzdata_full, mort_summary, by = "gbpu_name")
-
-## Classify overlapping GBPUs
-## FROM 2012 CODE:
-## For each MU that spans >1 GBPU, calculate the proportion in each GBPU.
-## Wrapping the calculation in data.frame allows naming of the new column
-## (for some unknown reason it doesn't name it otherwise)
-MU_GBPU.df <- ddply(MU_GBPU.df, .(ZONE_ID, ZONE_NAME, MU)
-                    , function(x) ddply(x, .(GBPU_ID, GBPU_NAME, Area_ha)
-                                        , function(y)
-                                          data.frame(PROP_MU = y$Area_ha/
-                                                       sum(x$Area_ha))))
 
 ##
 ## MORTALITY DATA CLEANING -----------------------------------------------------
@@ -89,3 +74,26 @@ bearmort$gbpu_name[ bearmort$gbpu_name == "NA - extirpated"] <- "Extirpated" # R
 
 # Make list of names for new df
 gbpu_cleanlist <- bearmort %>% distinct(gbpu_name)
+
+## Clean mortality dataset ----------------------------------------------------
+# Summarise # of bears killed per kill type + management unit
+mort_summary  <- bearmort %>%
+  group_by(gbpu_name, kill_code, hunt_year) %>%
+  summarise(count = n())
+glimpse(mort_summary )
+
+# Join population + density estimates
+grizzdata_full <- left_join(grizzdata_full, by_gbpu, by = "gbpu_name")
+# grizzdata_full <- left_join(grizzdata_full, mort_summary, by = "gbpu_name")
+
+## Classify overlapping GBPUs
+## FROM 2012 CODE:
+## For each MU that spans >1 GBPU, calculate the proportion in each GBPU.
+## Wrapping the calculation in data.frame allows naming of the new column
+## (for some unknown reason it doesn't name it otherwise)
+MU_GBPU.df <- ddply(MU_GBPU.df, .(ZONE_ID, ZONE_NAME, MU)
+                    , function(x) ddply(x, .(GBPU_ID, GBPU_NAME, Area_ha)
+                                        , function(y)
+                                          data.frame(PROP_MU = y$Area_ha/
+                                                       sum(x$Area_ha))))
+
