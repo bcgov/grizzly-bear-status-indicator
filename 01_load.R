@@ -31,16 +31,11 @@ lapply(Packages, library, character.only = TRUE)
 ## Data is released under the Open Government Licence - British Columbia
 ## https://www2.gov.bc.ca/gov/content?id=A519A56BC2BF44E4A008B33FCF527F61
 
-# Get grizzly pop estimate data (2012)
-grizzlypop_raw <- read_csv("https://catalogue.data.gov.bc.ca/dataset/2bf91935-9158-4f77-9c2c-4310480e6c29/resource/4eca8c5c-ed25-46c1-835c-3d9f84b807e1/download/grizzlypopulationestimate2012.csv")
-glimpse(grizzlypop_raw)
-
 # Load grizzly bear population units as an sf object
 popunits <- bcdc_get_geodata("grizzly-bear-population-units",
                              query = "VERSION_NAME='2012'")
-
-# Get grizzly mortality data
-bearmort_raw <- read_csv("https://catalogue.data.gov.bc.ca/dataset/4bc13aa2-80c9-441b-8f46-0b9574109b93/resource/c5fc42c7-67d3-4669-b281-61dc50fdef22/download/grizzlybearmortalityhistory_1976_2017.csv")
+bcdc_search("grizzly")
+hab_class <- bcdc_get_record("dba6c78a-1bc1-4d4f-b75c-96b5b0e7fd30")
 
 # Get BC boundary
 boundbc <- bc_bound()
