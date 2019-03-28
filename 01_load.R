@@ -31,11 +31,18 @@ lapply(Packages, library, character.only = TRUE)
 ## Data is released under the Open Government Licence - British Columbia
 ## https://www2.gov.bc.ca/gov/content?id=A519A56BC2BF44E4A008B33FCF527F61
 
-# Load grizzly bear population units as an sf object
-popunits <- bcdc_get_geodata("grizzly-bear-population-units",
-                             query = "VERSION_NAME='2012'")
+# Input grizzly bear threat calculator data - not yet in databc
+class(Threat_Calc) #df
+threat_calc <- as_tibble(Threat_Calc) %>%
+  rename_all(tolower) #%>%
+  rename(threat_calc, ï..gbpu_name = gbpu_name) # column headers import strangely
+
 bcdc_search("grizzly")
 hab_class <- bcdc_get_record("dba6c78a-1bc1-4d4f-b75c-96b5b0e7fd30")
+
+# Returns an HTTP 404 error
+hab_class <- bcdc_get_data("bc-grizzly-bear-habitat-classification-and-rating")
+hab_class <- bcdc_get_data("dba6c78a-1bc1-4d4f-b75c-96b5b0e7fd30")
 
 # Get BC boundary
 boundbc <- bc_bound()
