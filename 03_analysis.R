@@ -18,8 +18,8 @@ staticmap <- ggplot(grizzdata_full) +
   geom_sf(aes(fill = rankcode), color = "white", size = 0.1) +
   labs(title = "Conservation Status of Grizzly Bear Population Units in BC",
        col = "Conservation Rank") +
-  scale_fill_viridis(discrete = T, alpha = 0.8, option = "viridis",
-                     direction = -1, na.value = "darkgrey") +
+  scale_fill_viridis(trans = "sqrt", alpha = 0.5, discrete = T,
+                     option = "viridis", direction = -1, na.value = "darkgrey") +
   theme_soe() + theme(plot.title = element_text(hjust = 0.5),
                       axis.title.x = element_blank(),
                       axis.title.y = element_blank(),
@@ -43,7 +43,8 @@ static_ggmap <- ggmap(stamenbc) + # Generate new map
   geom_sf(data = grizzdata_full, aes(fill = rankcode), inherit.aes = F,
           color = "white", size = 0.01) + # plot with boundary
   theme_soe() + scale_fill_viridis(discrete = T, alpha = 0.5,
-                                   option = "viridis", direction = -1) +
+                                   option = "viridis", direction = -1,
+                                   na.value = "darkgrey") +
   labs(title = "Conservation Status of Grizzly Bear Population Units in BC",
        fill = "Rank Code") +
   theme(plot.title = element_text(hjust = 0.5), axis.title.x = element_blank(),
@@ -77,7 +78,7 @@ grizzlypopmap <- ggplot(grizzdata_full) +
   theme_minimal() + theme(plot.title = element_text(hjust = 0.5),
                           axis.title.x = element_blank(),
                           axis.title.y = element_blank()) +
-  scale_fill_viridis_c(trans = "sqrt", alpha = .5) +
+  scale_fill_viridis_c(trans = "sqrt", alpha = .5, na.value = "darkgrey") +
   geom_text_repel(aes(label = gbpu_name, x = lng, y = lat),
                   size = 2, force = 0.3)
 grizzlypopmap # plot map
