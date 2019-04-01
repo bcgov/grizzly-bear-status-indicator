@@ -19,7 +19,7 @@ popunits_simplify <- st_transform(popunits_simplify, crs = 4326)
 
 # Drop unused metadata columns
 popunits_simplify <- select(
-  popunits_simplify, -c(id, SE_ANNO_CAD_DATA, VERSION_YEAR_MODIFIED, OBJECTID))
+  popunits_simplify, -c(id, SE_ANNO_CAD_DATA, VERSION_YEAR_MODIFIED, OBJECTID, DISPLAY_NAME))
 
 # Find centroid of polygons (for labelling)
 # Note: 'popunits' w/ BC Albers CRS used because lat/long not accepted by st_centroid
@@ -47,6 +47,10 @@ glimpse(grizzdata_full) # View
 grizzdata_full <- grizzdata_full %>%
   rename(gbpu_name = population_name)
 
+# Join GBPU polygons (popunits) and threat classification data
+grizzdata_full <- left_join(grizzdata_full, threat_calc, by = "gbpu_name")
+
+# Not to be used in new version unless needed:
 # Summarise total pop estimate per management unit
 by_gbpu <- grizzlypop_raw %>%
   group_by(GBPU) %>%
@@ -57,3 +61,6 @@ by_gbpu <- grizzlypop_raw %>%
   rename(gbpu_name = GBPU) %>%
   rename_all(tolower) # Set to lower case
 glimpse(by_gbpu)
+
+
+
