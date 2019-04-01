@@ -22,7 +22,8 @@ transport_map <- ggplot(grizzdata_full) +
                       axis.title.x = element_blank(),
                       axis.title.y = element_blank(),
                       legend.background = element_rect(
-                        fill = "lightgrey", size = 0.5, linetype = "solid", colour = "darkgrey")) +
+                        fill = "lightgrey", size = 0.5,
+                        linetype = "solid", colour = "darkgrey")) +
   geom_text(aes(label = grizzdata_full$gbpu_name, x = grizzdata_full$lng,
                 y = grizzdata_full$lat), size = 2, check_overlap = T)
 transport_map
