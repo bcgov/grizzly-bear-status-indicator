@@ -13,7 +13,7 @@
 # Create colour palette for future mapping (not currently used)
 # pal <- c("Extirpated" = "firebrick2", "Threatened" = "yellow1", "Viable" = "forestgreen")
 
-# Build basic static map for grizzly popunits/status
+## STATIC MAPPING -------------------------------------------------------------
 staticmap <- ggplot(grizzdata_full) +
   geom_sf(aes(fill = rankcode), color = "white", size = 0.1) +
   labs(title = "Conservation Status of Grizzly Bear Population Units in BC",
@@ -41,7 +41,7 @@ plot(stamenbc)
 static_ggmap <- ggmap(stamenbc) + # Generate new map
   geom_sf(data = grizzdata_full, aes(fill = rankcode), inherit.aes = F,
           color = "white", size = 0.01) + # plot with boundary
-  theme_soe() + scale_fill_viridis(discrete = T, alpha = 0.4,
+  theme_soe() + scale_fill_viridis(discrete = T, alpha = 0.5,
                                    option = "viridis", direction = -1) +
   labs(title = "Conservation Status of Grizzly Bear Population Units in BC",
        fill = "Rank Code") +
@@ -56,6 +56,7 @@ plot(static_ggmap)
 # Clip + mask raster to BC boundary
 # stamenbc_crop <- raster::crop(stamenbc, bc_boundary)
 
+## POPULATION ESTIMATE MAPPING ------------------------------------------------
 # Plot basic POPULATION estimate per management unit
 popplot <- ggplot(grizzdata_full) +
   geom_col(aes(x = reorder(gbpu_name, -adults), y = adults)) +
@@ -66,17 +67,6 @@ popplot <- ggplot(grizzdata_full) +
   ggtitle("Grizzly Bear Population Estimate per Unit") +
   theme(plot.title = element_text(hjust = 0.5))
 popplot # Display plot
-
-# Plot basic DENSITY estimate per management unit
-densplot <- ggplot(by_gbpu) +
-  geom_col(aes(x = reorder(gbpu_name, -pop_density), y = pop_density)) +
-  theme_soe() +
-  scale_y_continuous("Population Density Estimate") +
-  scale_x_discrete("Population Unit") +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0)) + # rotate labels
-  ggtitle("Grizzly Bear Population Density Estimate per Unit") +
-  theme(plot.title = element_text(hjust = 0.5))
-densplot # Display plot
 
 # Build static grizzly population choropleth
 grizzlypopmap <- ggplot(grizzdata_full) +
@@ -91,6 +81,7 @@ grizzlypopmap <- ggplot(grizzdata_full) +
                   size = 2, force = 0.5)
 grizzlypopmap # plot map
 
+## POPULATION DENSITY MAPPING: May not be needed for updated version ----------
 # Build  static grizzly  density choropleth
 grizzlydensmap <- ggplot(grizzdata_full) +
   geom_sf(aes(fill = pop_density)) +
@@ -105,3 +96,14 @@ grizzlydensmap <- ggplot(grizzdata_full) +
 #geom_text(aes(label = gbpu_name, x = lng, y = lat),
 #position = position_dodge(width = 0.8), size = 3) # Needs some tweaking - some labels off polygons
 grizzlydensmap # plot map
+
+# Plot basic density estimate per management unit
+densplot <- ggplot(by_gbpu) +
+  geom_col(aes(x = reorder(gbpu_name, -pop_density), y = pop_density)) +
+  theme_soe() +
+  scale_y_continuous("Population Density Estimate") +
+  scale_x_discrete("Population Unit") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0)) + # rotate labels
+  ggtitle("Grizzly Bear Population Density Estimate per Unit") +
+  theme(plot.title = element_text(hjust = 0.5))
+densplot # Display plot
