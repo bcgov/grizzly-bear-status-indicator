@@ -15,10 +15,12 @@
 
 # Build basic static map for grizzly popunits/status
 staticmap <- ggplot(grizzdata_full) +
-  geom_sf(aes(fill = status), color = "white", size = 0.1) +
-  labs(title = "Conservation Status of Grizzly Bear Population Units in BC", col = "Conservation Status") +
+  geom_sf(aes(fill = rankcode), color = "white", size = 0.1) +
+  labs(title = "Conservation Status of Grizzly Bear Population Units in BC",
+       col = "Conservation Rank") +
   scale_fill_viridis(discrete = T, alpha = 0.8, option = "cividis", direction = -1) +
-  theme_soe() + theme(plot.title = element_text(hjust = 0.5), axis.title.x = element_blank(),
+  theme_soe() + theme(plot.title = element_text(hjust = 0.5),
+                      axis.title.x = element_blank(),
                       axis.title.y = element_blank(),
                       legend.background = element_rect(
                         fill = "lightgrey", size = 0.5, linetype = "solid", colour = "darkgrey")) +
@@ -29,7 +31,6 @@ staticmap <- ggplot(grizzdata_full) +
 staticmap # plot map
 
 # Get stamen basemap (terrain)
-require(ggmap)
 stamenbc <- get_stamenmap(bbox = c(-139.658203,48.806863,-113.071289,60.261617),
                           zoom = 7, maptype = "terrain-background", where = "/dev/stamen/")
 # saveRDS(stamenbc, file = "/dev/stamen.Rds")
