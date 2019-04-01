@@ -39,7 +39,6 @@ grizzdata_full <- rename(grizzdata_full, lat = Y)
 # Set column names to lower case
 grizzdata_full <- grizzdata_full %>% rename_all(tolower)
 grizzdata_full <- st_transform(grizzdata_full, crs = 4326) # convert to lat/long
-grizzdata_full$population_name[grizzdata_full$population_name == " "] <- "Extirpated"
 
 glimpse(grizzdata_full) # View
 
