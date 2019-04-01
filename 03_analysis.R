@@ -105,31 +105,3 @@ grizzlydensmap <- ggplot(grizzdata_full) +
 #geom_text(aes(label = gbpu_name, x = lng, y = lat),
 #position = position_dodge(width = 0.8), size = 3) # Needs some tweaking - some labels off polygons
 grizzlydensmap # plot map
-
-##
-## PLOTTING MORTALITY DATA  -----------------------------------------------
-# Caption text
-caption.text <- paste("*Note that prior to 2004, road and rail kills",
-                      " were not distinguished and were documented with",
-                      " 'Pick Ups'.\nA Limited Entry Hunt (LEH) was",
-                      " instituted province-wide for grizzly bears in",
-                      " 1996.\nThere was a province-wide moratorium on",
-                      " hunting grizzly bears in the spring of 2001."
-                      , sep="")
-
-# Plot for basic POPULATION estimate per management unit
-mortplot <- ggplot(mort_summary, aes(x = hunt_year, y = count,
-                            group = kill_code, fill = kill_code)) +
-  geom_bar(stat = "identity") + # Add bar for each year w/ fill = kill type
-  theme_bw() +
-  scale_fill_brewer(type = "qual", palette = "Set2") +
-  scale_x_continuous(breaks=seq(1970, 2017, by = 5)) +
-  labs(title = "Grizzly Bear Mortality for the Province of British Columbia, 1976-2017",
-       caption = caption.text,
-       x = "Year", y = "Number of Grizzly Bears Killed", fill = "Mortality Type") +
-  theme(plot.title = element_text(hjust = 0.5), legend.position = "bottom",
-        plot.caption = element_text(hjust = 0))
-mortplot # Display figure
-
-# Save figure
-# ggsave(file = "mortplot1.svg", plot = mortplot, width = 10, height= 8)
