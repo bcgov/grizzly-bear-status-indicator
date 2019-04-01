@@ -78,6 +78,19 @@ densplot <- ggplot(by_gbpu) +
   theme(plot.title = element_text(hjust = 0.5))
 densplot # Display plot
 
+# Build static grizzly population choropleth
+grizzlypopmap <- ggplot(grizzdata_full) +
+  geom_sf(aes(fill = adults)) +
+  labs(title = "Grizzly Bear Population Estimates for British Columbia",
+       fill = "Population Estimate") +
+  theme_minimal() + theme(plot.title = element_text(hjust = 0.5),
+                          axis.title.x = element_blank(),
+                          axis.title.y = element_blank()) +
+  scale_fill_viridis_c(trans = "sqrt", alpha = .5) +
+  geom_text_repel(aes(label = gbpu_name, x = lng, y = lat),
+                  size = 2, force = 0.5)
+grizzlypopmap # plot map
+
 # Build  static grizzly  density choropleth
 grizzlydensmap <- ggplot(grizzdata_full) +
   geom_sf(aes(fill = pop_density)) +
@@ -89,22 +102,9 @@ grizzlydensmap <- ggplot(grizzdata_full) +
   scale_fill_viridis_c(trans = "sqrt", alpha = .5) + # Set colour (viridis)
   geom_text_repel(aes(label = gbpu_name, x = lng, y = lat),
                   size = 2, force =  0.5) # Offset labels
-  #geom_text(aes(label = gbpu_name, x = lng, y = lat),
-            #position = position_dodge(width = 0.8), size = 3) # Needs some tweaking - some labels off polygons
+#geom_text(aes(label = gbpu_name, x = lng, y = lat),
+#position = position_dodge(width = 0.8), size = 3) # Needs some tweaking - some labels off polygons
 grizzlydensmap # plot map
-
-# Build static grizzly population choropleth
-grizzlypopmap <- ggplot(grizzdata_full) +
-  geom_sf(aes(fill = pop_estimate)) +
-  labs(title = "Grizzly Bear Population Estimates for British Columbia",
-       fill = "Population Estimate") +
-  theme_minimal() + theme(plot.title = element_text(hjust = 0.5),
-                          axis.title.x = element_blank(),
-                          axis.title.y = element_blank()) +
-  scale_fill_viridis_c(trans = "sqrt", alpha = .5) +
-  geom_text_repel(aes(label = gbpu_name, x = lng, y = lat),
-                  size = 2, force = 0.5)
-grizzlypopmap # plot map
 
 ##
 ## PLOTTING MORTALITY DATA  -----------------------------------------------
