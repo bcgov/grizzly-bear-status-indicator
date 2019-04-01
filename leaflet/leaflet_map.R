@@ -125,5 +125,7 @@ threatmap <- leaflet(grizzdata_full, width = "900px", height = "500px") %>%
                 bringToFront = T)) %>%
   addLayersControl(
     baseGroups = c("Terrain", "OSM (Default"),
-    overlayGroups = c("Transportation Threat", "Energy Threat", "Human Intrusion Threat"))
+    overlayGroups = c("Transportation Threat", "Energy Threat",
+                      "Human Intrusion Threat"),
+    options = layersControlOptions(collapsed = TRUE))
 threatmap # View leaflet
