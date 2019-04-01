@@ -39,22 +39,26 @@ plot(stamenbc)
 
 # Plot stamen map with terrain basemap
 static_ggmap <- ggmap(stamenbc) + # Generate new map
-  geom_sf(data = grizzdata_full, aes(fill = status), inherit.aes = F, color = "black", size = 0.01) + # plot with boundary
-  theme_soe() + scale_fill_viridis(discrete = T, alpha = 0.4, option = "viridis", direction = -1) +
-  labs(title = "Conservation Status of Grizzly Bear Population Units in BC", fill = "Status") +
+  geom_sf(data = grizzdata_full, aes(fill = rankcode), inherit.aes = F,
+          color = "white", size = 0.01) + # plot with boundary
+  theme_soe() + scale_fill_viridis(discrete = T, alpha = 0.4,
+                                   option = "viridis", direction = -1) +
+  labs(title = "Conservation Status of Grizzly Bear Population Units in BC",
+       fill = "Rank Code") +
   theme(plot.title = element_text(hjust = 0.5), axis.title.x = element_blank(),
         axis.title.y = element_blank(),
         legend.background = element_rect(
           fill = "lightgrey", size = 0.5, linetype = "solid", colour = "darkgrey"))
-  #geom_text(aes(label = grizzdata_full$gbpu_name, x = grizzdata_full$lng, y = grizzdata_full$lat))
+  # geom_text(aes(label = grizzdata_full$gbpu_name,
+  #              x = grizzdata_full$lng, y = grizzdata_full$lat))
 plot(static_ggmap)
 
 # Clip + mask raster to BC boundary
 # stamenbc_crop <- raster::crop(stamenbc, bc_boundary)
 
 # Plot basic POPULATION estimate per management unit
-popplot <- ggplot(by_gbpu) +
-  geom_col(aes(x = reorder(gbpu_name, -pop_estimate), y = pop_estimate)) +
+popplot <- ggplot(grizzdata_full) +
+  geom_col(aes(x = reorder(gbpu_name, -adults), y = adults)) +
   theme_soe() +
   scale_y_continuous("Population Estimate") +
   scale_x_discrete("Population Unit") +
