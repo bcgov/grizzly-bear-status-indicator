@@ -31,7 +31,8 @@ lapply(Packages, library, character.only = TRUE)
 ## Data is released under the Open Government Licence - British Columbia
 ## https://www2.gov.bc.ca/gov/content?id=A519A56BC2BF44E4A008B33FCF527F61
 
-# Input grizzly bear threat calculator data - not yet in databc
+# Import grizzly bear threat calculator data from csv prior to the following steps
+# Threat calculator data not yet in databc warehouse
 class(Threat_Calc) #df
 threat_calc <- as_tibble(Threat_Calc) %>%
   rename_all(tolower)
