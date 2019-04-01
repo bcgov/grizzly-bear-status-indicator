@@ -34,8 +34,7 @@ lapply(Packages, library, character.only = TRUE)
 # Input grizzly bear threat calculator data - not yet in databc
 class(Threat_Calc) #df
 threat_calc <- as_tibble(Threat_Calc) %>%
-  rename_all(tolower) #%>%
-  rename(threat_calc, ï..gbpu_name = gbpu_name) # column headers import strangely
+  rename_all(tolower)
 
 bcdc_search("grizzly")
 hab_class <- bcdc_get_record("dba6c78a-1bc1-4d4f-b75c-96b5b0e7fd30")
@@ -44,6 +43,9 @@ hab_class <- bcdc_get_record("dba6c78a-1bc1-4d4f-b75c-96b5b0e7fd30")
 hab_class <- bcdc_get_data("bc-grizzly-bear-habitat-classification-and-rating")
 hab_class <- bcdc_get_data("dba6c78a-1bc1-4d4f-b75c-96b5b0e7fd30")
 
+# Import GBPU polygons
+popunits <- bcdc_get_geodata("grizzly-bear-population-units",
+                             query = "VERSION_NAME='2012'")
 # Get BC boundary
 boundbc <- bc_bound()
 
