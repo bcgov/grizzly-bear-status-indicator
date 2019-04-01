@@ -18,7 +18,8 @@ staticmap <- ggplot(grizzdata_full) +
   geom_sf(aes(fill = rankcode), color = "white", size = 0.1) +
   labs(title = "Conservation Status of Grizzly Bear Population Units in BC",
        col = "Conservation Rank") +
-  scale_fill_viridis(discrete = T, alpha = 0.8, option = "cividis", direction = -1) +
+  scale_fill_viridis(discrete = T, alpha = 0.8, option = "viridis",
+                     direction = -1, na.value = "darkgrey") +
   theme_soe() + theme(plot.title = element_text(hjust = 0.5),
                       axis.title.x = element_blank(),
                       axis.title.y = element_blank(),
@@ -35,7 +36,7 @@ stamenbc <- get_stamenmap(bbox = c(-139.658203,48.806863,-113.071289,60.261617),
                           zoom = 7, maptype = "terrain-background", where = "/dev/stamen/")
 # saveRDS(stamenbc, file = "/dev/stamen.Rds")
 # readRDS(stamenbc)
-plot(stamenbc)
+plot(stamenbc) # View basemap
 
 # Plot stamen map with terrain basemap
 static_ggmap <- ggmap(stamenbc) + # Generate new map
@@ -78,11 +79,11 @@ grizzlypopmap <- ggplot(grizzdata_full) +
                           axis.title.y = element_blank()) +
   scale_fill_viridis_c(trans = "sqrt", alpha = .5) +
   geom_text_repel(aes(label = gbpu_name, x = lng, y = lat),
-                  size = 2, force = 0.5)
+                  size = 2, force = 0.3)
 grizzlypopmap # plot map
 
 ## POPULATION DENSITY MAPPING: May not be needed for updated version ----------
-# Build  static grizzly  density choropleth
+# Build  static grizzly density choropleth
 grizzlydensmap <- ggplot(grizzdata_full) +
   geom_sf(aes(fill = pop_density)) +
   labs(title = "Grizzly Bear Population Density in British Columbia",
