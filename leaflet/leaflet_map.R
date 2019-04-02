@@ -32,12 +32,13 @@ plotlabs <- sprintf(
   tools::toTitleCase(tolower(grizzdata_full$gbpu_name))
 ) %>% lapply(htmltools::HTML)
 
+names(providers)
 ## ------
 ## LEAFLET MAP -- POPULATION AND CONSERVATION STATUS
 ## ------
 grizzmap <- leaflet(grizzdata_full, width = "900px", height = "500px") %>%   # generate leaflet map
-  addProviderTiles(providers$Stamen.TerrainBackground, group = "Terrain") %>%
-  addTiles(group = "OSM (Default") %>%
+  addProviderTiles(providers$Stamen.TerrainBackground, group = "Terrain") %>% # or providers$Stamen.TerrainBackground
+  addTiles(group = "OpenStreetMap (Default") %>%
   add_bc_home_button() %>%
   set_bc_view() %>%
   set_bc_view_on_close() %>% # re-centre map on popup close - do we want this?
@@ -66,19 +67,25 @@ grizzmap <- leaflet(grizzdata_full, width = "900px", height = "500px") %>%   # g
                 weight = 3,
                 color = "yellow",
                 bringToFront = T)) %>%
+  addPolygons(stroke = T, weight = 1, color = "black", # Add border to polygons
+              fillOpacity = 0.4, # Polygon fill
+              fillColor = ~palette1(grizzdata_full$threat_class),
+              group = "Overall Threat Class",
+              label = plotlabs,
+              labelOptions = labelOptions(direction = "auto", textsize = "12px"),
+              highlight = highlightOptions( # Highlight interaction for mouse hover
+                weight = 3,
+                color = "yellow",
+                bringToFront = T)) %>%
   addLayersControl(
-    baseGroups = c("Conservation Status", "Population Estimate"),
-    overlayGroups = c("Terrain", "OSM (Default)"))
+    baseGroups = c("Conservation Status", "Population Estimate", "Overall Threat Class"),
+    overlayGroups = c("Terrain", "OpenStreetMap (Default)"))
 grizzmap # View leaflet
 
 ## ------------------------------
 ## LEAFLET MAP -- THREAT MAPPING
 ## ------------------------------
-tpalette1 <- colorFactor(palette = 'viridis', grizzdata_full$transportationcalc,
-                         reverse = TRUE, na.color = "#808080")
-tpalette2 <- colorFactor(palette = 'viridis', grizzdata_full$energycalc,
-                         reverse = TRUE, na.color = "#808080")
-tpalette3 <- colorFactor(palette = 'viridis', grizzdata_full$humanintrusioncalc,
+tpalette <- colorFactor(palette = 'viridis', grizzdata_full$transportationcalc,
                          reverse = TRUE, na.color = "#808080")
 
 # Generate leaflet map
@@ -88,12 +95,12 @@ threatmap <- leaflet(grizzdata_full, width = "900px", height = "500px") %>%
   add_bc_home_button() %>%
   set_bc_view() %>%
   set_bc_view_on_close() %>% # re-centre map on popup close
-  #addLegend("bottomright", pal = tpalette1, values = grizzdata_full$transportationcalc,
-            #title = "Transportation Threats",
-            #opacity = 1) %>%
+  addLegend("bottomright", pal = tpalette, values = grizzdata_full$transportationcalc,
+            title = "Threat Rank",
+            opacity = 1) %>%
   addPolygons(stroke = T, weight = 1, color = "black", # Add border to polygons
-              fillOpacity = 0.4, # Polygon fill
-              fillColor = ~tpalette1(grizzdata_full$transportationcalc),
+              fillOpacity = 0.5, # Polygon fill
+              fillColor = ~tpalette(grizzdata_full$transportationcalc),
               #popup = popups,
               #popupOptions = popup_options,
               group = "Transportation Threat",
@@ -104,8 +111,8 @@ threatmap <- leaflet(grizzdata_full, width = "900px", height = "500px") %>%
                 color = "yellow",
                 bringToFront = T)) %>%
   addPolygons(stroke = T, weight = 1, color = "black",
-              fillOpacity = 0.4,
-              fillColor = ~tpalette2(grizzdata_full$energycalc),
+              fillOpacity = 0.5,
+              fillColor = ~tpalette(grizzdata_full$energycalc),
               group = "Energy Threat",
               label = plotlabs,
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
@@ -114,8 +121,8 @@ threatmap <- leaflet(grizzdata_full, width = "900px", height = "500px") %>%
                 color = "yellow",
                 bringToFront = T)) %>%
   addPolygons(stroke = T, weight = 1, color = "black",
-              fillOpacity = 0.4,
-              fillColor = ~tpalette3(grizzdata_full$humanintrusioncalc),
+              fillOpacity = 0.5,
+              fillColor = ~tpalette(grizzdata_full$humanintrusioncalc),
               group = "Human Intrusion Threat",
               label = plotlabs,
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
