@@ -57,3 +57,8 @@ boundbc <- bc_bound()
 # bc_bbox <- st_as_sfc(st_bbox(boundbc)) # convert to sfc
 # bc_bbox <- st_bbox(bc_bbox) # convert to bbox
 # bc_bbox
+
+# Import shp as sf
+library(here)
+habclass <- st_read("C:/dev/grizzly-bear-status-indicator/habclass.shp")
+habclass <- ms_simplify(habclass)
