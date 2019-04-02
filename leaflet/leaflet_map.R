@@ -14,6 +14,8 @@ palette1 <- colorFactor(palette = 'viridis', grizzdata_full$rankcode,
                         reverse = TRUE, na.color = "#808080")
 palette2 <- colorFactor(palette = 'viridis', grizzdata_full$adults,
                         reverse = TRUE, na.color = "#808080")
+palette3 <- colorFactor(palette = 'viridis', grizzdata_full$threat_class,
+                        reverse = TRUE, na.color = "#808080")
 
 ## ------
 ## POPUPS
@@ -69,7 +71,7 @@ grizzmap <- leaflet(grizzdata_full, width = "900px", height = "500px") %>%   # g
                 bringToFront = T)) %>%
   addPolygons(stroke = T, weight = 1, color = "black", # Add border to polygons
               fillOpacity = 0.4, # Polygon fill
-              fillColor = ~palette1(grizzdata_full$threat_class),
+              fillColor = ~palette3(grizzdata_full$threat_class),
               group = "Overall Threat Class",
               label = plotlabs,
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
@@ -85,7 +87,7 @@ grizzmap # View leaflet
 ## ------------------------------
 ## LEAFLET MAP -- THREAT MAPPING
 ## ------------------------------
-tpalette <- colorFactor(palette = 'viridis', grizzdata_full$transportationcalc,
+tpalette <- colorFactor(palette = 'plasma', grizzdata_full$transportationcalc,
                          reverse = TRUE, na.color = "#808080")
 
 # Generate leaflet map
