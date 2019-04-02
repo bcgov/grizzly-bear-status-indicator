@@ -18,13 +18,14 @@ staticmap <- ggplot(grizzdata_full) +
   geom_sf(aes(fill = rankcode), color = "white", size = 0.1) +
   labs(title = "Conservation Status of Grizzly Bear Population Units in BC",
        col = "Conservation Rank") +
-  scale_fill_viridis(trans = "sqrt", alpha = 0.5, discrete = T,
-                     option = "viridis", direction = -1, na.value = "darkgrey") +
+  scale_fill_viridis(alpha = 0.5, discrete = T, option = "viridis",
+                     direction = -1, na.value = "darkgrey") +
   theme_soe() + theme(plot.title = element_text(hjust = 0.5),
                       axis.title.x = element_blank(),
                       axis.title.y = element_blank(),
                       legend.background = element_rect(
-                        fill = "lightgrey", size = 0.5, linetype = "solid", colour = "darkgrey")) +
+                        fill = "lightgrey", size = 0.5,
+                        linetype = "solid", colour = "darkgrey")) +
   geom_text(aes(label = grizzdata_full$gbpu_name, x = grizzdata_full$lng,
                 y = grizzdata_full$lat), size = 2, check_overlap = T)
   #geom_text_repel(aes(label = gbpu_name, x = lng, y = lat),
@@ -79,8 +80,8 @@ grizzlypopmap <- ggplot(grizzdata_full) +
                           axis.title.x = element_blank(),
                           axis.title.y = element_blank()) +
   scale_fill_viridis_c(trans = "sqrt", alpha = .5, na.value = "darkgrey") +
-  geom_text_repel(aes(label = gbpu_name, x = lng, y = lat),
-                  size = 2, force = 0.3)
+  geom_text(aes(label = grizzdata_full$gbpu_name, x = grizzdata_full$lng,
+                y = grizzdata_full$lat), size = 2, check_overlap = T)
 grizzlypopmap # plot map
 
 ## POPULATION DENSITY MAPPING: May not be needed for updated version ----------
