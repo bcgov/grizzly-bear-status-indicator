@@ -16,7 +16,7 @@ transport_map <- ggplot(grizzdata_full) +
   geom_sf(aes(fill = transportationcalc), color = "white", size = 0.1) +
   labs(title = "Transportation Threats to Grizzly Bear Populations in BC",
        col = "Threat Rank") +
-  scale_fill_viridis(alpha = 0.8, discrete = T, option = "viridis",
+  scale_fill_viridis(alpha = 0.6, discrete = T, option = "viridis",
                      direction = -1, na.value = "darkgrey") +
   theme_soe() + theme(plot.title = element_text(hjust = 0.5),
                       axis.title.x = element_blank(),
@@ -33,7 +33,7 @@ energy_map <- ggplot(grizzdata_full) +
   geom_sf(aes(fill = energycalc), color = "white", size = 0.1) +
   labs(title = "Energy Threats to Grizzly Bear Populations in BC",
        col = "Threat Rank") +
-  scale_fill_viridis(alpha = 0.8, discrete = T, option = "viridis",
+  scale_fill_viridis(alpha = 0.6, discrete = T, option = "viridis",
                      na.value = "darkgrey") +
   theme_soe() + theme(plot.title = element_text(hjust = 0.5),
                       axis.title.x = element_blank(),
@@ -49,7 +49,7 @@ hi_map <- ggplot(grizzdata_full) +
   geom_sf(aes(fill = humanintrusioncalc), color = "white", size = 0.1) +
   labs(title = "Human Intrusion Threats to Grizzly Bear Populations in BC",
        col = "Threat Rank") +
-  scale_fill_viridis(alpha = 0.8, discrete = T, option = "viridis",
+  scale_fill_viridis(alpha = 0.6, discrete = T, option = "viridis",
                      na.value = "darkgrey", direction = -1) +
   theme_soe() + theme(plot.title = element_text(hjust = 0.5),
                       axis.title.x = element_blank(),
