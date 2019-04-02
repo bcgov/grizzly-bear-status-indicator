@@ -18,7 +18,7 @@ staticmap <- ggplot(grizzdata_full) +
   geom_sf(aes(fill = rankcode), color = "white", size = 0.1) +
   labs(title = "Conservation Status of Grizzly Bear Population Units in BC",
        col = "Conservation Rank") +
-  scale_fill_viridis(alpha = 0.5, discrete = T, option = "viridis",
+  scale_fill_viridis(alpha = 0.6, discrete = T, option = "viridis",
                      direction = -1, na.value = "darkgrey") +
   theme_soe() + theme(plot.title = element_text(hjust = 0.5),
                       axis.title.x = element_blank(),
