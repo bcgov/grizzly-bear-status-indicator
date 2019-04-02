@@ -67,8 +67,8 @@ grizzmap <- leaflet(grizzdata_full, width = "900px", height = "500px") %>%   # g
                 color = "yellow",
                 bringToFront = T)) %>%
   addLayersControl(
-    baseGroups = c("Terrain", "OSM (Default"),
-    overlayGroups = c("Conservation Status", "Population Estimate"))
+    baseGroups = c("Conservation Status", "Population Estimate"),
+    overlayGroups = c("Terrain", "OSM (Default)"))
 grizzmap # View leaflet
 
 ## ------------------------------
@@ -124,8 +124,8 @@ threatmap <- leaflet(grizzdata_full, width = "900px", height = "500px") %>%
                 color = "yellow",
                 bringToFront = T)) %>%
   addLayersControl(
-    baseGroups = c("Terrain", "OSM (Default"),
-    overlayGroups = c("Transportation Threat", "Energy Threat",
-                      "Human Intrusion Threat"),
+    baseGroups = c("Transportation Threat", "Energy Threat",
+                   "Human Intrusion Threat"),
+    overlayGroups = c("Terrain", "OSM (Default)"),
     options = layersControlOptions(collapsed = TRUE))
 threatmap # View leaflet
