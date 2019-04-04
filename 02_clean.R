@@ -14,8 +14,8 @@
 # Simplify population unit polygons using mapshaper
 gbpu_simplify <- ms_simplify(gbpu_2015, keep = 0.25) # reduce number of vertices
 
-# Transform to lat long
-gbpu_simplify <- st_transform(gbpu_simplify, crs = 4326)
+# Transform to BC Albers
+gbpu_simplify <- st_transform(gbpu_simplify, crs = 3005)
 
 # Find centroid of polygons (for labelling)
 # Note: BC Albers CRS used because lat/long not accepted by st_centroid
