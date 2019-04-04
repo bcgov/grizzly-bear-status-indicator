@@ -40,9 +40,11 @@ threat_calc <- as_tibble(Threat_Calc) %>%
 popunits <- bcdc_get_geodata("grizzly-bear-population-units",
                              query = "VERSION_NAME='2012'")
 
-# Import 2015 GBPU polygons
+# Import 2015 GBPU polygons and MU polygons
 gbpu_2015 <- st_read("C:/dev/grizzly-bear-status-indicator/gbpu_2015.shp")
+gbpu_mu_dens <- st_read("C:/dev/grizzly-bear-status-indicator/gbpu_mu_leh_density.shp")
 plot(st_geometry(gbpu_2015))
+plot(st_geometry(gbpu_mu_dens))
 
 # Get BC boundary
 boundbc <- bc_bound()
@@ -55,8 +57,7 @@ boundbc <- bc_bound()
 # bc_bbox <- st_bbox(bc_bbox) # convert to bbox
 # bc_bbox
 
-# Import shp as sf
-library(here)
+# Import grizzly BEI polygons (2019) as sf
 habclass <- st_read("C:/dev/grizzly-bear-status-indicator/habclass.shp")
 plot(st_geometry(habclass))
 # habclass <- ms_simplify(habclass) # CRASHES - DO NOT RUN
