@@ -33,16 +33,8 @@ lapply(Packages, library, character.only = TRUE)
 
 # Import grizzly bear threat calculator data from csv prior to the following steps
 # Threat calculator data not yet in databc warehouse
-class(Threat_Calc) #df
 threat_calc <- as_tibble(Threat_Calc) %>%
   rename_all(tolower)
-
-bcdc_search("grizzly")
-hab_class <- bcdc_get_record("dba6c78a-1bc1-4d4f-b75c-96b5b0e7fd30")
-
-# Returns an HTTP 404 error
-hab_class <- bcdc_get_data("bc-grizzly-bear-habitat-classification-and-rating")
-hab_class <- bcdc_get_data("dba6c78a-1bc1-4d4f-b75c-96b5b0e7fd30")
 
 # Import 2012 GBPU polygons
 popunits <- bcdc_get_geodata("grizzly-bear-population-units",
@@ -67,4 +59,4 @@ boundbc <- bc_bound()
 library(here)
 habclass <- st_read("C:/dev/grizzly-bear-status-indicator/habclass.shp")
 plot(st_geometry(habclass))
-habclass <- ms_simplify(habclass)
+# habclass <- ms_simplify(habclass) # CRASHES - DO NOT RUN
