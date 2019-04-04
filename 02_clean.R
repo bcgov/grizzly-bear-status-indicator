@@ -20,7 +20,7 @@ gbpu_simplify <- st_transform(gbpu_simplify, crs = 3005)
 # Find centroid of polygons (for labelling)
 # Note: BC Albers CRS used because lat/long not accepted by st_centroid
 popcentroid <- st_centroid(gbpu_simplify$geometry)
-#popcentroid <- st_transform(popcentroid, crs = 4326) # convert to lat/long
+popcentroid <- st_transform(popcentroid, crs = 4326) # convert to lat/long
 
 # Calculate coordinates for centroid of polygons
 popcoords <- st_coordinates(popcentroid) # changes to a matrix
@@ -31,7 +31,7 @@ grizzdata_full <- cbind(gbpu_simplify, popcoords) # cbind coords and polygons
 # Rename lat and lng columns
 grizzdata_full <- rename(grizzdata_full, lng = X)
 grizzdata_full <- rename(grizzdata_full, lat = Y)
-# grizzdata_full <- st_transform(grizzdata_full, crs = 4326) # convert to lat/long
+grizzdata_full <- st_transform(grizzdata_full, crs = 4326) # convert to lat/long
 
 # Rename 'population name' column
 grizzdata_full <- grizzdata_full %>%
@@ -40,7 +40,6 @@ grizzdata_full <- grizzdata_full %>%
 
 # Join GBPU polygons (popunits) and threat classification data
 grizzdata_full <- left_join(grizzdata_full, threat_calc, by = "gbpu_name")
-grizzdata_full$gbpu_name[grizzdata_full$gbpu_name == "NA"] <- "Extirpated"
 
 # Rename NA gbpu names to Extirpated
 grizzdata_full$gbpu_name <- as.character(grizzdata_full$gbpu_name) # as char
