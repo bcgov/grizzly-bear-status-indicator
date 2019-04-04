@@ -44,9 +44,14 @@ hab_class <- bcdc_get_record("dba6c78a-1bc1-4d4f-b75c-96b5b0e7fd30")
 hab_class <- bcdc_get_data("bc-grizzly-bear-habitat-classification-and-rating")
 hab_class <- bcdc_get_data("dba6c78a-1bc1-4d4f-b75c-96b5b0e7fd30")
 
-# Import GBPU polygons
+# Import 2012 GBPU polygons
 popunits <- bcdc_get_geodata("grizzly-bear-population-units",
                              query = "VERSION_NAME='2012'")
+
+# Import 2015 GBPU polygons
+gbpu_2015 <- st_read("C:/dev/grizzly-bear-status-indicator/gbpu_2015.shp")
+plot(st_geometry(gbpu_2015))
+
 # Get BC boundary
 boundbc <- bc_bound()
 
@@ -61,4 +66,5 @@ boundbc <- bc_bound()
 # Import shp as sf
 library(here)
 habclass <- st_read("C:/dev/grizzly-bear-status-indicator/habclass.shp")
+plot(st_geometry(habclass))
 habclass <- ms_simplify(habclass)
