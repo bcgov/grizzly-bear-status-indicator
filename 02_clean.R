@@ -31,9 +31,7 @@ grizzdata_full <- cbind(gbpu_simplify, popcoords) # cbind coords and polygons
 # Rename lat and lng columns
 grizzdata_full <- rename(grizzdata_full, lng = X)
 grizzdata_full <- rename(grizzdata_full, lat = Y)
-
-# Set column names to lower case
-#grizzdata_full <- st_transform(grizzdata_full, crs = 4326) # convert to lat/long
+# grizzdata_full <- st_transform(grizzdata_full, crs = 4326) # convert to lat/long
 
 # Rename 'population name' column
 grizzdata_full <- grizzdata_full %>%
@@ -42,7 +40,11 @@ grizzdata_full <- grizzdata_full %>%
 
 # Join GBPU polygons (popunits) and threat classification data
 grizzdata_full <- left_join(grizzdata_full, threat_calc, by = "gbpu_name")
-glimpse(grizzdata_full)
+grizzdata_full$gbpu_name[grizzdata_full$gbpu_name == "NA"] <- "Extirpated"
+
+# Rename NA gbpu names to Extirpated
+grizzdata_full$gbpu_name <- as.character(grizzdata_full$gbpu_name) # as char
+grizzdata_full$gbpu_name[is.na(grizzdata_full$gbpu_name)] <- "Extirpated"
 
 # Not to be used in new version unless needed:
 # Summarise total pop estimate per management unit
