@@ -12,42 +12,37 @@
 
 ## SPATIAL DATA CLEANING ---------------------------------------------------------
 # Simplify population unit polygons using mapshaper
-popunits_simplify <- ms_simplify(popunits, keep = 0.25) # reduce number of vertices
+gbpu_simplify <- ms_simplify(gbpu_2015, keep = 0.25) # reduce number of vertices
 
-# Change to lat/long (4326)
-popunits_simplify <- st_transform(popunits_simplify, crs = 4326)
-
-# Drop unused metadata columns
-popunits_simplify <- select(
-  popunits_simplify, -c(id, SE_ANNO_CAD_DATA, VERSION_YEAR_MODIFIED, OBJECTID, DISPLAY_NAME))
+# Transform to BC Albers
+gbpu_simplify <- st_transform(gbpu_simplify, crs = 3005)
 
 # Find centroid of polygons (for labelling)
-# Note: 'popunits' w/ BC Albers CRS used because lat/long not accepted by st_centroid
-popcentroid <- st_centroid(popunits$geometry)
-popcentroid <- st_transform(popcentroid, crs = 4326) # convert to lat/long
+# Note: BC Albers CRS used because lat/long not accepted by st_centroid
+popcentroid <- st_centroid(gbpu_simplify$geometry)
+#popcentroid <- st_transform(popcentroid, crs = 4326) # convert to lat/long
 
 # Calculate coordinates for centroid of polygons
 popcoords <- st_coordinates(popcentroid) # changes to a matrix
 
 # Spatial join
-grizzdata_full <- cbind(popunits_simplify, popcoords) # cbind coords and polygons
+grizzdata_full <- cbind(gbpu_simplify, popcoords) # cbind coords and polygons
 
 # Rename lat and lng columns
 grizzdata_full <- rename(grizzdata_full, lng = X)
 grizzdata_full <- rename(grizzdata_full, lat = Y)
 
 # Set column names to lower case
-grizzdata_full <- grizzdata_full %>% rename_all(tolower)
-grizzdata_full <- st_transform(grizzdata_full, crs = 4326) # convert to lat/long
-
-glimpse(grizzdata_full) # View
+#grizzdata_full <- st_transform(grizzdata_full, crs = 4326) # convert to lat/long
 
 # Rename 'population name' column
 grizzdata_full <- grizzdata_full %>%
-  rename(gbpu_name = population_name)
+  rename_all(tolower) %>%
+  rename(gbpu_name = population)
 
 # Join GBPU polygons (popunits) and threat classification data
 grizzdata_full <- left_join(grizzdata_full, threat_calc, by = "gbpu_name")
+glimpse(grizzdata_full)
 
 # Not to be used in new version unless needed:
 # Summarise total pop estimate per management unit
