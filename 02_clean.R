@@ -14,6 +14,10 @@
 # Simplify population unit polygons using mapshaper
 gbpu_simplify <- ms_simplify(gbpu_2015, keep = 0.25) # reduce number of vertices
 
+# Simplify management units
+mu_simplify <- ms_simplify(gbpu_mu_dens, keep = 0.25)
+plot(st_geometry(mu_simplify))
+
 # Transform to BC Albers
 gbpu_simplify <- st_transform(gbpu_simplify, crs = 3005)
 
