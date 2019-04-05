@@ -43,6 +43,9 @@ plot(stamenbc) # View basemap
 static_ggmap <- ggmap(stamenbc) + # Generate new map
   geom_sf(data = grizzdata_full, aes(fill = rankcode), inherit.aes = F,
           color = "white", size = 0.01) + # plot with boundary
+  geom_text(aes(label = grizzdata_full$gbpu_name, x = grizzdata_full$lng,
+                y = grizzdata_full$lat), size = 2, check_overlap = T) +
+  #geom_label(data = grizzdata_full$gbpu_name) +
   theme_soe() + scale_fill_viridis(discrete = T, alpha = 0.5,
                                    option = "viridis", direction = -1,
                                    na.value = "darkgrey") +
@@ -52,8 +55,6 @@ static_ggmap <- ggmap(stamenbc) + # Generate new map
         axis.title.y = element_blank(),
         legend.background = element_rect(
           fill = "lightgrey", size = 0.5, linetype = "solid", colour = "darkgrey"))
-  # geom_text(aes(label = grizzdata_full$gbpu_name,
-  #              x = grizzdata_full$lng, y = grizzdata_full$lat))
 plot(static_ggmap)
 
 # Clip + mask raster to BC boundary
