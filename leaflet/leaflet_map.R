@@ -20,21 +20,22 @@ palette3 <- colorFactor(palette = 'viridis', grizzdata_full$threat_class,
 ## ------
 ## POPUPS
 ## -------
-grizz_plotlist <- readRDS(here("out/grizz_plotlist.rds"))[grizzdata_full$gbpu_name]
-popups <-  popupGraph(grizz_plotlist, type = "svg", width = 500,
-                      height = 300)
-popup_options <-  popupOptions(maxWidth = "100%", autoPan = TRUE,
-                               keepInView = TRUE,
-                               closeOnClick = TRUE,
-                               autoPanPaddingTopLeft = c(120, 10),
-                               autoPanPaddingBottomRight = c(120,10))
+# grizz_plotlist <- readRDS(here("out/grizz_plotlist.rds"))[grizzdata_full$gbpu_name]
+# popups <-  popupGraph(grizz_plotlist, type = "svg", width = 500,
+#                      height = 300)
+# popup_options <-  popupOptions(maxWidth = "100%", autoPan = TRUE,
+#                               keepInView = TRUE,
+#                               closeOnClick = TRUE,
+#                               autoPanPaddingTopLeft = c(120, 10),
+#                               autoPanPaddingBottomRight = c(120,10))
+
 require(htmltools)
-plotlabs <- sprintf(
+plotlabs <- sprintf( # create labels for leaflet map
   "<strong>%s</strong>",
   tools::toTitleCase(tolower(grizzdata_full$gbpu_name))
 ) %>% lapply(htmltools::HTML)
 
-names(providers)
+names(providers) # list of available tiles
 ## ------
 ## LEAFLET MAP -- POPULATION AND CONSERVATION STATUS
 ## ------
@@ -105,7 +106,7 @@ threatmap <- leaflet(grizzdata_full, width = "900px", height = "500px") %>%
               fillColor = ~tpalette(grizzdata_full$transportationcalc),
               #popup = popups,
               #popupOptions = popup_options,
-              group = "Transportation Threat",
+              group = "Transportation",
               label = plotlabs,
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
               highlight = highlightOptions( # Highlight interaction for mouse hover
@@ -115,7 +116,7 @@ threatmap <- leaflet(grizzdata_full, width = "900px", height = "500px") %>%
   addPolygons(stroke = T, weight = 1, color = "black",
               fillOpacity = 0.5,
               fillColor = ~tpalette(grizzdata_full$energycalc),
-              group = "Energy Threat",
+              group = "Energy",
               label = plotlabs,
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
               highlight = highlightOptions(
@@ -125,7 +126,7 @@ threatmap <- leaflet(grizzdata_full, width = "900px", height = "500px") %>%
   addPolygons(stroke = T, weight = 1, color = "black",
               fillOpacity = 0.5,
               fillColor = ~tpalette(grizzdata_full$humanintrusioncalc),
-              group = "Human Intrusion Threat",
+              group = "Human Intrusion",
               label = plotlabs,
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
               highlight = highlightOptions(
@@ -133,8 +134,8 @@ threatmap <- leaflet(grizzdata_full, width = "900px", height = "500px") %>%
                 color = "yellow",
                 bringToFront = T)) %>%
   addLayersControl(
-    baseGroups = c("Transportation Threat", "Energy Threat",
-                   "Human Intrusion Threat"),
+    baseGroups = c("Transportation", "Energy",
+                   "Human Intrusion"),
     overlayGroups = c("Terrain", "OSM (Default)"),
     options = layersControlOptions(collapsed = TRUE))
 threatmap # View leaflet
