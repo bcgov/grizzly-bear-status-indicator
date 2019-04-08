@@ -10,9 +10,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-# Create colour palette for future mapping (not currently used)
-# pal <- c("Extirpated" = "firebrick2", "Threatened" = "yellow1", "Viable" = "forestgreen")
-
 ## STATIC MAPPING -------------------------------------------------------------
 staticmap <- ggplot(grizzdata_full) +
   geom_sf(aes(fill = rankcode), color = "white", size = 0.1) +
@@ -44,7 +41,7 @@ static_ggmap <- ggmap(stamenbc) + # Generate new map
   geom_sf(data = grizzdata_full, aes(fill = rankcode), inherit.aes = F,
           color = "white", size = 0.01) + # plot with boundary
   geom_text(aes(label = grizzdata_full$gbpu_name, x = grizzdata_full$lng,
-                y = grizzdata_full$lat), size = 2, check_overlap = T) +
+                y = grizzdata_full$lat, color = "white")) +
   #geom_label(data = grizzdata_full$gbpu_name) +
   theme_soe() + scale_fill_viridis(discrete = T, alpha = 0.5,
                                    option = "viridis", direction = -1,
@@ -82,7 +79,7 @@ grizzlypopmap <- ggplot(grizzdata_full) +
                           axis.title.y = element_blank()) +
   scale_fill_viridis_c(trans = "sqrt", alpha = .5, na.value = "darkgrey") +
   geom_text(aes(label = grizzdata_full$gbpu_name, x = grizzdata_full$lng,
-                y = grizzdata_full$lat), size = 2, check_overlap = T)
+                y = grizzdata_full$lat), size = 2, check_overlap = F)
 grizzlypopmap # plot map
 
 ## POPULATION DENSITY MAPPING: May not be needed for updated version ----------
