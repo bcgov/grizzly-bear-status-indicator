@@ -102,7 +102,7 @@ threatmap <- leaflet(grizzdata_full, width = "900px", height = "500px") %>%
             title = "Threat Rank",
             opacity = 1) %>%
   addPolygons(stroke = T, weight = 1, color = "black", # Add border to polygons
-              fillOpacity = 0.5, # Polygon fill
+              fillOpacity = 0.4, # Polygon fill
               fillColor = ~tpalette(grizzdata_full$transportationcalc),
               #popup = popups,
               #popupOptions = popup_options,
@@ -114,7 +114,7 @@ threatmap <- leaflet(grizzdata_full, width = "900px", height = "500px") %>%
                 color = "yellow",
                 bringToFront = T)) %>%
   addPolygons(stroke = T, weight = 1, color = "black",
-              fillOpacity = 0.5,
+              fillOpacity = 0.4,
               fillColor = ~tpalette(grizzdata_full$energycalc),
               group = "Energy",
               label = plotlabs,
@@ -124,7 +124,7 @@ threatmap <- leaflet(grizzdata_full, width = "900px", height = "500px") %>%
                 color = "yellow",
                 bringToFront = T)) %>%
   addPolygons(stroke = T, weight = 1, color = "black",
-              fillOpacity = 0.5,
+              fillOpacity = 0.4,
               fillColor = ~tpalette(grizzdata_full$humanintrusioncalc),
               group = "Human Intrusion",
               label = plotlabs,
