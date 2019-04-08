@@ -61,7 +61,7 @@ grizzmap <- leaflet(grizzdata_full, width = "900px", height = "500px") %>%   # g
                 color = "yellow",
                 bringToFront = T)) %>%
   addPolygons(stroke = T, weight = 1, color = "black",
-              fillOpacity = 0.4,
+              fillOpacity = 0.2,
               fillColor = ~palette2(grizzdata_full$adults),
               group = "Population Estimate",
               label = plotlabs,
@@ -71,7 +71,7 @@ grizzmap <- leaflet(grizzdata_full, width = "900px", height = "500px") %>%   # g
                 color = "yellow",
                 bringToFront = T)) %>%
   addPolygons(stroke = T, weight = 1, color = "black", # Add border to polygons
-              fillOpacity = 0.4, # Polygon fill
+              fillOpacity = 0.2, # Polygon fill
               fillColor = ~palette3(grizzdata_full$threat_class),
               group = "Overall Threat Class",
               label = plotlabs,
