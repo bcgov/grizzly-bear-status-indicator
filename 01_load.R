@@ -60,5 +60,5 @@ boundbc <- bc_bound()
 # Import grizzly BEI polygons (2019) as sf
 habclass <- st_read("C:/dev/grizzly-bear-status-indicator/habclass.shp")
 plot(st_geometry(habclass))
-habclass_simp <- ms_simplify(habclass, keep = 0.25, sys = TRUE)
-plot(habclass_simp)
+habclass_simp <- ms_simplify(habclass, keep = 0.1, sys = TRUE)
+plot(habclass_simp[4])
