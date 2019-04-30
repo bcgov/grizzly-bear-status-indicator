@@ -25,13 +25,14 @@ cran <- gbpu_2015 %>% filter(POPULATION == "Cranberry")
 cran <- as(cran, 'Spatial')
 
 # Rasterize whole habitat class
-whole <- raster(habclass_simp, res = 90)
+# whole <- raster(habclass_simp, res = 90)
 whole <- fasterize(habclass_simp, whole, field = "ZONE")
 whole <- as.factor(whole)
 rat1 <- levels(whole)[[1]]
 rat1[["ecozone"]] <- c("BAFA","BG","BWBS","CDF","CMA","CWH","ESSF","ICH","IDF",
                       "IMA","MH","MS","PP","SBPS","SBS","SWB")
-levels(whole) <- rat1
+levels(whole) <- rat1 # Add RAT to raster
+writeRaster(whole, filename = "habclass_rast.grd")
 
 # plot
 plot(whole, legend = T)
@@ -48,7 +49,8 @@ cran_mask <- ratify(cran_mask)
 rat2 <- levels(cran_mask)[[1]]
 cran_mask
 
-beczones <- levelplot(cran_mask)
+# Plot categorical raster -- trellis
+beczones <- levelplot(whole)
 plot(beczones)
 
 
