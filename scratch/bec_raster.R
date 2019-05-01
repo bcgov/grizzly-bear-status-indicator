@@ -17,6 +17,7 @@ habclass_simp <- readRDS("habclass_simp.rds")
 
 ## Add gbpu polygons --------------------------------------------------
 gbpu_2015 <- st_read("C:/dev/grizzly-bear-status-indicator/gbpu_2015.shp")
+
 ## Create list of gbpu polys
 gbpu_list <- unique(gbpu_2015$POPULATION)
 
@@ -25,7 +26,7 @@ cran <- gbpu_2015 %>% filter(POPULATION == "Cranberry")
 cran <- as(cran, 'Spatial')
 
 # Rasterize whole habitat class
-# whole <- raster(habclass_simp, res = 90)
+whole <- raster(habclass_simp, res = 85)
 whole <- fasterize(habclass_simp, whole, field = "ZONE")
 whole <- as.factor(whole)
 rat1 <- levels(whole)[[1]]
