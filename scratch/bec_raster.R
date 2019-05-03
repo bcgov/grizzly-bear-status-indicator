@@ -14,6 +14,13 @@ plot(st_geometry(habclass))
 # habclass_simp <- ms_simplify(habclass, keep = 0.05, sys = TRUE)
 # saveRDS(habclass_simp, file = "habclass_simp.rds")
 habclass_simp <- readRDS("habclass_simp.rds")
+plot(habclass_simp[14])
+
+## Rename values to NAs
+habclass_simp$RATING <- as.factor(habclass_simp$RATING)
+habclass_simp$RATING[habclass_simp$RATING == "66"] <- "NA"
+habclass_simp$RATING[habclass_simp$RATING == "99"] <- "NA"
+# habclass_simp$RATING <- as.factor(habclass_simp$RATING)
 
 ## Add gbpu polygons --------------------------------------------------
 gbpu_2015 <- st_read("C:/dev/grizzly-bear-status-indicator/gbpu_2015.shp")
@@ -26,12 +33,12 @@ cran <- gbpu_2015 %>% filter(POPULATION == "Cranberry")
 cran <- as(cran, 'Spatial')
 
 # Rasterize whole habitat class
-whole <- raster(habclass_simp, res = 85)
-whole <- fasterize(habclass_simp, whole, field = "ZONE")
+whole <- raster(habclass_simp, res = 90)
+whole <- fasterize(habclass_simp, whole, field = "RATING")
 whole <- as.factor(whole)
+plot(whole)
 rat1 <- levels(whole)[[1]]
-rat1[["ecozone"]] <- c("BAFA","BG","BWBS","CDF","CMA","CWH","ESSF","ICH","IDF",
-                      "IMA","MH","MS","PP","SBPS","SBS","SWB")
+rat1[["rating"]] <- c("1","2","3","4","5","6","NA")
 levels(whole) <- rat1 # Add RAT to raster
 writeRaster(whole, filename = "habclass_rast.grd")
 
@@ -45,14 +52,8 @@ cran_mask <- raster::mask(cran_rast, cran)
 plot(cran_mask)
 plot(cran, add = T)
 
-# Convert to categorical raster
-cran_mask <- ratify(cran_mask)
-rat2 <- levels(cran_mask)[[1]]
-cran_mask
-
 # Plot categorical raster -- trellis
 beczones <- levelplot(whole)
 plot(beczones)
-
 
 
