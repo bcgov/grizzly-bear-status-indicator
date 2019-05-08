@@ -5,6 +5,10 @@ library(fasterize)
 library(rasterVis)
 library(purrr)
 library(envreportutils)
+library(tidyverse)
+
+# remotes::install_github("bcgov/bcmaps", ref = "future")
+library(bcmaps)
 
 ## Import grizzly BEI polygons (2019) as sf ---------------------------
 habclass <- st_read("C:/dev/grizzly-bear-status-indicator/habclass.shp")
@@ -25,12 +29,12 @@ habclass_simp$RATING <- as.factor(habclass_simp$RATING) # to factor
 ## Add gbpu polygons --------------------------------------------------
 gbpu_2015 <- st_read("C:/dev/grizzly-bear-status-indicator/gbpu_2015.shp")
 
+# Replace NAs - Needs to be updated with unique identifiers for extirpated
+gbpu_2015$POPULATION <- as.character(gbpu_2015$POPULATION)
+gbpu_2015$POPULATION[is.na(gbpu_2015$POPULATION)] <- "Extirpated"
+
 ## Create value with population field
 population <- "POPULATION"
-
-# extract Cranberry
-cran <- gbpu_2015 %>% filter(POPULATION == "Cranberry")
-tweed <- gbpu_2015 %>% filter(POPULATION == "Tweedsmuir")
 
 # Rasterize whole habitat class
 whole <- raster(habclass_simp, res = 90)
@@ -41,7 +45,6 @@ rat1 <- levels(whole)[[1]]
 rat1[["rating"]] <- c("1","2","3","4","5","6","NA")
 levels(whole) <- rat1 # Add RAT to raster
 # WriteRaster(whole, filename = file.path(out, "habclass_rast.grd"))
-whole
 
 # Crop raster to Cranberry GBPU sf
 cran_rast <- raster::crop(whole, cran)
@@ -57,12 +60,6 @@ levelplot(tweed_mask)
 beczones <- levelplot(whole)
 plot(beczones)
 
+## Raster by poly ----------------------------------------
 gbpu_rasts <- raster_by_poly(whole, gbpu_2015, population)
-?raster_by_poly
-class(gbpu_2015)
 
-strata <- bcmaps::ecoregions()
-strata
-gbpu_2015
-gbpu_2015 <- st_geometry(gbpu_2015)
-gbpu_2015 <- st_transform(gbpu_2015)
