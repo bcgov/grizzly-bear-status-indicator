@@ -34,6 +34,19 @@ gbpu_2015 <- st_read("C:/dev/grizzly-bear-status-indicator/gbpu_2015.shp")
 gbpu_2015$POPULATION <- as.character(gbpu_2015$POPULATION)
 gbpu_2015$POPULATION[is.na(gbpu_2015$POPULATION)] <- "Extirpated"
 
+## Create value with population field
+population <- "POPULATION"
+
+# Rasterize whole habitat class
+whole <- raster(habclass_simp, res = 90)
+whole <- fasterize(habclass_simp, whole, field = "RATING")
+# whole <- as.factor(whole)
+# plot(whole)
+# rat1 <- levels(whole)[[1]]
+# rat1[["rating"]] <- c("1","2","3","4","5","6","NA")
+# levels(whole) <- rat1 # Add RAT to raster
+# WriteRaster(whole, filename = file.path(out, "habclass_rast.grd"))
+
 # Crop raster to Cranberry GBPU sf
 cran_rast <- raster::crop(whole, cran)
 cran_mask <- raster::mask(cran_rast, cran)
@@ -44,24 +57,12 @@ tweed_mask <- raster::mask(tweed_rast, tweed)
 plot(tweed_mask)
 levelplot(tweed_mask)
 
-## Create value with population field
-population <- "POPULATION"
-
-# Rasterize whole habitat class
-whole <- raster(habclass_simp, res = 90)
-whole <- fasterize(habclass_simp, whole, field = "RATING")
-whole <- as.factor(whole)
-plot(whole)
-rat1 <- levels(whole)[[1]]
-rat1[["rating"]] <- c("1","2","3","4","5","6","NA")
-levels(whole) <- rat1 # Add RAT to raster
-# WriteRaster(whole, filename = file.path(out, "habclass_rast.grd"))
-
 # Plot categorical raster -- trellis
 beczones <- levelplot(whole)
 plot(beczones)
 
 ## Raster by poly ----------------------------------------
 gbpu_rasts <- raster_by_poly(whole, gbpu_2015, population,
-                             parallel = TRUE, workers = 2)
-gbpu_rasts <- raster_by_poly(whole, gbpu_2015, population)
+                                         parallel = T, workers = 2)
+write_rds(gbpu_rasts, file = "tmp/gbpu_rasts.rds")
+
