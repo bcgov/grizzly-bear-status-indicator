@@ -63,6 +63,47 @@ plot(beczones)
 
 ## Raster by poly ----------------------------------------
 gbpu_rasts <- raster_by_poly(whole, gbpu_2015, population,
-                                         parallel = T, workers = 2)
-write_rds(gbpu_rasts, file = "tmp/gbpu_rasts.rds")
+                                         parallel = T, workers = 3)
+saveRDS(gbpu_rasts, file = "out/gbpu_rasts.rds")
 
+# Summary
+gbpu_rast_summary <- summarize_raster_list(gbpu_rasts)
+summarize
+
+## Raster function
+# Mapping function - removed title and legend
+GbPuMap <-function(dat, Lbl, MCol, title="", plot_gmap = FALSE, legend = FALSE,
+                   n_classes = 3, max_px = 1000000) {
+  if (n_classes == 2) {
+    dat[dat == 3] <- 2
+    Lbl <- c(Lbl[1], ">500m")
+    MCol <- MCol[c(1,3)]
+  }
+
+  if (plot_gmap) {
+    dat <- projectRaster(dat, crs = CRS("+proj=longlat +datum=WGS84"))
+    gmap <- ggmap_strata(dat)
+    gg_start <- ggmap(gmap) + rasterVis::gplot(dat, maxpixels = max_px)
+    ext <- extent(dat)
+    coords <- coord_cartesian(xlim = c(ext@xmin, ext@xmax),
+                              ylim = c(ext@ymin, ext@ymax),
+                              expand = TRUE)
+  } else {
+    coords <- coord_fixed()
+    gg_start <- rasterVis::gplot(dat, maxpixels = max_px)
+  }
+  gg_start +
+    geom_raster(aes(fill=factor(value)), alpha=0.8) +
+    coords +
+    scale_x_continuous(expand = c(0,0)) +
+    scale_y_continuous(expand = c(0,0)) +
+    scale_fill_manual(labels = Lbl, values = MCol) +
+    labs(fill = "Distance to Roads") +
+    theme_minimal() +
+    theme(
+      axis.text=element_blank(),
+      axis.title=element_blank(),
+      legend.position=ifelse(legend, "bottom", "none"),
+      panel.grid = element_blank()
+    )
+}

@@ -10,13 +10,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-
 # Loading R libraries ---------------------------------------------------
-Packages <- c("sf", "tidyverse", "dplyr", "maptools", "devtools","bcmaps",
-              "ggplot2", "leaflet", "rmapshaper", "jsonlite", "geojsonio",
-              "mapview", "readr", "bcdata", "kableExtra", "envreportutils",
-              "viridis", "ggmap", "RColorBrewer", "ggspatial", "ggrepel",
-              "svglite", "Cairo", "purrr", "shiny", "htmltools", "here")
+Packages <- c("sf", "tidyverse", "maptools", "devtools","bcmaps",
+              "leaflet", "rmapshaper", "bcdata", "kableExtra",
+              "envreportutils", "viridis", "ggmap", "ggspatial",
+              "ggrepel", "svglite", "Cairo", "shiny", "htmltools", "here")
 lapply(Packages, library, character.only = TRUE)
 # devtools::install_github("dkahle/ggmap", force = T)
 
@@ -64,3 +62,5 @@ plot(st_geometry(habclass))
 habclass_simp <- ms_simplify(habclass, keep = 0.1, sys = TRUE)
 plot(habclass_simp[2])
 # saveRDS(habclass_simp, "habclass_simp.rds")
+
+plot(gbpu_rasts[["Extirpated"]])
