@@ -9,7 +9,8 @@ library(tidyverse)
 library(future)
 library(bcmaps)
 library(future.apply)
-
+library(envreportutils.internal)
+envreportutils.internal:::set_ghostscript('path_to_executable')
 # Add remote version of bcmaps
 # remotes::install_github("bcgov/bcmaps", ref = "future", force = T)
 
@@ -21,7 +22,6 @@ plot(st_geometry(habclass))
 # habclass_simp <- ms_simplify(habclass, keep = 0.05, sys = TRUE)
 # saveRDS(habclass_simp, file = "habclass_simp.rds")
 habclass_simp <- readRDS("habclass_simp.rds")
-plot(habclass_simp[14])
 
 ## Rename values to NAs
 habclass_simp$RATING[habclass_simp$RATING == 66] <- NA
@@ -58,52 +58,30 @@ plot(tweed_mask)
 levelplot(tweed_mask)
 
 # Plot categorical raster -- trellis
-beczones <- levelplot(whole)
+beczones <- levelplot(gbpu_rasts)
 plot(beczones)
 
 ## Raster by poly ----------------------------------------
-gbpu_rasts <- raster_by_poly(whole, gbpu_2015, population,
-                                         parallel = T, workers = 3)
+gbpu_rasts <- raster_by_poly(whole, gbpu_2015, population)
+gbpu_rasts <- c(whole, gbpu_rasts)
+names(gbpu_rasts)[1] <- "Province"
+plot(gbpu_rasts$Province)
 saveRDS(gbpu_rasts, file = "out/gbpu_rasts.rds")
 
 # Summary
 gbpu_rast_summary <- summarize_raster_list(gbpu_rasts)
-summarize
 
-## Raster function
-# Mapping function - removed title and legend
-GbPuMap <-function(dat, Lbl, MCol, title="", plot_gmap = FALSE, legend = FALSE,
-                   n_classes = 3, max_px = 1000000) {
-  if (n_classes == 2) {
-    dat[dat == 3] <- 2
-    Lbl <- c(Lbl[1], ">500m")
-    MCol <- MCol[c(1,3)]
-  }
+## Raster functions
+ggmap_gbpu <- function(gbpu_2015) {
+  e <- extent(gbpu_2015)
+  loc <- c(e[1] - 2, e[3] - 2, e[2] + 2, e[4] + 2)
+  get_map(loc, maptype = "satellite")
+}
 
-  if (plot_gmap) {
-    dat <- projectRaster(dat, crs = CRS("+proj=longlat +datum=WGS84"))
-    gmap <- ggmap_strata(dat)
-    gg_start <- ggmap(gmap) + rasterVis::gplot(dat, maxpixels = max_px)
-    ext <- extent(dat)
-    coords <- coord_cartesian(xlim = c(ext@xmin, ext@xmax),
-                              ylim = c(ext@ymin, ext@ymax),
-                              expand = TRUE)
-  } else {
-    coords <- coord_fixed()
-    gg_start <- rasterVis::gplot(dat, maxpixels = max_px)
-  }
-  gg_start +
-    geom_raster(aes(fill=factor(value)), alpha=0.8) +
-    coords +
-    scale_x_continuous(expand = c(0,0)) +
-    scale_y_continuous(expand = c(0,0)) +
-    scale_fill_manual(labels = Lbl, values = MCol) +
-    labs(fill = "Distance to Roads") +
-    theme_minimal() +
-    theme(
-      axis.text=element_blank(),
-      axis.title=element_blank(),
-      legend.position=ifelse(legend, "bottom", "none"),
-      panel.grid = element_blank()
-    )
+gbpuRastMaps <- function(dat, title = "", plot_gmap = F, legend = F, max_px = 1000000) {
+  dat <- projectRaster(dat, crs = CRS("+proj=longlat +datum=WGS84"))
+  gmap <- ggmap_gbpu(dat)
+  gg_start <- ggmap(gmap) + rasterVis::gplot(dat, maxpixels = max_px)
+  ext <- extent(dat)
+
 }
