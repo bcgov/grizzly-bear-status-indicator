@@ -10,6 +10,7 @@ library(future)
 library(bcmaps)
 library(future.apply)
 library(envreportutils.internal)
+library(raster)
 envreportutils.internal:::set_ghostscript('path_to_executable')
 # Add remote version of bcmaps
 # remotes::install_github("bcgov/bcmaps", ref = "future", force = T)
@@ -78,10 +79,44 @@ ggmap_gbpu <- function(gbpu_2015) {
   get_map(loc, maptype = "satellite")
 }
 
-gbpuRastMaps <- function(dat, title = "", plot_gmap = F, legend = F, max_px = 1000000) {
-  dat <- projectRaster(dat, crs = CRS("+proj=longlat +datum=WGS84"))
-  gmap <- ggmap_gbpu(dat)
-  gg_start <- ggmap(gmap) + rasterVis::gplot(dat, maxpixels = max_px)
-  ext <- extent(dat)
-
+gbpuRastMaps <- function(dat, title = "", plot_gmap = F,
+                         legend = F, max_px = 1000000) {
+  if (plot_gmap) {
+    dat <- projectRaster(dat, crs = CRS("+proj=longlat +datum=WGS84"))
+    gmap <- ggmap_gbpu(dat)
+    gg_start <- ggmap(gmap) + rasterVis::gplot(dat, maxpixels = max_px)
+    ext <- extent(dat)
+    coords <- coord_cartesian(xlim = c(ext@xmin, ext@xmax),
+                              ylim = c(ext@ymin, ext@ymax),
+                              expand = TRUE)
+  } else {
+  coords <- coord_fixed()
+  gg_start <- rasterVis::gplot(dat, maxpixels = max_px)
+  }
+  gg_start +
+  geom_raster(aes(fill=factor(value)), alpha=0.8) +
+  coords +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = c(0,0)) +
+  labs(fill = "Distance to Roads") +
+  theme_minimal() +
+  theme(
+    axis.text=element_blank(),
+    axis.title=element_blank(),
+    legend.position=ifelse(legend, "bottom", "none"),
+    panel.grid = element_blank()
+  )
 }
+
+# Generate plots
+plot_list <- imap(gbpu_rasts, ~ {
+  print(.y)
+# Graph functions
+  GPGroups <- filter(gbpu_2015, POPULATION == .y)
+  plotMap <- gbpuRastMaps(.x, title = .y,
+                          plot_gmap = FALSE, legend = FALSE)
+
+  # Save in a list
+  list(map = plotMap)
+
+})
