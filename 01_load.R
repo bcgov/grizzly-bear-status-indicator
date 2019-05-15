@@ -30,6 +30,7 @@ lapply(Packages, library, character.only = TRUE)
 ## https://www2.gov.bc.ca/gov/content?id=A519A56BC2BF44E4A008B33FCF527F61
 
 # Import grizzly bear threat calculator data from csv prior to the following steps
+# (Not yet in DataBC)
 # Threat calculator data not yet in databc warehouse
 threat_calc <- as_tibble(Threat_Calc) %>%
   rename_all(tolower)
