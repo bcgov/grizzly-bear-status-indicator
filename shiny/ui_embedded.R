@@ -17,4 +17,3 @@ ui_embedded <- shinyUI(fluidPage(
     ))
 )
 
-
