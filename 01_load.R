@@ -41,9 +41,6 @@ gbpu_mu_dens <- st_read("C:/dev/grizzly-bear-status-indicator/gbpu_mu_leh_densit
 plot(st_geometry(gbpu_2015))
 plot(st_geometry(gbpu_mu_dens))
 
-# Get biogeoclimatic zones
-# bec <- bec()
-
 # Create bounding box
 # bc_bbox <- st_as_sfc(st_bbox(boundbc)) # convert to sfc
 # bc_bbox <- st_bbox(bc_bbox) # convert to bbox
