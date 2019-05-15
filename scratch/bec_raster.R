@@ -120,3 +120,18 @@ plot_list <- imap(gbpu_rasts, ~ {
   list(map = plotMap)
 
 })
+
+plot_list[["Valhalla"]]
+
+#save pngs of plots:
+for (n in names(plot_list)) {
+  print(n)
+  map <- plot_list[[n]]$map
+  map_fname <- file.path("out/", paste0(n, "_map.png"))
+  png_retina(filename = map_fname, width = 500, height = 500, units = "px")
+  plot(map)
+  dev.off()
+}
+
+iwalk(plot_list, ~ png_retina(.x, file = paste0("out/", .y, ".png"),
+                              width = 600, height = 300))
