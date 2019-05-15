@@ -44,9 +44,6 @@ gbpu_mu_dens <- st_read("C:/dev/grizzly-bear-status-indicator/gbpu_mu_leh_densit
 plot(st_geometry(gbpu_2015))
 plot(st_geometry(gbpu_mu_dens))
 
-# Get BC boundary
-boundbc <- bc_bound()
-
 # Get biogeoclimatic zones
 # bec <- bec()
 
@@ -62,5 +59,3 @@ plot(st_geometry(habclass))
 habclass_simp <- ms_simplify(habclass, keep = 0.1, sys = TRUE)
 plot(habclass_simp[2])
 # saveRDS(habclass_simp, "habclass_simp.rds")
-
-plot(gbpu_rasts[["Extirpated"]])
