@@ -35,10 +35,6 @@ lapply(Packages, library, character.only = TRUE)
 threat_calc <- as_tibble(Threat_Calc) %>%
   rename_all(tolower)
 
-# Import 2012 GBPU polygons
-popunits <- bcdc_get_geodata("grizzly-bear-population-units",
-                             query = "VERSION_NAME='2012'")
-
 # Import 2015 GBPU polygons and MU polygons
 gbpu_2015 <- st_read("C:/dev/grizzly-bear-status-indicator/gbpu_2015.shp")
 gbpu_mu_dens <- st_read("C:/dev/grizzly-bear-status-indicator/gbpu_mu_leh_density.shp")
