@@ -36,6 +36,7 @@ plotlabs <- sprintf( # create labels for leaflet map
 ) %>% lapply(htmltools::HTML)
 
 names(providers) # list of available tiles
+
 ## ------
 ## LEAFLET MAP -- POPULATION AND CONSERVATION STATUS
 ## ------
