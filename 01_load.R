@@ -16,6 +16,7 @@ Packages <- c("sf", "tidyverse", "maptools", "devtools","bcmaps",
               "envreportutils", "viridis", "ggmap", "ggspatial",
               "ggrepel", "svglite", "Cairo", "shiny", "htmltools", "here")
 lapply(Packages, library, character.only = TRUE)
+
 # devtools::install_github("dkahle/ggmap", force = T)
 
 # Install envreportutils

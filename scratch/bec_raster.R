@@ -11,7 +11,10 @@ library(bcmaps)
 library(future.apply)
 library(envreportutils.internal)
 library(raster)
+library(dplyr)
+
 envreportutils.internal:::set_ghostscript('path_to_executable')
+
 # Add remote version of bcmaps
 # remotes::install_github("bcgov/bcmaps", ref = "future", force = T)
 
@@ -48,23 +51,13 @@ whole <- fasterize(habclass_simp, whole, field = "RATING")
 # levels(whole) <- rat1 # Add RAT to raster
 # WriteRaster(whole, filename = file.path(out, "habclass_rast.grd"))
 
-# Crop raster to Cranberry GBPU sf
-cran_rast <- raster::crop(whole, cran)
-cran_mask <- raster::mask(cran_rast, cran)
-plot(cran_mask)
-
-tweed_rast <- raster::crop(whole, tweed)
-tweed_mask <- raster::mask(tweed_rast, tweed)
-plot(tweed_mask)
-levelplot(tweed_mask)
-
 # Plot categorical raster -- trellis
 beczones <- levelplot(gbpu_rasts)
 plot(beczones)
 
 ## Raster by poly ----------------------------------------
 gbpu_rasts <- raster_by_poly(whole, gbpu_2015, population)
-gbpu_rasts <- c(whole, gbpu_rasts)
+# gbpu_rasts <- c(whole, gbpu_rasts)
 names(gbpu_rasts)[1] <- "Province"
 plot(gbpu_rasts$Province)
 saveRDS(gbpu_rasts, file = "out/gbpu_rasts.rds")
@@ -80,7 +73,7 @@ ggmap_gbpu <- function(gbpu_2015) {
 }
 
 gbpuRastMaps <- function(dat, title = "", plot_gmap = F,
-                         legend = F, max_px = 1000000) {
+                         legend = T, max_px = 1000000) {
   if (plot_gmap) {
     dat <- projectRaster(dat, crs = CRS("+proj=longlat +datum=WGS84"))
     gmap <- ggmap_gbpu(dat)
@@ -98,7 +91,7 @@ gbpuRastMaps <- function(dat, title = "", plot_gmap = F,
   coords +
   scale_x_continuous(expand = c(0,0)) +
   scale_y_continuous(expand = c(0,0)) +
-  labs(fill = "Distance to Roads") +
+  labs(fill = "") +
   theme_minimal() +
   theme(
     axis.text=element_blank(),
@@ -118,20 +111,34 @@ plot_list <- imap(gbpu_rasts, ~ {
 
   # Save in a list
   list(map = plotMap)
-
 })
 
-plot_list[["Valhalla"]]
+# Check result
+plot_list[["Taiga"]]
+
+# Save to disk
+saveRDS(plot_list, file = "out/plot_list.rds")
+gc()
+
+figsOutDir <- "c:/dev/grizzly-bear-status-indicator/out"
 
 #save pngs of plots:
 for (n in names(plot_list)) {
   print(n)
   map <- plot_list[[n]]$map
-  map_fname <- file.path("out/", paste0(n, "_map.png"))
-  png_retina(filename = map_fname, width = 500, height = 500, units = "px")
+  map_fname <- file.path(figsOutDir, paste0(n, "_map.png"))
+  png_retina(filename = map_fname, width = 500, height = 500, units = "px",
+             type = "windows")
   plot(map)
   dev.off()
 }
 
-iwalk(plot_list, ~ png_retina(.x, file = paste0("out/", .y, ".png"),
-                              width = 600, height = 300))
+memory.limit(size = 9000)
+walk(plot_list, ~ {
+  plot(.x$map)
+})
+
+iwalk(plot_list, ~ png_retina(.x, filename = paste0("out/", .y, ".png"),
+                              width = 600, height = 300, units = "px", type = "windows"))
+iwalk(plot_list, ~ save_svg_px(.x, file = paste0("out/", .y, ".svg"),
+                               width = 600, height = 300))
