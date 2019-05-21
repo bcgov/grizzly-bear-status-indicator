@@ -118,8 +118,6 @@ plot_list[["Taiga"]]
 
 # Save to disk
 saveRDS(plot_list, file = "out/plot_list.rds")
-gc()
-memory.limit(15000)
 
 figsOutDir <- "c:/dev/grizzly-bear-status-indicator/out"
 
