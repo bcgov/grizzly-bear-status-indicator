@@ -2,6 +2,7 @@
 ## LEAFLET
 ## --------
 library(bcmaps)
+library(mapview)
 available_layers()
 
 # Create custom icons
@@ -20,14 +21,16 @@ palette3 <- colorFactor(palette = 'viridis', grizzdata_full$threat_class,
 ## ------
 ## POPUPS
 ## -------
+plot(map)
 grizz_plotlist <- readRDS(here("out/grizz_plotlist.rds"))[grizzdata_full$gbpu_name]
-popups <-  popupGraph(grizz_plotlist, type = "svg", width = 500,
+popups <-  popupGraph(plot_list, type = "png", width = 500,
                       height = 300)
 popup_options <-  popupOptions(maxWidth = "100%", autoPan = TRUE,
                                keepInView = TRUE,
                                closeOnClick = TRUE,
                                autoPanPaddingTopLeft = c(120, 10),
                                autoPanPaddingBottomRight = c(120,10))
+# saveRDS(popups, "grizz_popups.rds")
 require(htmltools)
 plotlabs <- sprintf( # create labels for leaflet map
   "<strong>%s</strong>",
@@ -44,15 +47,14 @@ grizzmap <- leaflet(grizzdata_full, width = "900px", height = "500px") %>%   # g
   addTiles(group = "OpenStreetMap (Default") %>%
   add_bc_home_button() %>%
   set_bc_view() %>%
-  set_bc_view_on_close() %>% # re-centre map on popup close - do we want this?
   addLegend("bottomright", pal = palette1, values = grizzdata_full$rankcode,
             title = "Conservation Status",
             opacity = 1) %>%
   addPolygons(stroke = T, weight = 1, color = "black", # Add border to polygons
               fillOpacity = 0.4, # Polygon fill
               fillColor = ~palette1(grizzdata_full$rankcode),
-              #popup = popups,
-              #popupOptions = popup_options,
+              popup = popups,
+              popupOptions = popup_options,
               group = "Conservation Rank",
               label = plotlabs,
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
@@ -84,6 +86,7 @@ grizzmap <- leaflet(grizzdata_full, width = "900px", height = "500px") %>%   # g
     baseGroups = c("Conservation Status", "Population Estimate", "Overall Threat Class"),
     overlayGroups = c("Terrain", "OpenStreetMap (Default)"))
 grizzmap # View leaflet
+plot(whole)
 
 ## ------------------------------
 ## LEAFLET MAP -- THREAT MAPPING
