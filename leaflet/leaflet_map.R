@@ -20,19 +20,18 @@ palette3 <- colorFactor(palette = 'viridis', grizzdata_full$threat_class,
 ## ------
 ## POPUPS
 ## -------
-# grizz_plotlist <- readRDS(here("out/grizz_plotlist.rds"))[grizzdata_full$gbpu_name]
-# popups <-  popupGraph(grizz_plotlist, type = "svg", width = 500,
-#                      height = 300)
-# popup_options <-  popupOptions(maxWidth = "100%", autoPan = TRUE,
-#                               keepInView = TRUE,
-#                               closeOnClick = TRUE,
-#                               autoPanPaddingTopLeft = c(120, 10),
-#                               autoPanPaddingBottomRight = c(120,10))
-
+grizz_plotlist <- readRDS(here("out/grizz_plotlist.rds"))[grizzdata_full$gbpu_name]
+popups <-  popupGraph(grizz_plotlist, type = "svg", width = 500,
+                      height = 300)
+popup_options <-  popupOptions(maxWidth = "100%", autoPan = TRUE,
+                               keepInView = TRUE,
+                               closeOnClick = TRUE,
+                               autoPanPaddingTopLeft = c(120, 10),
+                               autoPanPaddingBottomRight = c(120,10))
 require(htmltools)
 plotlabs <- sprintf( # create labels for leaflet map
   "<strong>%s</strong>",
-  tools::toTitleCase(tolower(grizzdata_full$gbpu_name))
+  tools::toTitleCase(tolower(gbpu_2015$POPULATION))
 ) %>% lapply(htmltools::HTML)
 
 names(providers) # list of available tiles
