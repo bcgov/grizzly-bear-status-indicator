@@ -58,8 +58,8 @@ plot(beczones)
 ## Raster by poly ----------------------------------------
 gbpu_rasts <- raster_by_poly(whole, gbpu_2015, population)
 # gbpu_rasts <- c(whole, gbpu_rasts)
-names(gbpu_rasts)[1] <- "Province"
-plot(gbpu_rasts$Province)
+# names(gbpu_rasts)[1] <- "Province"
+# plot(gbpu_rasts$Province)
 saveRDS(gbpu_rasts, file = "out/gbpu_rasts.rds")
 
 # Summary
@@ -119,6 +119,7 @@ plot_list[["Taiga"]]
 # Save to disk
 saveRDS(plot_list, file = "out/plot_list.rds")
 gc()
+memory.limit(15000)
 
 figsOutDir <- "c:/dev/grizzly-bear-status-indicator/out"
 
@@ -133,12 +134,7 @@ for (n in names(plot_list)) {
   dev.off()
 }
 
-memory.limit(size = 9000)
+# Walk loops over list, but don't return anything to the environment
 walk(plot_list, ~ {
   plot(.x$map)
 })
-
-iwalk(plot_list, ~ png_retina(.x, filename = paste0("out/", .y, ".png"),
-                              width = 600, height = 300, units = "px", type = "windows"))
-iwalk(plot_list, ~ save_svg_px(.x, file = paste0("out/", .y, ".svg"),
-                               width = 600, height = 300))
