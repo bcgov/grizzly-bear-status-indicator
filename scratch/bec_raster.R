@@ -14,6 +14,7 @@ library(raster)
 library(dplyr)
 
 envreportutils.internal:::set_ghostscript('path_to_executable')
+devtools::install_github("bcgov-c/envreportutils.internal")
 
 # Add remote version of bcmaps
 # remotes::install_github("bcgov/bcmaps", ref = "future", force = T)
@@ -50,10 +51,6 @@ whole <- fasterize(habclass_simp, whole, field = "RATING")
 # rat1[["rating"]] <- c("1","2","3","4","5","6","NA")
 # levels(whole) <- rat1 # Add RAT to raster
 # WriteRaster(whole, filename = file.path(out, "habclass_rast.grd"))
-
-# Plot categorical raster -- trellis
-beczones <- levelplot(gbpu_rasts)
-plot(beczones)
 
 ## Raster by poly ----------------------------------------
 gbpu_rasts <- raster_by_poly(whole, gbpu_2015, population)
@@ -136,3 +133,4 @@ for (n in names(plot_list)) {
 walk(plot_list, ~ {
   plot(.x$map)
 })
+R.Version()
