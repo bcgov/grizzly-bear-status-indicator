@@ -12,12 +12,14 @@
 
 # Loading R libraries ---------------------------------------------------
 Packages <- c("sf", "tidyverse", "maptools", "devtools","bcmaps",
-              "leaflet", "rmapshaper", "bcdata", "kableExtra",
+              "leaflet", "rmapshaper", "bcdata",
               "envreportutils", "viridis", "ggmap", "ggspatial",
               "ggrepel", "svglite", "Cairo", "shiny", "htmltools", "here")
 lapply(Packages, library, character.only = TRUE)
 
-# devtools::install_github("dkahle/ggmap", force = T)
+remotes::install_github("bcgov/bcdata")
+install_github("bcgov/envreportutils")
+devtools::install_github("dkahle/ggmap", force = T)
 
 # Install envreportutils
 # remotes::install_github("bcgov/envreportutils", force = T)
