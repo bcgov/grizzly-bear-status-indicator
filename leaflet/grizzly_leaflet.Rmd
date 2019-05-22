@@ -20,12 +20,24 @@ See the License for the specific language governing permissions and limitations 
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r leaflet, include = FALSE}
+```{r pkgs, include = FALSE}
 
 # # Loading R libraries
-Packages <- c("sf", "tidyverse", "maptools", "devtools","bcmaps", "htmltools", "here",
-              "ggplot2", "leaflet", "rmapshaper", "bcdata", "envreportutils","viridis")
+Packages <- c("sf", "tidyverse", "maptools", "devtools","bcmaps",
+              "leaflet", "rmapshaper", "bcdata", "here", "mapview", 
+              "envreportutils", "viridis", "ggmap", "ggspatial",
+              "ggrepel", "svglite", "Cairo", "shiny", "htmltools")
 lapply(Packages, library, character.only = TRUE)
+```
+
+``` {r leaflet, include = FALSE}
+# Prep - colour palettes
+palette1 <- colorFactor(palette = 'viridis', grizzdata_full$rankcode,
+                        reverse = TRUE, na.color = "#808080")
+palette2 <- colorFactor(palette = 'viridis', grizzdata_full$adults,
+                        reverse = TRUE, na.color = "#808080")
+palette3 <- colorFactor(palette = 'viridis', grizzdata_full$threat_class,
+                        reverse = TRUE, na.color = "#808080")
 
 # Load grizzly bear population unit polygons as an sf object
 popunits <- bcdc_get_geodata("grizzly-bear-population-units",
@@ -77,59 +89,77 @@ popunits_xy <- left_join(popunits_xy, by_gbpu, by = "population_name")
 # Setup
 ``` {r, warning = FALSE}
 
-plot_list = list()
-if (params$add_popups) {
-  # get plot list 
-  plot_list <- readRDS(here("tmp/plotlist.rds"))[popunits_xy$population_name]
-}
-
-popupGraph_list <- imap(plot_list, ~ {
-    .x$barchart + 
-      .x$map +
-      plot_layout(widths = c(1, 1.5)) +
-      plot_annotation(title = tools::toTitleCase(tolower(.y)),
-                      theme = theme(title = element_text(size = 18)))
-  })
-  
-popups <-  popupGraph(popupGraph_list, type = "svg", width = 700,
-                        height = 400)
+## ------
+## POPUPS
+## -------
+grizz_plotlist <- readRDS(here("out/grizz_plotlist.rds"))[grizzdata_full$gbpu_name]
+popups <-  popupGraph(plot_list, type = "png", width = 500,
+                      height = 300)
 popup_options <-  popupOptions(maxWidth = "100%", autoPan = TRUE,
-                                 keepInView = TRUE,
-                                 zoomAnimation = FALSE,
-                                 closeOnClick = TRUE,
-                                 autoPanPaddingTopLeft = c(120, 10),
-                                 autoPanPaddingBottomRight = c(10,10))
-} else {
-  popups <- popup_options <- NULL
-}
+                               keepInView = TRUE,
+                               closeOnClick = TRUE,
+                               autoPanPaddingTopLeft = c(120, 10),
+                               autoPanPaddingBottomRight = c(120,10))
+# saveRDS(popups, "grizz_popups.rds")
+popups <- readRDS("grizz_popups.rds")
+
+require(htmltools)
+plotlabs <- sprintf( # create labels for leaflet map
+  "<strong>%s</strong>",
+  tools::toTitleCase(tolower(gbpu_2015$POPULATION))
+) %>% lapply(htmltools::HTML)
+
 ```
 
 ``` {r leaflet, warning = F}
-grizzmap <- leaflet() %>%   # generate leaflet map
-  addProviderTiles(providers$Stamen.TerrainBackground, group = "Terrain") %>%
-  addTiles(group = "OSM (Default") %>%
+
+## ------
+## LEAFLET MAP -- POPULATION AND CONSERVATION STATUS
+## ------
+grizzmap <- leaflet(grizzdata_full, width = "900px", height = "500px") %>%   # generate leaflet map
+  addProviderTiles(providers$Stamen.TerrainBackground, group = "Terrain") %>% # or providers$Stamen.TerrainBackground
+  addTiles(group = "OpenStreetMap (Default") %>%
   add_bc_home_button() %>%
-  set_bc_view_on_close() %>% # re-centre map on popup close
-  addLegend("bottomright", pal = factpal, values = grizzdata$status,
-            title = "Population Status",
+  set_bc_view() %>%
+  addLegend("bottomright", pal = palette1, values = grizzdata_full$rankcode,
+            title = "Conservation Status",
             opacity = 1) %>%
-  addPolygons(data = grizzdata,
-              stroke = T, weight = 1, color = "black", # Add border to polygons
+  addPolygons(stroke = T, weight = 1, color = "black", # Add border to polygons
               fillOpacity = 0.4, # Polygon fill
-              fillColor = ~factpal(grizzdata$status),
+              fillColor = ~palette1(grizzdata_full$rankcode),
+              popup = popups,
+              popupOptions = popup_options,
+              group = "Conservation Rank",
+              label = plotlabs,
+              labelOptions = labelOptions(direction = "auto", textsize = "12px"),
               highlight = highlightOptions( # Highlight interaction for mouse hover
-                weight = 4,
+                weight = 3,
+                color = "yellow",
+                bringToFront = T)) %>%
+  addPolygons(stroke = T, weight = 1, color = "black",
+              fillOpacity = 0.2,
+              fillColor = ~palette2(grizzdata_full$adults),
+              group = "Population Estimate",
+              label = plotlabs,
+              labelOptions = labelOptions(direction = "auto", textsize = "12px"),
+              highlight = highlightOptions( # Highlight interaction for mouse hover
+                weight = 3,
+                color = "yellow",
+                bringToFront = T)) %>%
+  addPolygons(stroke = T, weight = 1, color = "black", # Add border to polygons
+              fillOpacity = 0.2, # Polygon fill
+              fillColor = ~palette3(grizzdata_full$threat_class),
+              group = "Overall Threat Class",
+              label = plotlabs,
+              labelOptions = labelOptions(direction = "auto", textsize = "12px"),
+              highlight = highlightOptions( # Highlight interaction for mouse hover
+                weight = 3,
                 color = "yellow",
                 bringToFront = T)) %>%
   addLayersControl(
-    baseGroups = c("Terrain", "OSM (Default")) %>%
-  addMarkers(data = grizzdata, lng = ~lng, lat = ~lat,
-             label = grizzdata$population_name, icon = tree,
-             labelOptions = labelOptions(noHide = F, textOnly = F))
+    baseGroups = c("Conservation Status", "Population Estimate", "Overall Threat Class"),
+    overlayGroups = c("Terrain", "OpenStreetMap (Default)"))
 grizzmap # View leaflet
-
-```
-
-```{r leaflet printout, include=TRUE}
-grizzmap # View leaflet
+plot(whole)
+}
 ```
