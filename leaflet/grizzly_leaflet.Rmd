@@ -38,43 +38,6 @@ palette2 <- colorFactor(palette = 'viridis', grizzdata_full$adults,
                         reverse = TRUE, na.color = "#808080")
 palette3 <- colorFactor(palette = 'viridis', grizzdata_full$threat_class,
                         reverse = TRUE, na.color = "#808080")
-
-# Simplify population unit polygons using mapshaper
-popunits_simplify <- ms_simplify(popunits, keep = 0.25) %>% # reduce number of vertices
-  st_transform(popunits_simplify, crs = 4326) # change projection
-
-# Drop unused metadata columns
-popunits_simplify <- select(popunits_simplify, -c(id, SE_ANNO_CAD_DATA, VERSION_YEAR_MODIFIED, OBJECTID))
-
-# Find centroid of polygons (for labelling)
-# Note: 'popunits' w/ BC Albers CRS used because lat/long not accepted by st_centroid
-popcentroid <- st_centroid(popunits$geometry)
-popcentroid <- st_transform(popcentroid, crs = 4326) # convert to lat/long
-
-# Calculate coordinates for centroid of polygons
-popcoords <- st_coordinates(popcentroid) # changes to a matrix
-
-# Spatial join
-popunits_xy <- cbind(popunits_simplify, popcoords) # cbind coords and polygons
-
-# Rename lat and lng columns
-popunits_xy <- rename(popunits_xy, lng = X)
-popunits_xy <- rename(popunits_xy, lat = Y)
-
-
-# Set column names to lower case
-popunits_xy <- popunits_xy %>% rename_all(tolower) %>%
-  st_transform(popunits_xy, crs = 4326) # convert to lat/long
-
-by_gbpu <- grizzlypop_raw %>%
-  group_by(GBPU) %>%
-  summarise(POP_ESTIMATE = sum(Estimate), POP_DENSITY = sum(Density)) %>% # Does this make sense to sum up density?
-  rename(POPULATION_NAME = GBPU) %>%
-  rename_all(tolower) # Set to lower case
-glimpse(by_gbpu)
-
-# Join population + density estimates
-popunits_xy <- left_join(popunits_xy, by_gbpu, by = "population_name")
 ```
 
 # Setup
