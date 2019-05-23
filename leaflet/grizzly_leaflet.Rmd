@@ -39,15 +39,6 @@ palette2 <- colorFactor(palette = 'viridis', grizzdata_full$adults,
 palette3 <- colorFactor(palette = 'viridis', grizzdata_full$threat_class,
                         reverse = TRUE, na.color = "#808080")
 
-# Load grizzly bear population unit polygons as an sf object
-popunits <- bcdc_get_geodata("grizzly-bear-population-units",
-                             query = "VERSION_NAME='2012'")
-
-# Load grizzly 
-grizzlypop_raw <- read_csv("https://catalogue.data.gov.bc.ca/dataset/2bf91935-9158-4f77-9c2c-4310480e6c29/resource/4eca8c5c-ed25-46c1-835c-3d9f84b807e1/download/grizzlypopulationestimate2012.csv")
-glimpse(grizzlypop_raw)
-
-
 # Simplify population unit polygons using mapshaper
 popunits_simplify <- ms_simplify(popunits, keep = 0.25) %>% # reduce number of vertices
   st_transform(popunits_simplify, crs = 4326) # change projection
