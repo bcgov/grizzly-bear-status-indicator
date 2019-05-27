@@ -19,6 +19,9 @@ devtools::install_github("bcgov-c/envreportutils.internal")
 # Add remote version of bcmaps
 # remotes::install_github("bcgov/bcmaps", ref = "future", force = T)
 
+# Create -out directory
+figsOutDir <- "c:/dev/grizzly-bear-status-indicator/out"
+
 ## Import grizzly BEI polygons (2019) as sf ---------------------------
 habclass <- st_read("C:/dev/grizzly-bear-status-indicator/habclass.shp")
 plot(st_geometry(habclass))
@@ -34,31 +37,29 @@ habclass_simp$RATING[habclass_simp$RATING == 66] <- NA
 habclass_simp$RATING[habclass_simp$RATING == 99] <- NA
 
 ## Add gbpu polygons --------------------------------------------------
-gbpu_2015 <- st_read("C:/dev/grizzly-bear-status-indicator/gbpu_2015.shp")
-
-# Replace NAs - Needs to be updated with unique identifiers for extirpated
-gbpu_2015$POPULATION <- as.character(gbpu_2015$POPULATION)
-gbpu_2015$POPULATION[is.na(gbpu_2015$POPULATION)] <- "Extirpated"
+grizzdata_full <- readRDS("grizzdata_full.rds")
+class(grizzdata_full)
 
 ## Create value with population field
-population <- "POPULATION"
+gbpu_name <- "gbpu_name"
+crs(whole)
 
 # Rasterize whole habitat class
 whole <- raster(habclass_simp, res = 90)
 whole <- fasterize(habclass_simp, whole, field = "RATING")
 # whole <- as.factor(whole)
-plot(whole)
+# plot(whole)
 # rat1 <- levels(whole)[[1]]
 # rat1[["rating"]] <- c("1","2","3","4","5","6","NA")
 # levels(whole) <- rat1 # Add RAT to raster
 # WriteRaster(whole, filename = file.path(out, "habclass_rast.grd"))
 
 ## Raster by poly ----------------------------------------
-gbpu_rasts <- raster_by_poly(whole, gbpu_2015, population)
+gbpu_rasts <- raster_by_poly(whole, grizzdata_full, gbpu_name)
 # gbpu_rasts <- c(whole, gbpu_rasts)
 # names(gbpu_rasts)[1] <- "Province"
 # plot(gbpu_rasts$Province)
-saveRDS(gbpu_rasts, file = "out/gbpu_rasts.rds")
+saveRDS(gbpu_rasts, file = "out/gbpu_rasts2.rds")
 
 # Summary
 gbpu_rast_summary <- summarize_raster_list(gbpu_rasts)
@@ -89,7 +90,7 @@ gbpuRastMaps <- function(dat, title = "", plot_gmap = F,
   coords +
   scale_x_continuous(expand = c(0,0)) +
   scale_y_continuous(expand = c(0,0)) +
-  labs(fill = "") +
+  labs(fill = "Habitat Suitability Rank") +
   theme_minimal() +
   theme(
     axis.text=element_blank(),
@@ -117,8 +118,6 @@ plot_list[["Taiga"]]
 # Save to disk
 saveRDS(plot_list, file = "out/plot_list.rds")
 
-figsOutDir <- "c:/dev/grizzly-bear-status-indicator/out"
-
 #save pngs of plots:
 for (n in names(plot_list)) {
   print(n)
@@ -134,4 +133,3 @@ for (n in names(plot_list)) {
 walk(plot_list, ~ {
   plot(.x$map)
 })
-R.Version()
