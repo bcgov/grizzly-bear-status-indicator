@@ -17,9 +17,9 @@ Packages <- c("sf", "tidyverse", "maptools", "devtools","bcmaps",
               "ggrepel", "svglite", "Cairo", "shiny", "htmltools", "here")
 lapply(Packages, library, character.only = TRUE)
 
-remotes::install_github("bcgov/bcdata")
-install_github("bcgov/envreportutils")
-devtools::install_github("dkahle/ggmap", force = T)
+# remotes::install_github("bcgov/bcdata")
+# install_github("bcgov/envreportutils")
+# devtools::install_github("dkahle/ggmap", force = T)
 
 # Install envreportutils
 # remotes::install_github("bcgov/envreportutils", force = T)
