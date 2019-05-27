@@ -49,6 +49,9 @@ grizzdata_full <- left_join(grizzdata_full, threat_calc, by = "gbpu_name")
 grizzdata_full$gbpu_name <- as.character(grizzdata_full$gbpu_name) # as char
 grizzdata_full$gbpu_name[is.na(grizzdata_full$gbpu_name)] <- "Extirpated"
 
+# Write grizzly polygons to disk
+saveRDS(grizzdata_full,file = "grizzdata_full.rds")
+
 # Not to be used in new version unless needed:
 # Summarise total pop estimate per management unit
 by_gbpu <- grizzlypop_raw %>%

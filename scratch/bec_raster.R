@@ -27,6 +27,7 @@ plot(st_geometry(habclass))
 # habclass_simp <- ms_simplify(habclass, keep = 0.05, sys = TRUE)
 # saveRDS(habclass_simp, file = "habclass_simp.rds")
 habclass_simp <- readRDS("habclass_simp.rds")
+plot(habclass_simp)
 
 ## Rename values to NAs
 habclass_simp$RATING[habclass_simp$RATING == 66] <- NA
@@ -46,7 +47,7 @@ population <- "POPULATION"
 whole <- raster(habclass_simp, res = 90)
 whole <- fasterize(habclass_simp, whole, field = "RATING")
 # whole <- as.factor(whole)
-# plot(whole)
+plot(whole)
 # rat1 <- levels(whole)[[1]]
 # rat1[["rating"]] <- c("1","2","3","4","5","6","NA")
 # levels(whole) <- rat1 # Add RAT to raster
