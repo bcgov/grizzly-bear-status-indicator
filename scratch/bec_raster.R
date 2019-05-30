@@ -29,7 +29,7 @@ plot(st_geometry(habclass))
 ## Simplify BEI polygons ----------------------------------------------
 # habclass_simp <- ms_simplify(habclass, keep = 0.05, sys = TRUE)
 # saveRDS(habclass_simp, file = "habclass_simp.rds")
-habclass_simp <- readRDS("habclass_simp.rds")
+habclass_simp <- readRDS("data/habclass_simp.rds")
 plot(habclass_simp)
 
 ## Rename values to NAs
