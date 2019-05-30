@@ -12,9 +12,9 @@
 
 # Loading R libraries ---------------------------------------------------
 Packages <- c("sf", "tidyverse", "maptools", "devtools","bcmaps",
-              "leaflet", "rmapshaper", "bcdata",
-              "envreportutils", "viridis", "ggmap", "ggspatial",
-              "ggrepel", "svglite", "Cairo", "shiny", "htmltools", "here")
+              "leaflet", "rmapshaper", "bcdata", "envreportutils",
+              "viridis", "ggmap", "ggspatial", "here",
+              "ggrepel", "svglite", "Cairo", "shiny", "htmltools")
 lapply(Packages, library, character.only = TRUE)
 
 # remotes::install_github("bcgov/bcdata")
@@ -39,7 +39,7 @@ threat_calc <- as_tibble(Threat_Calc) %>%
   rename_all(tolower)
 
 # Import 2015 GBPU polygons and MU polygons
-gbpu_2015 <- st_read("C:/dev/grizzly-bear-status-indicator/gbpu_2015.shp")
+gbpu_2015 <- st_read("C:/dev/grizzly-bear-status-indicator/data/gbpu_2015.shp")
 gbpu_mu_dens <- st_read("C:/dev/grizzly-bear-status-indicator/gbpu_mu_leh_density.shp")
 plot(st_geometry(gbpu_2015))
 plot(st_geometry(gbpu_mu_dens))
