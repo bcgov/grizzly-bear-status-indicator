@@ -37,9 +37,6 @@ grizzdata_full <- rename(grizzdata_full, lng = X)
 grizzdata_full <- rename(grizzdata_full, lat = Y)
 grizzdata_full <- st_transform(grizzdata_full, crs = 4326) # convert to lat/long
 
-# Transform BACK to BC Albers
-grizzdata_full <- st_transform(grizzdata_full, crs = 3005)
-
 # Rename 'population name' column
 grizzdata_full <- grizzdata_full %>%
   rename_all(tolower) %>%
@@ -54,6 +51,7 @@ grizzdata_full$gbpu_name[is.na(grizzdata_full$gbpu_name)] <- "Extirpated"
 
 # Write grizzly polygons to disk
 saveRDS(grizzdata_full,file = "grizzdata_full.rds")
+write.csv(gbpu_2015, file = "gbpu_2015.csv")
 
 # Not to be used in new version unless needed:
 # Summarise total pop estimate per management unit
