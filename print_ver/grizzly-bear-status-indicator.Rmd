@@ -1,41 +1,45 @@
 ---
 topic: "plants-and-animals"
-title: "Grizzly Bear Status Indicator"
+title: "Grizzly Bear Population Status Indicator"
 output: envreportutils.internal::print_ver
 params:
   draft: TRUE
 ---
-
 <!--
-Instructions:
-
-If you don't have a bibliography, delete the bibliography line in the YAML header.
-If you do have a bibliography, insert the filename. In-text citations are done as:
-[@Moe-etal-1999]. End the document with the bibliography heading (e.g., # References).
+# Copyright 2019 Province of British Columbia
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and limitations under the License.
+# Instructions:
+#
+# If you don't have a bibliography, delete the bibliography line in the YAML header.
+# If you do have a bibliography, insert the filename. In-text citations are done as:
+# [@Moe-etal-1999]. End the document with the bibliography heading (e.g., # References).
 -->
-
-```{r echo = FALSE, include=params$draft, results='asis'}
-cat("\\begin{center}
-\\fbox{
-  \\begin{minipage}[c]{14cm}
- 
-   \\begingroup\\centering{\\textbf{DRAFT – NOT FOR DISTRIBUTION}}
-   
-    \\endgroup
-    
-    \\vspace{1mm}
-   
-    \\text{This DRAFT public reporting product is under review and may change. It is not intended}
-    \\text{to be shared, cited or used at this time. Please contact Environmental Reporting BC program}
-    \\text{staff if you have questions about the content. }
-   
-  \\end{minipage}
-}
-\\end{center}")
+```{r set-options, echo=FALSE, cache=FALSE, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo=FALSE, cache=TRUE, message=FALSE, warning=FALSE, 
+                      error=FALSE)
 ```
 
-Lorem ipsum dolor sit amet, maximus risus, imperdiet mi ac. Vitae tempor ultrices, odio euismod fames tempus at, sodales, eu lacus. Sit ac pellentesque eget ligula sociis mi sociis taciti sed nec. Sodales leo nam himenaeos a et. Porttitor adipiscing risus donec rhoncus est ut eget eu. Feugiat pellentesque donec, vitae neque. Sit faucibus eget nec quis turpis orci. Et, ultrices aptent magnis.
+```{r pre}
+```
 
+Grizzly bears *(Ursus arctos horriblis)* are an important part of the British Columbia landscape. They are a symbol of ecological integrity that represents much of what British Columbians and visitors alike appreciate about B.C.’s natural beauty. 
+
+Grizzly bears are habitat generalists which live in a variety of habitats including temperate coastal rainforests, mountainous areas, and semi-desert Arctic tundra. Grizzly bears are an important “umbrella” species, as landscapes that support healthy Grizzly bear populations will be able to sustain many other species. Grizzly bears play a key role in maintaining healthy ecosystems, for example, by distributing salmon nutrients into forests, managing herbivore populations, and transporting seeds through their feces. 
+
+-	There are approximately 15,000 Grizzly bears in British Columbia — this is about a quarter of the entire North American population. For administrative reasons, the grizzly bear population has been divided into 55 Grizzly Bear Population Units (GBPUs). 
+-	In British Columbia, grizzly bears are an important part of the culture of Indigenous Peoples whose historical relationships with the land are ongoing. 
+-	Grizzly bear viewing is an important economic and social component of B.C.’s tourism and recreation industries. Prior to 2018, about 250 grizzly bears were killed by hunters each year
+in B.C.; however, all non-Indigenous grizzly bear hunting is currently illegals. 
+-	According to recent research, thirteen population units are 
 
 ```{r echo=FALSE, message=FALSE}
 library(ggplot2)
@@ -44,23 +48,20 @@ ggplot(mtcars, aes(x = hp, y = mpg)) +
   geom_smooth()
 ```
 
-Cum vivamus penatibus sed mus fringilla non sociosqu taciti ut. Sed, semper lacus justo ultricies penatibus praesent. Tortor vivamus fermentum libero, libero urna montes orci luctus ligula? Tellus et mauris sed a in lacinia imperdiet. Sed nec penatibus sed at mauris etiam. Interdum morbi arcu vitae lectus cubilia eros, imperdiet felis. Nisl, lacinia vel, nisl, rutrum ac, elementum felis. Dui ante eros ex mi, interdum velit accumsan sociosqu, tempus. Erat vulputate potenti nascetur. Malesuada, curabitur, leo himenaeos, molestie euismod sit. In vitae sollicitudin adipiscing commodo.
-
 ## References and Other Useful Links
 
-* Link 1
-* Link 2
+- [British Columbia conservation Foundation's Bear Aware Program] (https://wildsafebc.com/grizzly-bear/)
 
 ## Data
 
 \*By accessing these datasets, you agree to the licence associated with each file, as indicated in parentheses below.
 
-* Data 1
-* Data 2
+- [Indicator data: BC Grizzly Bear Habitat Classification and Rating](https://catalogue.data.gov.bc.ca/dataset/bc-grizzly-bear-habitat-classification-and-rating)
 
+\newpage
 ----
 
-Published and Available On-Line at Environmental Reporting BC (May 2019):  
+Published and Available On-Line at Environmental Reporting BC (July 2019):  
 [](http://www.env.gov.bc.ca/soe)
 
 Email correspondence to: envreportbc@gov.bc.ca
