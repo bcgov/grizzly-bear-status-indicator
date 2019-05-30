@@ -14,7 +14,8 @@
 staticmap <- ggplot(grizzdata_full) +
   geom_sf(aes(fill = rankcode), color = "white", size = 0.1) +
   labs(title = "Conservation Status of Grizzly Bear Population Units in BC",
-       col = "Conservation Rank") +
+       col = "Conservation Rank",
+       fill = "Threat Category") +
   scale_fill_viridis(alpha = 0.6, discrete = T, option = "viridis",
                      direction = -1, na.value = "darkgrey") +
   theme_soe() + theme(plot.title = element_text(hjust = 0.5),
@@ -30,7 +31,7 @@ staticmap <- ggplot(grizzdata_full) +
 staticmap # plot map
 
 # Get stamen basemap (terrain)
-stamenbc <- get_stamenmap(bbox = c(-139.658203,48.806863,-113.071289,60.261617),
+stamenbc <- get_stamenmap(bbox = c(-139.658203,48,-113.071289,60.261617),
                           zoom = 7, maptype = "terrain-background", where = "/dev/stamen/")
 # saveRDS(stamenbc, file = "/dev/stamen.Rds")
 # readRDS(stamenbc)
@@ -40,14 +41,14 @@ plot(stamenbc) # View basemap
 static_ggmap <- ggmap(stamenbc) + # Generate new map
   geom_sf(data = grizzdata_full, aes(fill = rankcode), inherit.aes = F,
           color = "white", size = 0.01) + # plot with boundary
-  geom_text(aes(label = grizzdata_full$gbpu_name, x = grizzdata_full$lng,
-                y = grizzdata_full$lat, color = "white")) +
-  #geom_label(data = grizzdata_full$gbpu_name) +
+  #geom_text(aes(label = grizzdata_full$gbpu_name, x = grizzdata_full$lng,
+  #              y = grizzdata_full$lat")) +
+  # geom_label(data = grizzdata_full$gbpu_name) +
   theme_soe() + scale_fill_viridis(discrete = T, alpha = 0.5,
                                    option = "viridis", direction = -1,
                                    na.value = "darkgrey") +
   labs(title = "Conservation Status of Grizzly Bear Population Units in BC",
-       fill = "Rank Code") +
+       fill = "Conservation Rank") +
   theme(plot.title = element_text(hjust = 0.5), axis.title.x = element_blank(),
         axis.title.y = element_blank(),
         legend.background = element_rect(
@@ -57,7 +58,7 @@ plot(static_ggmap)
 # Clip + mask raster to BC boundary
 # stamenbc_crop <- raster::crop(stamenbc, bc_boundary)
 
-## POPULATION ESTIMATE MAPPING ------------------------------------------------
+## POPULATION ESTIMATE PLOTTING ------------------------------------------------
 # Plot basic POPULATION estimate per management unit
 popplot <- ggplot(grizzdata_full) +
   geom_col(aes(x = reorder(gbpu_name, -adults), y = adults)) +
@@ -108,3 +109,8 @@ densplot <- ggplot(by_gbpu) +
   ggtitle("Grizzly Bear Population Density Estimate per Unit") +
   theme(plot.title = element_text(hjust = 0.5))
 densplot # Display plot
+
+# Make condensed threat table
+threats <- dplyr::select(threat_calc, -popcode, -isocode, -trendadj, -popiso, -popisoadj)
+threats <- arrange(threats, desc(rankcode))
+
