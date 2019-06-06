@@ -43,7 +43,6 @@ class(grizzdata_full)
 
 ## Create value with population field
 gbpu_name <- "gbpu_name"
-crs(whole)
 
 # Rasterize whole habitat class
 whole <- raster(habclass_simp, res = 90)
