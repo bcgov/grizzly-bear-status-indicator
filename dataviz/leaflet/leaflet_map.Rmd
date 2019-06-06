@@ -20,6 +20,24 @@ library(mapview)
 # SOE + popups
 library(envreportutils)
 
+# Load data
+grizzdata_full <- read_rds(here("data/grizzdata_full.rds"))
+grizzdata_full <- st_transform(grizzdata_full, crs = 4326) # convert to lat/long
+
+# Popups
+popups <- read_rds(here("data/grizz_popups.rds"))
+
+popup_options <-  popupOptions(maxWidth = "100%", autoPan = TRUE,
+                               keepInView = TRUE,
+                               closeOnClick = TRUE,
+                               autoPanPaddingTopLeft = c(120, 10),
+                               autoPanPaddingBottomRight = c(120,10))
+
+plotlabs <- sprintf( # create labels for leaflet map
+  "<strong>%s</strong>",
+  tools::toTitleCase(tolower(grizzdata_full$gbpu_name))
+) %>% lapply(htmltools::HTML)
+
 # Prep - colour palettes
 palette1 <- colorFactor(palette = 'viridis', grizzdata_full$rankcode,
                         reverse = TRUE, na.color = "#808080")
@@ -31,19 +49,22 @@ palette3 <- colorFactor(palette = 'viridis', grizzdata_full$threat_class,
 
 ## {.tabset}
 
-```{r, warning=FALSE}
-grizzmap <- leaflet(grizzdata_full, width = "900px", height = "500px") %>%  # generate leaflet map
+```{r, warning=FALSE, echo=FALSE}
+grizzmap <- leaflet(width = "900px", height = "500px") %>%  # generate leaflet map
   addProviderTiles(providers$Stamen.TerrainBackground, group = "Terrain") %>% 
-  # or providers$Stamen.TerrainBackground
   addTiles(group = "OpenStreetMap (Default") %>%
   add_bc_home_button() %>%
   set_bc_view() %>%
+  addLayersControl(
+    baseGroups = c("Conservation Status", "Population Estimate", "Threat Classification")
+  )
 ```
 
 ## Conservation Status
-```{r, warning=FALSE}
+```{r, warning=FALSE, echo=FALSE}
 grizzmap %>% 
-  addPolygons(stroke = T, weight = 1, color = "black", # Add border to polygons
+  addPolygons(data = grizzdata_full, #group = "Conservation Status",
+              stroke = T, weight = 1, color = "black", # Add border to polygons
               fillOpacity = 0.4, # Polygon fill
               fillColor = ~palette1(grizzdata_full$rankcode),
               popup = popups,
@@ -62,9 +83,10 @@ grizzmap %>%
 ```
 
 ## Population 
-``` {r, warning=FALSE}
+``` {r, warning=FALSE, echo=FALSE}
 grizzmap %>%
-  addPolygons(stroke = T, weight = 1, color = "black",
+  addPolygons(data = grizzdata_full, #group = "Population Estimate",
+              stroke = T, weight = 1, color = "black",
               fillOpacity = 0.2,
               fillColor = ~palette2(grizzdata_full$adults),
               group = "Population Estimate",
@@ -81,9 +103,10 @@ grizzmap %>%
 ```
 
 ## Threat Classification
-``` {r, warning=FALSE}
+``` {r, warning=FALSE, echo=FALSE}
 grizzmap %>%
-  addPolygons(stroke = T, weight = 1, color = "black", # Add border to polygons
+  addPolygons(data = grizzdata_full, #group = "Threat Classification",
+              stroke = T, weight = 1, color = "black", # Add border to polygons
               fillOpacity = 0.2, # Polygon fill
               fillColor = ~palette3(grizzdata_full$threat_class),
               group = "Overall Threat Class",
