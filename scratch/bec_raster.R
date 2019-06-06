@@ -23,7 +23,7 @@ devtools::install_github("bcgov-c/envreportutils.internal")
 figsOutDir <- "c:/dev/grizzly-bear-status-indicator/out"
 
 ## Import grizzly BEI polygons (2019) as sf ---------------------------
-habclass <- st_read("C:/dev/grizzly-bear-status-indicator/habclass.shp")
+habclass <- st_read("C:/dev/grizzly-bear-status-indicator/data/habclass.shp")
 plot(st_geometry(habclass))
 
 ## Simplify BEI polygons ----------------------------------------------
@@ -31,13 +31,14 @@ plot(st_geometry(habclass))
 # saveRDS(habclass_simp, file = "habclass_simp.rds")
 habclass_simp <- readRDS("data/habclass_simp.rds")
 plot(habclass_simp)
+summary(habclass_simp)
 
 ## Rename values to NAs
-habclass_simp$RATING[habclass_simp$RATING == 66] <- NA
-habclass_simp$RATING[habclass_simp$RATING == 99] <- NA
+# habclass_simp$RATING[habclass_simp$RATING == 66] <- "Never Occupied"
+# habclass_simp$RATING[habclass_simp$RATING == 99] <- "Extirpated"
 
 ## Add gbpu polygons --------------------------------------------------
-grizzdata_full <- readRDS("grizzdata_full.rds")
+grizzdata_full <- readRDS("data/grizzdata_full.rds")
 class(grizzdata_full)
 
 ## Create value with population field
@@ -48,7 +49,7 @@ crs(whole)
 whole <- raster(habclass_simp, res = 90)
 whole <- fasterize(habclass_simp, whole, field = "RATING")
 # whole <- as.factor(whole)
-# plot(whole)
+plot(whole)
 # rat1 <- levels(whole)[[1]]
 # rat1[["rating"]] <- c("1","2","3","4","5","6","NA")
 # levels(whole) <- rat1 # Add RAT to raster
