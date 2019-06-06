@@ -1,0 +1,94 @@
+---
+output: html_document
+---
+
+```{r setup, include=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(here)
+
+# Tidyverse
+library(tidyverse)
+
+# Mapping
+library(leaflet)
+library(sf)
+library(geojsonio)
+library(htmltools)
+library(mapview)
+
+# SOE + popups
+library(envreportutils)
+
+# Prep - colour palettes
+palette1 <- colorFactor(palette = 'viridis', grizzdata_full$rankcode,
+                        reverse = TRUE, na.color = "#808080")
+palette2 <- colorFactor(palette = 'viridis', grizzdata_full$adults,
+                        reverse = TRUE, na.color = "#808080")
+palette3 <- colorFactor(palette = 'viridis', grizzdata_full$threat_class,
+                        reverse = TRUE, na.color = "#808080")
+```
+
+## {.tabset}
+
+```{r, warning=FALSE}
+grizzmap <- leaflet(grizzdata_full, width = "900px", height = "500px") %>%  # generate leaflet map
+  addProviderTiles(providers$Stamen.TerrainBackground, group = "Terrain") %>% # or providers$Stamen.TerrainBackground
+  addTiles(group = "OpenStreetMap (Default") %>%
+  add_bc_home_button() %>%
+  set_bc_view() %>%
+```
+
+## Conservation Status
+```{r, warning=FALSE}
+grizzmap %>% 
+  addPolygons(stroke = T, weight = 1, color = "black", # Add border to polygons
+              fillOpacity = 0.4, # Polygon fill
+              fillColor = ~palette1(grizzdata_full$rankcode),
+              popup = popups,
+              popupOptions = popup_options,
+              group = "Conservation Rank",
+              label = plotlabs,
+              labelOptions = labelOptions(direction = "auto", textsize = "12px"),
+              highlight = highlightOptions( # Highlight interaction for mouse hover
+                weight = 3,
+                color = "yellow",
+                bringToFront = T)) %>%
+  addLegend("bottomright", pal = palette1, values = grizzdata_full$rankcode,
+            title = "Conservation Status",
+            opacity = 1) %>%
+  addPolygons(stroke = T, weight = 1, color = "black",
+              fillOpacity = 0.2,
+              fillColor = ~palette2(grizzdata_full$adults),
+              group = "Population Estimate",
+              label = plotlabs,
+              labelOptions = labelOptions(direction = "auto", textsize = "12px"),
+              highlight = highlightOptions( # Highlight interaction for mouse hover
+                weight = 3,
+                color = "yellow",
+                bringToFront = T)) %>%
+  addPolygons(stroke = T, weight = 1, color = "black", # Add border to polygons
+              fillOpacity = 0.2, # Polygon fill
+              fillColor = ~palette3(grizzdata_full$threat_class),
+              group = "Overall Threat Class",
+              label = plotlabs,
+              labelOptions = labelOptions(direction = "auto", textsize = "12px"),
+              highlight = highlightOptions( # Highlight interaction for mouse hover
+                weight = 3,
+                color = "yellow",
+                bringToFront = T)) %>%
+  addLayersControl(
+    baseGroups = c("Conservation Status", "Population Estimate", "Overall Threat Class"),
+    overlayGroups = c("Terrain", "OpenStreetMap (Default)"))
+grizzmap # View leaflet
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
