@@ -11,10 +11,10 @@
 # See the License for the specific language governing permissions and limitations under the License.
 
 ## SPATIAL DATA CLEANING ---------------------------------------------------------
-# Simplify population unit polygons using mapshaper
+# Simplify vertices of GBPU polygons
 gbpu_simplify <- ms_simplify(gbpu_2015, keep = 0.25) # reduce number of vertices
 
-# Simplify management units
+# Simplify vertices of management unit polygons
 mu_simplify <- ms_simplify(gbpu_mu_dens, keep = 0.25)
 plot(st_geometry(mu_simplify))
 
@@ -51,7 +51,6 @@ grizzdata_full$gbpu_name[is.na(grizzdata_full$gbpu_name)] <- "Extirpated"
 
 # Write grizzly polygons to disk
 saveRDS(grizzdata_full,file = "grizzdata_full.rds")
-write.csv(gbpu_2015, file = "gbpu_2015.csv")
 
 # Not to be used in new version unless needed:
 # Summarise total pop estimate per management unit
