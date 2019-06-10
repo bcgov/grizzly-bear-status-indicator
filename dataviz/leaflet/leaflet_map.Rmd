@@ -49,8 +49,6 @@ palette3 <- colorFactor(palette = 'viridis', grizzdata_full$threat_class,
 
 # {.tabset .tabset-fade}
 
-## TAB 1
-
 ```{r cons_map, warning=FALSE, echo=FALSE}
 grizzmap <- leaflet(width = "900px", height = "500px") %>%  # generate leaflet map
   addProviderTiles(providers$Stamen.TerrainBackground, group = "Terrain") %>% 
@@ -62,8 +60,8 @@ grizzmap <- leaflet(width = "900px", height = "500px") %>%  # generate leaflet m
   )
 ```
 
-## TAB 2
 ## Conservation Status
+
 ```{r, warning=FALSE, echo=FALSE}
 grizzmap %>% 
   addPolygons(data = grizzdata_full, #group = "Conservation Status",
@@ -85,7 +83,8 @@ grizzmap %>%
   addLayersControl(overlayGroups = c("Terrain", "OpenStreetMap (Default)"))
 ```
 
-## Population 
+## Population Estimate
+
 ``` {r, warning=FALSE, echo=FALSE}
 grizzmap %>%
   addPolygons(data = grizzdata_full, #group = "Population Estimate",
@@ -106,6 +105,7 @@ grizzmap %>%
 ```
 
 ## Threat Classification
+
 ``` {r, warning=FALSE, echo=FALSE}
 grizzmap %>%
   addPolygons(data = grizzdata_full, #group = "Threat Classification",
