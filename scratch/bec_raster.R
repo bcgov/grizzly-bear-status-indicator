@@ -129,7 +129,7 @@ for (n in names(plot_list)) {
   dev.off()
 }
 
-# Walk loops over list, but don't return anything to the environment
+# Walk loops over list, but doesn't return anything to the environment
 walk(plot_list, ~ {
   plot(.x$map)
 })
