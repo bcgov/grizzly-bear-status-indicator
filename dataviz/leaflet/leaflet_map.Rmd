@@ -47,9 +47,11 @@ palette3 <- colorFactor(palette = 'viridis', grizzdata_full$threat_class,
                         reverse = TRUE, na.color = "#808080")
 ```
 
-## {.tabset}
+# {.tabset .tabset-fade}
 
-```{r, warning=FALSE, echo=FALSE}
+## TAB 1
+
+```{r cons_map, warning=FALSE, echo=FALSE}
 grizzmap <- leaflet(width = "900px", height = "500px") %>%  # generate leaflet map
   addProviderTiles(providers$Stamen.TerrainBackground, group = "Terrain") %>% 
   addTiles(group = "OpenStreetMap (Default") %>%
@@ -60,6 +62,7 @@ grizzmap <- leaflet(width = "900px", height = "500px") %>%  # generate leaflet m
   )
 ```
 
+## TAB 2
 ## Conservation Status
 ```{r, warning=FALSE, echo=FALSE}
 grizzmap %>% 
