@@ -41,10 +41,10 @@ plotlabs <- sprintf( # create labels for leaflet map
 # Prep - colour palettes
 palette1 <- colorFactor(palette = 'viridis', grizzdata_full$rankcode,
                         reverse = TRUE, na.color = "#808080")
-palette2 <- colorNumeric("RdYlBu", grizzdata_full$adults,
+palette2 <- colorNumeric("PuBuGn", grizzdata_full$adults,
                         na.color = "#808080")
-palette3 <- colorFactor(palette = 'viridis', grizzdata_full$threat_class,
-                        reverse = TRUE, na.color = "#808080")
+palette3 <- colorFactor("RdBu", grizzdata_full$threat_class,
+                        na.color = "#808080")
 ```
 
 # {.tabset .tabset-fade}
@@ -63,7 +63,7 @@ grizzmap <- leaflet(width = "900px", height = "500px") %>%  # generate leaflet m
 grizzmap %>% 
   addPolygons(data = grizzdata_full, #group = "Conservation Status",
               stroke = T, weight = 1, color = "black", # Add border to polygons
-              fillOpacity = 0.4, # Polygon fill
+              fillOpacity = 0.5, # Polygon fill
               fillColor = ~palette1(grizzdata_full$rankcode),
               popup = popups,
               popupOptions = popup_options,
@@ -85,7 +85,7 @@ grizzmap %>%
 grizzmap %>%
   addPolygons(data = grizzdata_full, #group = "Population Estimate",
               stroke = T, weight = 1, color = "black",
-              fillOpacity = 0.7,
+              fillOpacity = 0.6,
               fillColor = ~palette2(grizzdata_full$adults),
               label = plotlabs,
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
@@ -107,7 +107,7 @@ grizzmap %>%
 grizzmap %>%
   addPolygons(data = grizzdata_full, #group = "Threat Classification",
               stroke = T, weight = 1, color = "black", # Add border to polygons
-              fillOpacity = 0.2, # Polygon fill
+              fillOpacity = 0.6, # Polygon fill
               fillColor = ~palette3(grizzdata_full$threat_class),
               label = plotlabs,
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
@@ -117,8 +117,8 @@ grizzmap %>%
                 weight = 3,
                 color = "yellow",
                 bringToFront = T)) %>%
-  addLegend("bottomright", pal = palette1, values = grizzdata_full$threat_class,
-            title = "Threat Classification Status",
+  addLegend("bottomright", pal = palette3, values = grizzdata_full$threat_class,
+            title = "Threat  Status",
             opacity = 1) %>%
   addLayersControl(overlayGroups = c("Terrain", "OpenStreetMap (Default)"))
 ```
