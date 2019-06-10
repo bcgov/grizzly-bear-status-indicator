@@ -27,7 +27,7 @@ habclass <- st_read("C:/dev/grizzly-bear-status-indicator/data/habclass.shp")
 plot(st_geometry(habclass))
 
 ## Simplify BEI polygons ----------------------------------------------
-# habclass_simp <- ms_simplify(habclass, keep = 0.05, sys = TRUE)
+habclass_simp <- ms_simplify(habclass, keep = 0.05, sys = TRUE)
 # saveRDS(habclass_simp, file = "habclass_simp.rds")
 habclass_simp <- readRDS("data/habclass_simp.rds")
 plot(habclass_simp)
