@@ -41,23 +41,20 @@ plotlabs <- sprintf( # create labels for leaflet map
 # Prep - colour palettes
 palette1 <- colorFactor(palette = 'viridis', grizzdata_full$rankcode,
                         reverse = TRUE, na.color = "#808080")
-palette2 <- colorFactor(palette = 'viridis', grizzdata_full$adults,
-                        reverse = TRUE, na.color = "#808080")
+palette2 <- colorNumeric("RdYlBu", grizzdata_full$adults,
+                        na.color = "#808080")
 palette3 <- colorFactor(palette = 'viridis', grizzdata_full$threat_class,
                         reverse = TRUE, na.color = "#808080")
 ```
 
 # {.tabset .tabset-fade}
 
-```{r cons_map, warning=FALSE, echo=FALSE}
+```{r grizz_map, warning=FALSE, echo=FALSE}
 grizzmap <- leaflet(width = "900px", height = "500px") %>%  # generate leaflet map
   addProviderTiles(providers$Stamen.TerrainBackground, group = "Terrain") %>% 
   addTiles(group = "OpenStreetMap (Default") %>%
   add_bc_home_button() %>%
-  set_bc_view() %>%
-  addLayersControl(
-    baseGroups = c("Conservation Status", "Population Estimate", "Threat Classification")
-  )
+  set_bc_view()
 ```
 
 ## Conservation Status
@@ -89,7 +86,7 @@ grizzmap %>%
 grizzmap %>%
   addPolygons(data = grizzdata_full, #group = "Population Estimate",
               stroke = T, weight = 1, color = "black",
-              fillOpacity = 0.2,
+              fillOpacity = 0.7,
               fillColor = ~palette2(grizzdata_full$adults),
               group = "Population Estimate",
               label = plotlabs,
@@ -124,13 +121,3 @@ grizzmap %>%
             opacity = 1) %>%
   addLayersControl(overlayGroups = c("Terrain", "OpenStreetMap (Default)"))
 ```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
