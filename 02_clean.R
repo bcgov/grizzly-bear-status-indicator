@@ -47,7 +47,10 @@ grizzdata_full <- left_join(grizzdata_full, threat_calc, by = "gbpu_name")
 
 # Rename NA gbpu names to Extirpated
 grizzdata_full$gbpu_name <- as.character(grizzdata_full$gbpu_name) # as char
-grizzdata_full$gbpu_name[is.na(grizzdata_full$gbpu_name)] <- "Extirpated"
+grizzdata_full$gbpu_name[grizzdata_full$gbpu_name == "Extirpated"] <- c("Extirpated1",
+                                                               "Extirpated2",
+                                                               "Extirpated3",
+                                                               "Extirpated4")
 
 # Write grizzly polygons to disk
 saveRDS(grizzdata_full,file = "grizzdata_full.rds")
