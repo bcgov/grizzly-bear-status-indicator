@@ -118,6 +118,9 @@ plot_list[["Taiga"]]
 # Save to disk
 saveRDS(plot_list, file = "out/plot_list.rds")
 
+?popup_create_row()
+?popup_combine_rows
+
 #save pngs of plots:
 for (n in names(plot_list)) {
   print(n)

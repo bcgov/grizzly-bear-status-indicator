@@ -111,7 +111,24 @@ densplot <- ggplot(by_gbpu) +
 densplot # Display plot
 
 # Make condensed threat table
-threats <- dplyr::select(grizzdata_full, lng, lat, gbpu_name, energy, transportation, residential,
+threats <- dplyr::select(grizzdata_full, gbpu_name, energy, transportation, residential,
                          agriculture, biouse, humanintrusion, climatechange)
-threats <- st_cast(threats, "MULTIPOLYGON")
-class(threats)
+
+gbpu_list <- unique(threats$gbpu_name)
+
+gbpu_table <- function(data) {
+  st_geometry(data) = NULL
+  gather(data, key = Threat, value = Rank)
+}
+
+table_list <- map(gbpu_list, ~ {
+  data = filter(threats, gbpu_name == .x)
+  gbpu_table(data)
+})
+
+names(table_list) <- gbpu_list
+iwalk(table_list, ~ save_svg_px(.x, file = paste0("out/", .y, ".svg"),
+                               width = 600, height = 300))
+
+?popup_combine_rows
+grizz_full_popup <- map(table_list, plot_list)
