@@ -111,7 +111,7 @@ densplot <- ggplot(by_gbpu) +
 densplot # Display plot
 
 # Make condensed threat table
-threats <- dplyr::select(threat_calc, gbpu_name, energy, transportation, residential,
+threats <- dplyr::select(grizzdata_full, lng, lat, gbpu_name, energy, transportation, residential,
                          agriculture, biouse, humanintrusion, climatechange)
-threats <- arrange(threats, desc(rankcode))
-
+threats <- st_cast(threats, "MULTIPOLYGON")
+class(threats)
