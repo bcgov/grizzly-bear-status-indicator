@@ -130,5 +130,12 @@ names(table_list) <- gbpu_list
 iwalk(table_list, ~ save_svg_px(.x, file = paste0("out/", .y, ".svg"),
                                width = 600, height = 300))
 
-?popup_combine_rows
-grizz_full_popup <- map(table_list, plot_list)
+plot_list <- plot_list[names(table_list)]
+
+plot_list_df <- do.call(rbind, Map(data.frame, popup_row1 = table_list, popup_row2 = plot_list))
+plot_list_df <- tibble(
+  gbpu = names(plot_list),
+  popup_row1 <- table_list,
+  popup_row2 <- plot_list
+)
+
