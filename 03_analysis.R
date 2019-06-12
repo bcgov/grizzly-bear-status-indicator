@@ -110,6 +110,7 @@ densplot <- ggplot(by_gbpu) +
   theme(plot.title = element_text(hjust = 0.5))
 densplot # Display plot
 
+## ----------------------------------------------------------------------------
 # Make condensed threat table
 threats <- dplyr::select(grizzdata_full, gbpu_name, energy, transportation, residential,
                          agriculture, biouse, humanintrusion, climatechange)
@@ -130,12 +131,12 @@ names(table_list) <- gbpu_list
 iwalk(table_list, ~ save_svg_px(.x, file = paste0("out/", .y, ".svg"),
                                width = 600, height = 300))
 
-plot_list <- plot_list[names(table_list)]
+gbpu_rasts <- gbpu_rasts[names(table_list)]
 
 plot_list_df <- tibble(
-  gbpu = names(plot_list),
+  gbpu = names(gbpu_rasts),
   popup_row1 <- table_list,
-  popup_row2 <- plot_list
+  popup_row2 <- gbpu_rasts
 )
 
-popup_combine_rows(plot_list_df)
+full_popup <- popup_combine_rows(plot_list_df)
