@@ -132,10 +132,10 @@ iwalk(table_list, ~ save_svg_px(.x, file = paste0("out/", .y, ".svg"),
 
 plot_list <- plot_list[names(table_list)]
 
-plot_list_df <- do.call(rbind, Map(data.frame, popup_row1 = table_list, popup_row2 = plot_list))
 plot_list_df <- tibble(
   gbpu = names(plot_list),
   popup_row1 <- table_list,
   popup_row2 <- plot_list
 )
 
+popup_combine_rows(plot_list_df)
