@@ -66,10 +66,10 @@ saveRDS(gbpu_rasts, file = "out/gbpu_rasts.rds")
 gbpu_rast_summary <- summarize_raster_list(gbpu_rasts)
 
 ## Raster functions
-ggmap_gbpu <- function(gbpu_2015) {
-  e <- extent(gbpu_2015)
+ggmap_gbpu <- function(grizzdata_full) {
+  e <- extent(grizzdata_full)
   loc <- c(e[1] - 2, e[3] - 2, e[2] + 2, e[4] + 2)
-  get_map(loc, maptype = "satellite")
+  get_map(loc, maptype = "terrain")
 }
 
 gbpuRastMaps <- function(dat, title = "", plot_gmap = F,
@@ -105,9 +105,9 @@ gbpuRastMaps <- function(dat, title = "", plot_gmap = F,
 plot_list <- imap(gbpu_rasts, ~ {
   print(.y)
 # Graph functions
-  GPGroups <- filter(gbpu_2015, POPULATION == .y)
+  GPGroups <- filter(grizzdata_full, gbpu_name == .y)
   plotMap <- gbpuRastMaps(.x, title = .y,
-                          plot_gmap = FALSE, legend = FALSE)
+                          plot_gmap = FALSE, legend = T)
 
   # Save in a list
   list(map = plotMap)
