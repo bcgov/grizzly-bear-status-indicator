@@ -47,7 +47,7 @@ gbpu_name <- "gbpu_name"
 # Rasterize whole habitat class
 whole <- raster(habclass_simp, res = 90)
 whole <- fasterize(habclass_simp, whole, field = "RATING")
-whole <- projectExtent(whole, crs = grizzdata_full)
+# whole <- projectExtent(whole, crs = grizzdata_full)
 # whole <- as.factor(whole)
 # rat1 <- levels(whole)[[1]]
 # rat1[["rating"]] <- c("1","2","3","4","5","6","NA")
@@ -56,11 +56,11 @@ whole <- projectExtent(whole, crs = grizzdata_full)
 
 ## Raster by poly ----------------------------------------
 gbpu_rasts <- raster_by_poly(whole, grizzdata_full, gbpu_name)
+
 # gbpu_rasts <- c(whole, gbpu_rasts)
 # names(gbpu_rasts)[1] <- "Province"
 # plot(gbpu_rasts$Province)
-saveRDS(gbpu_rasts, file = "out/gbpu_rasts2.rds")
-
+saveRDS(gbpu_rasts, file = "out/gbpu_rasts.rds")
 
 # Summary
 gbpu_rast_summary <- summarize_raster_list(gbpu_rasts)
