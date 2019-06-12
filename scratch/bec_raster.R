@@ -119,6 +119,14 @@ plot_list[["Taiga"]]
 # Save to disk
 saveRDS(plot_list, file = "out/plot_list.rds")
 
+# Popups for leaflet map
+popups <-  popupGraph(plot_list, type = "png", width = 500,
+                      height = 300)
+popup_options <-  popupOptions(maxWidth = "100%", autoPan = TRUE,
+                               keepInView = TRUE,
+                               closeOnClick = TRUE,
+                               autoPanPaddingTopLeft = c(120, 10),
+                               autoPanPaddingBottomRight = c(120,10))
 #save pngs of plots:
 for (n in names(plot_list)) {
   print(n)
