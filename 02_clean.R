@@ -51,7 +51,7 @@ grizzdata_full$gbpu_name[grizzdata_full$gbpu_name == "Extirpated"] <-
   c("Central Interior", "Northeast", "Sunshine Coast", "Lower Mainland")
 
 # Write grizzly data file to disk
-saveRDS(grizzdata_full, file = "data/grizzdata_full.rds")
+# saveRDS(grizzdata_full, file = "data/grizzdata_full.rds")
 
 # Not to be used in new version unless needed:
 # Summarise total pop estimate per management unit
