@@ -11,6 +11,8 @@
 # See the License for the specific language governing permissions and limitations under the License.
 
 ## STATIC MAPPING -------------------------------------------------------------
+grizzdata_full <- st_transform(grizzdata_full, crs = 4326) # convert to lat/long
+
 staticmap <- ggplot(grizzdata_full) +
   geom_sf(aes(fill = rankcode), color = "white", size = 0.1) +
   labs(title = "Conservation Status of Grizzly Bear Population Units in BC",
