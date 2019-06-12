@@ -130,8 +130,6 @@ table_list <- map(gbpu_list, ~ {
 })
 
 names(table_list) <- gbpu_list
-iwalk(table_list, ~ save_svg_px(.x, file = paste0("out/", .y, ".svg"),
-                               width = 600, height = 300))
 
 gbpu_rasts <- gbpu_rasts[names(table_list)]
 
