@@ -29,9 +29,9 @@ plot(st_geometry(habclass))
 ## Simplify BEI polygons ----------------------------------------------
 habclass_simp <- ms_simplify(habclass, keep = 0.05, sys = TRUE)
 # saveRDS(habclass_simp, file = "habclass_simp.rds")
-habclass_simp <- readRDS("data/habclass_simp.rds")
-plot(habclass_simp)
-summary(habclass_simp)
+# habclass_simp <- readRDS("data/habclass_simp.rds")
+# plot(habclass_simp)
+# summary(habclass_simp)
 
 ## Rename values to NAs
 # habclass_simp$RATING[habclass_simp$RATING == 66] <- "Never Occupied"
@@ -47,8 +47,8 @@ gbpu_name <- "gbpu_name"
 # Rasterize whole habitat class
 whole <- raster(habclass_simp, res = 90)
 whole <- fasterize(habclass_simp, whole, field = "RATING")
+whole <- projectExtent(whole, crs = grizzdata_full)
 # whole <- as.factor(whole)
-plot(whole)
 # rat1 <- levels(whole)[[1]]
 # rat1[["rating"]] <- c("1","2","3","4","5","6","NA")
 # levels(whole) <- rat1 # Add RAT to raster
@@ -60,6 +60,7 @@ gbpu_rasts <- raster_by_poly(whole, grizzdata_full, gbpu_name)
 # names(gbpu_rasts)[1] <- "Province"
 # plot(gbpu_rasts$Province)
 saveRDS(gbpu_rasts, file = "out/gbpu_rasts2.rds")
+
 
 # Summary
 gbpu_rast_summary <- summarize_raster_list(gbpu_rasts)
