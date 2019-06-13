@@ -39,7 +39,6 @@ habclass_simp <- ms_simplify(habclass, keep = 0.05, sys = TRUE)
 
 ## Add gbpu polygons --------------------------------------------------
 grizzdata_full <- readRDS("data/grizzdata_full.rds")
-class(grizzdata_full)
 
 ## Create value with population field
 gbpu_name <- "gbpu_name"
@@ -127,7 +126,7 @@ popup_options <-  popupOptions(maxWidth = "100%", autoPan = TRUE,
                                closeOnClick = TRUE,
                                autoPanPaddingTopLeft = c(120, 10),
                                autoPanPaddingBottomRight = c(120,10))
-#save pngs of plots:
+# save pngs of plots:
 for (n in names(plot_list)) {
   print(n)
   map <- plot_list[[n]]$map
