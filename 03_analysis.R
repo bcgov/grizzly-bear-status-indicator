@@ -129,14 +129,13 @@ table_list <- map(gbpu_list, ~ {
   gbpu_table(data)
 })
 
-names(table_list) <- gbpu_list
-
-gbpu_rasts <- gbpu_rasts[names(table_list)]
+plot_list <- plot_list[names(table_list)]
 
 plot_list_df <- tibble(
-  gbpu = names(gbpu_rasts),
   popup_row1 <- table_list,
-  popup_row2 <- gbpu_rasts
+  popup_row2 <- plot_list
 )
 
 full_popup <- popup_combine_rows(plot_list_df)
+saveRDS(full_popup, file = "out/full_popup.rds")
+
