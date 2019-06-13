@@ -43,7 +43,7 @@ gbpu_2015 <- st_read("C:/dev/grizzly-bear-status-indicator/data/gbpu_2015.shp")
 plot(st_geometry(gbpu_2015))
 
 # Import management unit polygons
-gbpu_mu_dens <- st_read("C:/dev/grizzly-bear-status-indicator/gbpu_mu_leh_density.shp")
+gbpu_mu_dens <- st_read("C:/dev/grizzly-bear-status-indicator/data/gbpu_mu_leh_density.shp")
 plot(st_geometry(gbpu_mu_dens))
 
 # Create bounding box
