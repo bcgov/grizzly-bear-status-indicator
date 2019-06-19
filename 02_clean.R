@@ -11,42 +11,49 @@
 # See the License for the specific language governing permissions and limitations under the License.
 
 ## SPATIAL DATA CLEANING ---------------------------------------------------------
-# Simplify population unit polygons using mapshaper
-popunits_simplify <- ms_simplify(popunits, keep = 0.25) # reduce number of vertices
+# Simplify vertices of GBPU polygons
+gbpu_simplify <- ms_simplify(gbpu_2015, keep = 0.25) # reduce number of vertices
 
-# Change to lat/long (4326)
-popunits_simplify <- st_transform(popunits_simplify, crs = 4326)
+# Simplify vertices of management unit polygons
+mu_simplify <- ms_simplify(gbpu_mu_dens, keep = 0.25)
+plot(st_geometry(mu_simplify))
 
-# Drop unused metadata columns
-popunits_simplify <- select(
-  popunits_simplify, -c(id, SE_ANNO_CAD_DATA, VERSION_YEAR_MODIFIED, OBJECTID))
+# Transform to BC Albers
+gbpu_simplify <- st_transform(gbpu_simplify, crs = 3005)
 
 # Find centroid of polygons (for labelling)
-# Note: 'popunits' w/ BC Albers CRS used because lat/long not accepted by st_centroid
-popcentroid <- st_centroid(popunits$geometry)
+# Note: BC Albers CRS used because lat/long not accepted by st_centroid
+popcentroid <- st_centroid(gbpu_simplify$geometry)
 popcentroid <- st_transform(popcentroid, crs = 4326) # convert to lat/long
 
 # Calculate coordinates for centroid of polygons
 popcoords <- st_coordinates(popcentroid) # changes to a matrix
 
 # Spatial join
-grizzdata_full <- cbind(popunits_simplify, popcoords) # cbind coords and polygons
+grizzdata_full <- cbind(gbpu_simplify, popcoords) # cbind coords and polygons
 
 # Rename lat and lng columns
 grizzdata_full <- rename(grizzdata_full, lng = X)
 grizzdata_full <- rename(grizzdata_full, lat = Y)
-
-# Set column names to lower case
-grizzdata_full <- grizzdata_full %>% rename_all(tolower)
 grizzdata_full <- st_transform(grizzdata_full, crs = 4326) # convert to lat/long
-grizzdata_full$population_name[grizzdata_full$population_name == " "] <- "Extirpated"
-
-glimpse(grizzdata_full) # View
 
 # Rename 'population name' column
 grizzdata_full <- grizzdata_full %>%
-  rename(gbpu_name = population_name)
+  rename_all(tolower) %>%
+  rename(gbpu_name = population)
 
+# Join GBPU polygons (popunits) and threat classification data
+grizzdata_full <- left_join(grizzdata_full, threat_calc, by = "gbpu_name")
+
+# Rename NA gbpu names to Extirpated
+grizzdata_full$gbpu_name <- as.character(grizzdata_full$gbpu_name) # as char
+grizzdata_full$gbpu_name[grizzdata_full$gbpu_name == "Extirpated"] <-
+  c("Central Interior", "Northeast", "Sunshine Coast", "Lower Mainland")
+
+# Write grizzly data file to disk
+# saveRDS(grizzdata_full, file = "data/grizzdata_full.rds")
+
+# Not to be used in new version unless needed:
 # Summarise total pop estimate per management unit
 by_gbpu <- grizzlypop_raw %>%
   group_by(GBPU) %>%
@@ -58,42 +65,5 @@ by_gbpu <- grizzlypop_raw %>%
   rename_all(tolower) # Set to lower case
 glimpse(by_gbpu)
 
-##
-## MORTALITY DATA CLEANING -----------------------------------------------------
 
-# Mortality data - basic checks
-table(is.na(bearmort_raw$GBPU_NAME)) # check for NAs in name column
-gbpu_rawlist <- bearmort_raw %>% distinct(GBPU_NAME) # Make list of unique names
-
-# Change names in new df to all lower case
-bearmort <- bearmort_raw %>% rename_all(tolower)
-
-# There are multiple observations w/ different spellings of NA-Extirpated; combine these
-bearmort$gbpu_name[ bearmort$gbpu_name == "N/A - extirpated"] <- "Extirpated" # Rename rows
-bearmort$gbpu_name[ bearmort$gbpu_name == "NA - extirpated"] <- "Extirpated" # Rename rows
-
-# Make list of names for new df
-gbpu_cleanlist <- bearmort %>% distinct(gbpu_name)
-
-## Clean mortality dataset ----------------------------------------------------
-# Summarise # of bears killed per kill type + management unit
-mort_summary  <- bearmort %>%
-  group_by(gbpu_name, kill_code, hunt_year) %>%
-  summarise(count = n())
-glimpse(mort_summary )
-
-# Join population + density estimates
-grizzdata_full <- left_join(grizzdata_full, by_gbpu, by = "gbpu_name")
-# grizzdata_full <- left_join(grizzdata_full, mort_summary, by = "gbpu_name")
-
-## Classify overlapping GBPUs
-## FROM 2012 CODE:
-## For each MU that spans >1 GBPU, calculate the proportion in each GBPU.
-## Wrapping the calculation in data.frame allows naming of the new column
-## (for some unknown reason it doesn't name it otherwise)
-MU_GBPU.df <- ddply(MU_GBPU.df, .(ZONE_ID, ZONE_NAME, MU)
-                    , function(x) ddply(x, .(GBPU_ID, GBPU_NAME, Area_ha)
-                                        , function(y)
-                                          data.frame(PROP_MU = y$Area_ha/
-                                                       sum(x$Area_ha))))
 

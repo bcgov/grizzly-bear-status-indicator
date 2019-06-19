@@ -1,0 +1,120 @@
+---
+output: 
+html_document:
+  css: "assets/grizzleaflet_style.css"
+params:
+  add_popups: true
+---
+<!--
+Copyright 2018 Province of British Columbia
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and limitations under the License.
+-->
+
+```{r setup, include=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r pkgs, include = FALSE}
+
+# # Loading R libraries
+Packages <- c("sf", "tidyverse", "maptools", "devtools","bcmaps",
+              "leaflet", "rmapshaper", "bcdata", "here", "mapview", 
+              "envreportutils", "viridis", "ggmap", "ggspatial",
+              "ggrepel", "svglite", "Cairo", "shiny", "htmltools")
+lapply(Packages, library, character.only = TRUE)
+
+```
+
+``` {r leaflet, include = FALSE}
+# Prep - colour palettes
+palette1 <- colorFactor(palette = 'viridis', grizzdata_full$rankcode,
+                        reverse = TRUE, na.color = "#808080")
+palette2 <- colorFactor(palette = 'viridis', grizzdata_full$adults,
+                        reverse = TRUE, na.color = "#808080")
+palette3 <- colorFactor(palette = 'viridis', grizzdata_full$threat_class,
+                        reverse = TRUE, na.color = "#808080")
+```
+
+# Setup
+``` {r, warning = FALSE}
+
+## ------
+## POPUPS
+## -------
+grizz_plotlist <- readRDS(here("out/grizz_plotlist.rds"))[grizzdata_full$gbpu_name]
+popups <-  popupGraph(plot_list, type = "png", width = 500,
+                      height = 300)
+popup_options <-  popupOptions(maxWidth = "100%", autoPan = TRUE,
+                               keepInView = TRUE,
+                               closeOnClick = TRUE,
+                               autoPanPaddingTopLeft = c(120, 10),
+                               autoPanPaddingBottomRight = c(120,10))
+# saveRDS(popups, "grizz_popups.rds")
+popups <- readRDS("grizz_popups.rds")
+
+require(htmltools)
+plotlabs <- sprintf( # create labels for leaflet map
+  "<strong>%s</strong>",
+  tools::toTitleCase(tolower(gbpu_2015$POPULATION))
+) %>% lapply(htmltools::HTML)
+
+```
+
+``` {r leaflet, warning = F}
+
+## ------
+## LEAFLET MAP -- POPULATION AND CONSERVATION STATUS
+## ------
+grizzmap <- leaflet(grizzdata_full, width = "900px", height = "500px") %>%   # generate leaflet map
+  addProviderTiles(providers$Stamen.TerrainBackground, group = "Terrain") %>% # or providers$Stamen.TerrainBackground
+  addTiles(group = "OpenStreetMap (Default") %>%
+  add_bc_home_button() %>%
+  set_bc_view() %>%
+  addLegend("bottomright", pal = palette1, values = grizzdata_full$rankcode,
+            title = "Conservation Status",
+            opacity = 1) %>%
+  addPolygons(stroke = T, weight = 1, color = "black", # Add border to polygons
+              fillOpacity = 0.4, # Polygon fill
+              fillColor = ~palette1(grizzdata_full$rankcode),
+              popup = popups,
+              popupOptions = popup_options,
+              group = "Conservation Rank",
+              label = plotlabs,
+              labelOptions = labelOptions(direction = "auto", textsize = "12px"),
+              highlight = highlightOptions( # Highlight interaction for mouse hover
+                weight = 3,
+                color = "yellow",
+                bringToFront = T)) %>%
+  addPolygons(stroke = T, weight = 1, color = "black",
+              fillOpacity = 0.2,
+              fillColor = ~palette2(grizzdata_full$adults),
+              group = "Population Estimate",
+              label = plotlabs,
+              labelOptions = labelOptions(direction = "auto", textsize = "12px"),
+              highlight = highlightOptions( # Highlight interaction for mouse hover
+                weight = 3,
+                color = "yellow",
+                bringToFront = T)) %>%
+  addPolygons(stroke = T, weight = 1, color = "black", # Add border to polygons
+              fillOpacity = 0.2, # Polygon fill
+              fillColor = ~palette3(grizzdata_full$threat_class),
+              group = "Overall Threat Class",
+              label = plotlabs,
+              labelOptions = labelOptions(direction = "auto", textsize = "12px"),
+              highlight = highlightOptions( # Highlight interaction for mouse hover
+                weight = 3,
+                color = "yellow",
+                bringToFront = T)) %>%
+  addLayersControl(
+    baseGroups = c("Conservation Status", "Population Estimate", "Overall Threat Class"),
+    overlayGroups = c("Terrain", "OpenStreetMap (Default)"))
+grizzmap # View leaflet
+plot(whole)
+}
+```

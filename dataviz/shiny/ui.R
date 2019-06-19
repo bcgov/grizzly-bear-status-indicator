@@ -16,6 +16,7 @@ ui <- navbarPage(title = div(img(src = "http://www2.gov.bc.ca/assets/gov/home/go
 )
 
 library(DT)
+
 # UI with custom CSS
 ui <- function() {
   navbarPage(
@@ -27,7 +28,7 @@ ui <- function() {
              mainPanel(leafletOutput(outputId = "grizzmap"))),
     tabPanel("Data Explorer",
              icon = icon("bar-chart"),
-             mainPanel(DT::datatable(mort_summary))),
+             mainPanel(DT::datatable(threats))),
     navbarMenu("More",
                tabPanel("About"),
                tabPanel("Summary")),

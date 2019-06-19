@@ -10,18 +10,22 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-# Create colour palette for future mapping (not currently used)
-# pal <- c("Extirpated" = "firebrick2", "Threatened" = "yellow1", "Viable" = "forestgreen")
+## STATIC MAPPING -------------------------------------------------------------
+grizzdata_full <- st_transform(grizzdata_full, crs = 4326) # convert to lat/long
 
-# Build basic static map for grizzly popunits/status
 staticmap <- ggplot(grizzdata_full) +
-  geom_sf(aes(fill = status), color = "white", size = 0.1) +
-  labs(title = "Conservation Status of Grizzly Bear Population Units in BC", col = "Conservation Status") +
-  scale_fill_viridis(discrete = T, alpha = 0.8, option = "cividis", direction = -1) +
-  theme_soe() + theme(plot.title = element_text(hjust = 0.5), axis.title.x = element_blank(),
+  geom_sf(aes(fill = rankcode), color = "white", size = 0.1) +
+  labs(title = "Conservation Status of Grizzly Bear Population Units in BC",
+       col = "Conservation Rank",
+       fill = "Threat Category") +
+  scale_fill_viridis(alpha = 0.6, discrete = T, option = "viridis",
+                     direction = -1, na.value = "darkgrey") +
+  theme_soe() + theme(plot.title = element_text(hjust = 0.5),
+                      axis.title.x = element_blank(),
                       axis.title.y = element_blank(),
                       legend.background = element_rect(
-                        fill = "lightgrey", size = 0.5, linetype = "solid", colour = "darkgrey")) +
+                        fill = "lightgrey", size = 0.5,
+                        linetype = "solid", colour = "darkgrey")) +
   geom_text(aes(label = grizzdata_full$gbpu_name, x = grizzdata_full$lng,
                 y = grizzdata_full$lat), size = 2, check_overlap = T)
   #geom_text_repel(aes(label = gbpu_name, x = lng, y = lat),
@@ -29,31 +33,37 @@ staticmap <- ggplot(grizzdata_full) +
 staticmap # plot map
 
 # Get stamen basemap (terrain)
-require(ggmap)
-stamenbc <- get_stamenmap(bbox = c(-139.658203,48.806863,-113.071289,60.261617),
+stamenbc <- get_stamenmap(bbox = c(-139.658203,48,-113.071289,60.261617),
                           zoom = 7, maptype = "terrain-background", where = "/dev/stamen/")
 # saveRDS(stamenbc, file = "/dev/stamen.Rds")
 # readRDS(stamenbc)
-plot(stamenbc)
+plot(stamenbc) # View basemap
 
 # Plot stamen map with terrain basemap
 static_ggmap <- ggmap(stamenbc) + # Generate new map
-  geom_sf(data = grizzdata_full, aes(fill = status), inherit.aes = F, color = "black", size = 0.01) + # plot with boundary
-  theme_soe() + scale_fill_viridis(discrete = T, alpha = 0.4, option = "viridis", direction = -1) +
-  labs(title = "Conservation Status of Grizzly Bear Population Units in BC", fill = "Status") +
+  geom_sf(data = grizzdata_full, aes(fill = rankcode), inherit.aes = F,
+          color = "white", size = 0.01) + # plot with boundary
+  #geom_text(aes(label = grizzdata_full$gbpu_name, x = grizzdata_full$lng,
+  #              y = grizzdata_full$lat")) +
+  # geom_label(data = grizzdata_full$gbpu_name) +
+  theme_soe() + scale_fill_viridis(discrete = T, alpha = 0.5,
+                                   option = "viridis", direction = -1,
+                                   na.value = "darkgrey") +
+  labs(title = "Conservation Status of Grizzly Bear Population Units in BC",
+       fill = "Conservation Rank") +
   theme(plot.title = element_text(hjust = 0.5), axis.title.x = element_blank(),
         axis.title.y = element_blank(),
         legend.background = element_rect(
           fill = "lightgrey", size = 0.5, linetype = "solid", colour = "darkgrey"))
-  #geom_text(aes(label = grizzdata_full$gbpu_name, x = grizzdata_full$lng, y = grizzdata_full$lat))
 plot(static_ggmap)
 
 # Clip + mask raster to BC boundary
 # stamenbc_crop <- raster::crop(stamenbc, bc_boundary)
 
+## POPULATION ESTIMATE PLOTTING ------------------------------------------------
 # Plot basic POPULATION estimate per management unit
-popplot <- ggplot(by_gbpu) +
-  geom_col(aes(x = reorder(gbpu_name, -pop_estimate), y = pop_estimate)) +
+popplot <- ggplot(grizzdata_full) +
+  geom_col(aes(x = reorder(gbpu_name, -adults), y = adults)) +
   theme_soe() +
   scale_y_continuous("Population Estimate") +
   scale_x_discrete("Population Unit") +
@@ -62,18 +72,21 @@ popplot <- ggplot(by_gbpu) +
   theme(plot.title = element_text(hjust = 0.5))
 popplot # Display plot
 
-# Plot basic DENSITY estimate per management unit
-densplot <- ggplot(by_gbpu) +
-  geom_col(aes(x = reorder(gbpu_name, -pop_density), y = pop_density)) +
-  theme_soe() +
-  scale_y_continuous("Population Density Estimate") +
-  scale_x_discrete("Population Unit") +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0)) + # rotate labels
-  ggtitle("Grizzly Bear Population Density Estimate per Unit") +
-  theme(plot.title = element_text(hjust = 0.5))
-densplot # Display plot
+# Build static grizzly population choropleth
+grizzlypopmap <- ggplot(grizzdata_full) +
+  geom_sf(aes(fill = adults)) +
+  labs(title = "Grizzly Bear Population Estimates for British Columbia",
+       fill = "Population Estimate") +
+  theme_minimal() + theme(plot.title = element_text(hjust = 0.5),
+                          axis.title.x = element_blank(),
+                          axis.title.y = element_blank()) +
+  scale_fill_viridis_c(trans = "sqrt", alpha = .5, na.value = "darkgrey") +
+  geom_text(aes(label = grizzdata_full$gbpu_name, x = grizzdata_full$lng,
+                y = grizzdata_full$lat), size = 2, check_overlap = F)
+grizzlypopmap # plot map
 
-# Build  static grizzly  density choropleth
+## POPULATION DENSITY MAPPING: May not be needed for updated version ----------
+# Build  static grizzly density choropleth
 grizzlydensmap <- ggplot(grizzdata_full) +
   geom_sf(aes(fill = pop_density)) +
   labs(title = "Grizzly Bear Population Density in British Columbia",
@@ -84,47 +97,46 @@ grizzlydensmap <- ggplot(grizzdata_full) +
   scale_fill_viridis_c(trans = "sqrt", alpha = .5) + # Set colour (viridis)
   geom_text_repel(aes(label = gbpu_name, x = lng, y = lat),
                   size = 2, force =  0.5) # Offset labels
-  #geom_text(aes(label = gbpu_name, x = lng, y = lat),
-            #position = position_dodge(width = 0.8), size = 3) # Needs some tweaking - some labels off polygons
+#geom_text(aes(label = gbpu_name, x = lng, y = lat),
+#position = position_dodge(width = 0.8), size = 3) # Needs some tweaking - some labels off polygons
 grizzlydensmap # plot map
 
-# Build static grizzly population choropleth
-grizzlypopmap <- ggplot(grizzdata_full) +
-  geom_sf(aes(fill = pop_estimate)) +
-  labs(title = "Grizzly Bear Population Estimates for British Columbia",
-       fill = "Population Estimate") +
-  theme_minimal() + theme(plot.title = element_text(hjust = 0.5),
-                          axis.title.x = element_blank(),
-                          axis.title.y = element_blank()) +
-  scale_fill_viridis_c(trans = "sqrt", alpha = .5) +
-  geom_text_repel(aes(label = gbpu_name, x = lng, y = lat),
-                  size = 2, force = 0.5)
-grizzlypopmap # plot map
+# Plot basic density estimate per management unit
+densplot <- ggplot(by_gbpu) +
+  geom_col(aes(x = reorder(gbpu_name, -pop_density), y = pop_density)) +
+  theme_soe() +
+  scale_y_continuous("Population Density Estimate") +
+  scale_x_discrete("Population Unit") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0)) + # rotate labels
+  ggtitle("Grizzly Bear Population Density Estimate per Unit") +
+  theme(plot.title = element_text(hjust = 0.5))
+densplot # Display plot
 
-##
-## PLOTTING MORTALITY DATA  -----------------------------------------------
-# Caption text
-caption.text <- paste("*Note that prior to 2004, road and rail kills",
-                      " were not distinguished and were documented with",
-                      " 'Pick Ups'.\nA Limited Entry Hunt (LEH) was",
-                      " instituted province-wide for grizzly bears in",
-                      " 1996.\nThere was a province-wide moratorium on",
-                      " hunting grizzly bears in the spring of 2001."
-                      , sep="")
+## ----------------------------------------------------------------------------
+# Make condensed threat table
+threats <- dplyr::select(grizzdata_full, gbpu_name, energy, transportation, residential,
+                         agriculture, biouse, humanintrusion, climatechange)
 
-# Plot for basic POPULATION estimate per management unit
-mortplot <- ggplot(mort_summary, aes(x = hunt_year, y = count,
-                            group = kill_code, fill = kill_code)) +
-  geom_bar(stat = "identity") + # Add bar for each year w/ fill = kill type
-  theme_bw() +
-  scale_fill_brewer(type = "qual", palette = "Set2") +
-  scale_x_continuous(breaks=seq(1970, 2017, by = 5)) +
-  labs(title = "Grizzly Bear Mortality for the Province of British Columbia, 1976-2017",
-       caption = caption.text,
-       x = "Year", y = "Number of Grizzly Bears Killed", fill = "Mortality Type") +
-  theme(plot.title = element_text(hjust = 0.5), legend.position = "bottom",
-        plot.caption = element_text(hjust = 0))
-mortplot # Display figure
+gbpu_list <- unique(threats$gbpu_name)
 
-# Save figure
-# ggsave(file = "mortplot1.svg", plot = mortplot, width = 10, height= 8)
+gbpu_table <- function(data) {
+  st_geometry(data) = NULL
+  gather(data, key = Threat, value = Rank)
+}
+
+table_list <- map(gbpu_list, ~ {
+  data = filter(threats, gbpu_name == .x)
+  gbpu_table(data)
+})
+names(table_list) <- gbpu_list
+
+plot_list <- plot_list[names(table_list)]
+
+plot_list_df <- tibble(
+  popup_row1 <- table_list,
+  popup_row2 <- plot_list
+)
+
+full_popup <- popup_combine_rows(plot_list_df)
+saveRDS(full_popup, file = "out/full_popup.rds")
+

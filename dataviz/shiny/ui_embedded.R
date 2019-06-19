@@ -1,5 +1,6 @@
 library(DT)
 
+
 ui_embedded <- shinyUI(fluidPage(
     titlePanel("Grizzly Bear Conservation Status in British Columbia"),
     tabsetPanel(
@@ -13,8 +14,8 @@ ui_embedded <- shinyUI(fluidPage(
                ),
       tabPanel("Data Explorer",
                icon = icon("bar-chart"),
+               mainPanel(DT::datatable(threat_calc, width = 800)),
                fluidRow(column(6)))
     ))
 )
-
 

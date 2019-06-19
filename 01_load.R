@@ -10,14 +10,15 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-
 # Loading R libraries ---------------------------------------------------
-Packages <- c("sf", "tidyverse", "dplyr", "maptools", "devtools","bcmaps",
-              "ggplot2", "leaflet", "rmapshaper", "jsonlite", "geojsonio",
-              "mapview", "readr", "bcdata", "kableExtra", "envreportutils",
-              "viridis", "ggmap", "RColorBrewer", "ggspatial", "ggrepel",
-              "svglite", "Cairo", "purrr", "shiny", "htmltools", "here")
+Packages <- c("sf", "tidyverse", "maptools", "devtools","bcmaps",
+              "leaflet", "rmapshaper", "bcdata", "envreportutils",
+              "viridis", "ggmap", "ggspatial", "here",
+              "ggrepel", "svglite", "Cairo", "shiny", "htmltools")
 lapply(Packages, library, character.only = TRUE)
+
+# remotes::install_github("bcgov/bcdata")
+# install_github("bcgov/envreportutils")
 # devtools::install_github("dkahle/ggmap", force = T)
 
 # Install envreportutils
@@ -31,24 +32,29 @@ lapply(Packages, library, character.only = TRUE)
 ## Data is released under the Open Government Licence - British Columbia
 ## https://www2.gov.bc.ca/gov/content?id=A519A56BC2BF44E4A008B33FCF527F61
 
-# Get grizzly pop estimate data (2012)
-grizzlypop_raw <- read_csv("https://catalogue.data.gov.bc.ca/dataset/2bf91935-9158-4f77-9c2c-4310480e6c29/resource/4eca8c5c-ed25-46c1-835c-3d9f84b807e1/download/grizzlypopulationestimate2012.csv")
-glimpse(grizzlypop_raw)
+# Import grizzly bear threat calculator data from csv prior to the following steps
+# (Not yet in DataBC)
+# Threat calculator data not yet in databc warehouse
+threat_calc <- as_tibble(Threat_Calc) %>%
+  rename_all(tolower)
 
-# Load grizzly bear population units as an sf object
-popunits <- bcdc_get_geodata("grizzly-bear-population-units",
-                             query = "VERSION_NAME='2012'")
+# Import 2015 GBPU polygons
+gbpu_2015 <- st_read("C:/dev/grizzly-bear-status-indicator/data/gbpu_2015.shp")
+plot(st_geometry(gbpu_2015))
 
-# Get grizzly mortality data
-bearmort_raw <- read_csv("https://catalogue.data.gov.bc.ca/dataset/4bc13aa2-80c9-441b-8f46-0b9574109b93/resource/c5fc42c7-67d3-4669-b281-61dc50fdef22/download/grizzlybearmortalityhistory_1976_2017.csv")
-
-# Get BC boundary
-boundbc <- bc_bound()
-
-# Get biogeoclimatic zones
-# bec <- bec()
+# Import management unit polygons
+gbpu_mu_dens <- st_read("C:/dev/grizzly-bear-status-indicator/data/gbpu_mu_leh_density.shp")
+plot(st_geometry(gbpu_mu_dens))
 
 # Create bounding box
 # bc_bbox <- st_as_sfc(st_bbox(boundbc)) # convert to sfc
 # bc_bbox <- st_bbox(bc_bbox) # convert to bbox
 # bc_bbox
+
+# Import grizzly BEI polygons (2019) as sf
+habclass <- st_read("C:/dev/grizzly-bear-status-indicator/habclass.shp")
+plot(st_geometry(habclass))
+
+habclass_simp <- ms_simplify(habclass, keep = 0.1, sys = TRUE)
+plot(habclass_simp[2])
+# saveRDS(habclass_simp, "habclass_simp.rds")
