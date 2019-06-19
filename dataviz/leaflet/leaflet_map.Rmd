@@ -25,7 +25,7 @@ grizzdata_full <- read_rds(here("data/grizzdata_full.rds"))
 grizzdata_full <- st_transform(grizzdata_full, crs = 4326) # convert to lat/long
 
 # Popups
-popups <- read_rds(here("data/grizz_popups.rds"))
+popups <- read_rds(here("out/grizz_popups2.rds"))
 
 popup_options <-  popupOptions(maxWidth = "100%", autoPan = TRUE,
                                keepInView = TRUE,
@@ -51,8 +51,7 @@ palette3 <- colorFactor("RdBu", grizzdata_full$threat_class,
 
 ```{r grizz_map, warning=FALSE, echo=FALSE}
 grizzmap <- leaflet(width = "900px", height = "500px") %>%  # generate leaflet map
-  addProviderTiles(providers$Stamen.TerrainBackground, group = "Terrain") %>% 
-  addTiles(group = "OpenStreetMap (Default") %>%
+  addProviderTiles(providers$Stamen.Terrain, group = "Terrain") %>%
   add_bc_home_button() %>%
   set_bc_view()
 ```
@@ -75,8 +74,8 @@ grizzmap %>%
                 bringToFront = T)) %>%
   addLegend("bottomright", pal = palette1, values = grizzdata_full$rankcode,
             title = "Conservation Status",
-            opacity = 1) %>%
-  addLayersControl(overlayGroups = c("Terrain", "OpenStreetMap (Default)"))
+            opacity = 1) #%>%
+  #addLayersControl(overlayGroups = c("Terrain", "Topography"))
 ```
 
 ## Population Estimate
@@ -97,8 +96,8 @@ grizzmap %>%
                 bringToFront = T)) %>%
   addLegend("bottomright", pal = palette2, values = grizzdata_full$adults,
             title = "Population",
-            opacity = 1) %>%
-  addLayersControl(overlayGroups = c("Terrain", "OpenStreetMap (Default)"))
+            opacity = 1) #%>%
+  #addLayersControl(overlayGroups = c("Terrain", "Topography"))
 ```
 
 ## Threat Classification
@@ -119,6 +118,6 @@ grizzmap %>%
                 bringToFront = T)) %>%
   addLegend("bottomright", pal = palette3, values = grizzdata_full$threat_class,
             title = "Threat  Status",
-            opacity = 1) %>%
-  addLayersControl(overlayGroups = c("Terrain", "OpenStreetMap (Default)"))
+            opacity = 1) #%>%
+  #addLayersControl(overlayGroups = c("Terrain", "Topography"))
 ```
