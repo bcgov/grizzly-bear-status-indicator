@@ -34,8 +34,9 @@ habclass_simp <- ms_simplify(habclass, keep = 0.05, sys = TRUE)
 # summary(habclass_simp)
 
 ## Rename values to NAs
-# habclass_simp$RATING[habclass_simp$RATING == 66] <- "Never Occupied"
-# habclass_simp$RATING[habclass_simp$RATING == 99] <- "Extirpated"
+habclass_simp$RATING[habclass_simp$RATING == 66] <- "Never Occupied"
+habclass_simp$RATING[habclass_simp$RATING == 99] <- "Extirpated"
+habclass_simp$RATING <- as.double(habclass_simp$RATING)
 
 ## Add gbpu polygons --------------------------------------------------
 grizzdata_full <- readRDS("data/grizzdata_full.rds")
@@ -52,6 +53,7 @@ whole <- fasterize(habclass_simp, whole, field = "RATING")
 # rat1[["rating"]] <- c("1","2","3","4","5","6","NA")
 # levels(whole) <- rat1 # Add RAT to raster
 # WriteRaster(whole, filename = file.path(out, "habclass_rast.grd"))
+plot(whole)
 
 ## Raster by poly ----------------------------------------
 gbpu_rasts <- raster_by_poly(whole, grizzdata_full, gbpu_name)
