@@ -128,6 +128,7 @@ table_list <- map(gbpu_list, ~ {
   data = filter(threats, gbpu_name == .x)
   gbpu_table(data)
 })
+names(table_list) <- gbpu_list
 
 plot_list <- plot_list[names(table_list)]
 
