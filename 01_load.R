@@ -35,7 +35,7 @@ lapply(Packages, library, character.only = TRUE)
 # Import grizzly bear threat calculator data from csv prior to the following steps
 # (Not yet in DataBC)
 # Threat calculator data not yet in databc warehouse
-threat_calc <- as_tibble(Threatcalc_updated) %>%
+threat_calc <- as_tibble(Threat_Calc) %>%
   rename_all(tolower)
 
 # Import 2015 GBPU polygons
