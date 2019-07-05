@@ -44,10 +44,17 @@ grizzdata_full <- grizzdata_full %>%
 # Join GBPU polygons (popunits) and threat classification data
 grizzdata_full <- left_join(grizzdata_full, threat_calc, by = "gbpu_name")
 
-# Rename NA gbpu names to Extirpated
-grizzdata_full$gbpu_name <- as.character(grizzdata_full$gbpu_name) # as char
-grizzdata_full$gbpu_name[grizzdata_full$gbpu_name == "Extirpated"] <-
-  c("Central Interior", "Northeast", "Sunshine Coast", "Lower Mainland")
+# Give NA (extirpated) gbpu names
+grizzdata_full <- mutate(grizzdata_full,
+       gbpu_name = as.character(gbpu_name),
+       gbpu_name = case_when(
+         grizzly_bear_population_tag == 47 ~ "Northeast",
+         grizzly_bear_population_tag == 48 ~ "Central Interior",
+         grizzly_bear_population_tag == 53 ~ "Lower Mainland",
+         grizzly_bear_population_tag == 81 ~ "Sunshine Coast",
+         TRUE ~ gbpu_name
+       ))
+
 
 # Write grizzly data file to disk
 # saveRDS(grizzdata_full, file = "data/grizzdata_full.rds")
