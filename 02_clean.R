@@ -23,7 +23,7 @@ gbpu_simplify <- st_transform(gbpu_simplify, crs = 3005)
 
 # Find centroid of polygons (for labelling)
 # Note: BC Albers CRS used because lat/long not accepted by st_centroid
-popcentroid <- st_centroid(gbpu_simplify$geometry)
+popcentroid <- st_centroid(st_geometry(gbpu_simplify))
 popcentroid <- st_transform(popcentroid, crs = 4326) # convert to lat/long
 
 # Calculate coordinates for centroid of polygons
