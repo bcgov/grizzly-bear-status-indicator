@@ -45,6 +45,8 @@ palette2 <- colorNumeric("PuBuGn", grizzdata_full$adults,
                         na.color = "#808080")
 palette3 <- colorFactor("RdBu", grizzdata_full$threat_class,
                         na.color = "#808080")
+tpalette <- colorFactor(palette = 'plasma', grizzdata_full$transportationcalc,
+                         reverse = TRUE)
 ```
 
 # {.tabset .tabset-fade}
@@ -103,21 +105,91 @@ grizzmap %>%
 ## Threat Classification
 
 ``` {r, warning=FALSE, echo=FALSE}
-grizzmap %>%
-  addPolygons(data = grizzdata_full, #group = "Threat Classification",
+grizzmap %>% 
+  addPolygons(data = grizzdata_full,
               stroke = T, weight = 1, color = "black", # Add border to polygons
-              fillOpacity = 0.6, # Polygon fill
-              fillColor = ~palette3(grizzdata_full$threat_class),
+              fillOpacity = 0.4, # Polygon fill
+              fillColor = ~tpalette(grizzdata_full$transportationcalc),
+              #popup = popups,
+              #popupOptions = popup_options,
+              group = "Transportation",
               label = plotlabs,
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
-              popup = popups,
-              popupOptions = popup_options,
               highlight = highlightOptions( # Highlight interaction for mouse hover
                 weight = 3,
                 color = "yellow",
                 bringToFront = T)) %>%
-  addLegend("bottomright", pal = palette3, values = grizzdata_full$threat_class,
-            title = "Threat  Status",
-            opacity = 1) #%>%
+  addPolygons(data = grizzdata_full,
+              stroke = T, weight = 1, color = "black",
+              fillOpacity = 0.4,
+              fillColor = ~tpalette(grizzdata_full$energycalc),
+              group = "Energy",
+              label = plotlabs,
+              labelOptions = labelOptions(direction = "auto", textsize = "12px"),
+              highlight = highlightOptions(
+                weight = 3,
+                color = "yellow",
+                bringToFront = T)) %>%
+  addPolygons(data = grizzdata_full,
+              stroke = T, weight = 1, color = "black",
+              fillOpacity = 0.4,
+              fillColor = ~tpalette(grizzdata_full$humanintrusioncalc),
+              group = "Human Intrusion",
+              label = plotlabs,
+              labelOptions = labelOptions(direction = "auto", textsize = "12px"),
+              highlight = highlightOptions(
+                weight = 3,
+                color = "yellow",
+                bringToFront = T)) %>%
+  addPolygons(data = grizzdata_full,
+              stroke = T, weight = 1, color = "black",
+              fillOpacity = 0.4,
+              fillColor = ~tpalette(grizzdata_full$residentialcalc),
+              group = "Residential",
+              label = plotlabs,
+              labelOptions = labelOptions(direction = "auto", textsize = "12px"),
+              highlight = highlightOptions(
+                weight = 3,
+                color = "yellow",
+                bringToFront = T)) %>%
+  addPolygons(data = grizzdata_full,
+              stroke = T, weight = 1, color = "black",
+              fillOpacity = 0.4,
+              fillColor = ~tpalette(grizzdata_full$agriculturecalc),
+              group = "Agriculture",
+              label = plotlabs,
+              labelOptions = labelOptions(direction = "auto", textsize = "12px"),
+              highlight = highlightOptions(
+                weight = 3,
+                color = "yellow",
+                bringToFront = T)) %>%
+  addPolygons(data = grizzdata_full,
+              stroke = T, weight = 1, color = "black",
+              fillOpacity = 0.4,
+              fillColor = ~tpalette(grizzdata_full$biousecalc),
+              group = "Biouse",
+              label = plotlabs,
+              labelOptions = labelOptions(direction = "auto", textsize = "12px"),
+              highlight = highlightOptions(
+                weight = 3,
+                color = "yellow",
+                bringToFront = T)) %>%
+  addPolygons(data = grizzdata_full,
+              stroke = T, weight = 1, color = "black",
+              fillOpacity = 0.4,
+              fillColor = ~tpalette(grizzdata_full$climatechangecalc),
+              group = "Climate Change",
+              label = plotlabs,
+              labelOptions = labelOptions(direction = "auto", textsize = "12px"),
+              highlight = highlightOptions(
+                weight = 3,
+                color = "yellow",
+                bringToFront = T)) %>%
+  addLayersControl(
+    baseGroups = c("Transportation", "Energy", "Human Intrusion", "Residential",
+                   "Agriculture", "Biouse", "Climate Change"),
+    #overlayGroups = c("Terrain", "OSM (Default)"),
+    options = layersControlOptions(collapsed = FALSE))
+#%>%
   #addLayersControl(overlayGroups = c("Terrain", "Topography"))
 ```
