@@ -33,9 +33,8 @@ popcoords <- st_coordinates(popcentroid) # changes to a matrix
 grizzdata_full <- cbind(gbpu_simplify, popcoords) # cbind coords and polygons
 
 # Rename lat and lng columns
-grizzdata_full <- rename(grizzdata_full, lng = X)
-grizzdata_full <- rename(grizzdata_full, lat = Y)
-grizzdata_full <- st_transform(grizzdata_full, crs = 4326) # convert to lat/long
+grizzdata_full <- rename(grizzdata_full, lng = X, lat = Y) %>%
+  st_transform(4326) # convert to lat/long
 
 # Rename 'population name' column
 grizzdata_full <- grizzdata_full %>%
