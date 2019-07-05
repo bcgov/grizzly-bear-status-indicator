@@ -12,7 +12,7 @@
 
 ## SPATIAL DATA CLEANING ---------------------------------------------------------
 # Simplify vertices of GBPU polygons
-gbpu_simplify <- ms_simplify(gbpu_2015, keep = 0.25) # reduce number of vertices
+gbpu_simplify <- ms_simplify(gbpu_2018, keep = 0.25) # reduce number of vertices
 
 # Simplify vertices of management unit polygons
 mu_simplify <- ms_simplify(gbpu_mu_dens, keep = 0.25)
@@ -51,7 +51,7 @@ grizzdata_full$gbpu_name[grizzdata_full$gbpu_name == "Extirpated"] <-
   c("Central Interior", "Northeast", "Sunshine Coast", "Lower Mainland")
 
 # Write grizzly data file to disk
-# saveRDS(grizzdata_full, file = "data/grizzdata_full.rds")
+saveRDS(grizzdata_full, file = "data/grizzdata_full.rds")
 
 # Not to be used in new version unless needed:
 # Summarise total pop estimate per management unit
