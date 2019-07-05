@@ -13,6 +13,11 @@
 ## STATIC MAPPING -------------------------------------------------------------
 grizzdata_full <- st_transform(grizzdata_full, crs = 4326) # convert to lat/long
 
+grizzdata_full <- mutate(grizzdata_full,
+  area_sq_km = set_units(st_area(geometry), km2),
+  pop_density = adults / area_sq_km * 1000
+)
+
 staticmap <- ggplot(grizzdata_full) +
   geom_sf(aes(fill = rankcode), color = "white", size = 0.1) +
   labs(title = "Conservation Status of Grizzly Bear Population Units in BC",
@@ -88,7 +93,7 @@ grizzlypopmap # plot map
 ## POPULATION DENSITY MAPPING: May not be needed for updated version ----------
 # Build  static grizzly density choropleth
 grizzlydensmap <- ggplot(grizzdata_full) +
-  geom_sf(aes(fill = pop_density)) +
+  geom_sf(aes(fill = as.numeric(pop_density))) +
   labs(title = "Grizzly Bear Population Density in British Columbia",
        fill = "Population Density") + # Legend title
   theme_minimal() + theme(plot.title = element_text(hjust = 0.5), # Center main title

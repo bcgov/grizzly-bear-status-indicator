@@ -14,7 +14,8 @@
 Packages <- c("sf", "tidyverse", "maptools", "devtools","bcmaps",
               "leaflet", "rmapshaper", "bcdata", "envreportutils",
               "viridis", "ggmap", "ggspatial", "here", "readxl",
-              "ggrepel", "svglite", "Cairo", "shiny", "htmltools")
+              "ggrepel", "svglite", "Cairo", "shiny", "htmltools",
+              "units")
 lapply(Packages, library, character.only = TRUE)
 
 # remotes::install_github("bcgov/bcdata")
