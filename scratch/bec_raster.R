@@ -13,8 +13,10 @@ library(envreportutils.internal)
 library(raster)
 library(dplyr)
 
-envreportutils.internal:::set_ghostscript('path_to_executable')
 devtools::install_github("bcgov-c/envreportutils.internal")
+
+# set path to ghostscript executable
+envreportutils.internal:::set_ghostscript('path_to_executable')
 
 # Add remote version of bcmaps
 # remotes::install_github("bcgov/bcmaps", ref = "future", force = T)
@@ -34,9 +36,9 @@ habclass_simp <- ms_simplify(habclass, keep = 0.05, sys = TRUE)
 # summary(habclass_simp)
 
 ## Rename values to NAs
-habclass_simp$RATING[habclass_simp$RATING == 66] <- "Never Occupied"
-habclass_simp$RATING[habclass_simp$RATING == 99] <- "Extirpated"
-habclass_simp$RATING <- as.double(habclass_simp$RATING)
+# habclass_simp$RATING[habclass_simp$RATING == 66] <- "Never Occupied"
+# habclass_simp$RATING[habclass_simp$RATING == 99] <- "Extirpated"
+# habclass_simp$RATING <- as.double(habclass_simp$RATING)
 
 ## Add gbpu polygons --------------------------------------------------
 grizzdata_full <- readRDS("data/grizzdata_full.rds")
