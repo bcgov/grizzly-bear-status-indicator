@@ -41,8 +41,7 @@ threat_calc <- read_xls(file.path(data_path, "Threat_Calc.xls")) %>%
   rename_all(tolower)
 
 # Import 2015 GBPU polygons
-gbpu_2018 <- st_read(file.path(data_path, "gbpu_2018.shp")) %>%
-  group_by
+gbpu_2018 <- st_read(file.path(data_path, "gbpu_2018.shp"))
 plot(st_geometry(gbpu_2018))
 
 # Import management unit polygons
