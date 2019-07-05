@@ -57,7 +57,8 @@ grizzdata_full <- mutate(grizzdata_full,
 
 
 # Write grizzly data file to disk
-# saveRDS(grizzdata_full, file = "data/grizzdata_full.rds")
+dir.create("data")
+saveRDS(grizzdata_full, file = "data/grizzdata_full.rds")
 
 # Not to be used in new version unless needed:
 # Summarise total pop estimate per management unit
