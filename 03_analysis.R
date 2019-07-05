@@ -19,7 +19,7 @@ grizzdata_full <- mutate(grizzdata_full,
 )
 
 staticmap <- ggplot(grizzdata_full) +
-  geom_sf(aes(fill = rankcode), color = "white", size = 0.1) +
+  geom_sf(aes(fill = calcrank), color = "white", size = 0.1) +
   labs(title = "Conservation Status of Grizzly Bear Population Units in BC",
        col = "Conservation Rank",
        fill = "Threat Category") +
@@ -46,7 +46,7 @@ plot(stamenbc) # View basemap
 
 # Plot stamen map with terrain basemap
 static_ggmap <- ggmap(stamenbc) + # Generate new map
-  geom_sf(data = grizzdata_full, aes(fill = rankcode), inherit.aes = F,
+  geom_sf(data = grizzdata_full, aes(fill = calcrank), inherit.aes = F,
           color = "white", size = 0.01) + # plot with boundary
   #geom_text(aes(label = grizzdata_full$gbpu_name, x = grizzdata_full$lng,
   #              y = grizzdata_full$lat")) +
