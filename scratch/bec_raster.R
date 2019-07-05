@@ -12,6 +12,7 @@ library(future.apply)
 library(envreportutils.internal)
 library(raster)
 library(dplyr)
+library(mapview)
 
 devtools::install_github("bcgov-c/envreportutils.internal")
 
