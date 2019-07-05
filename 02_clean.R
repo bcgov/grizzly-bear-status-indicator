@@ -12,7 +12,7 @@
 
 ## SPATIAL DATA CLEANING ---------------------------------------------------------
 # Simplify vertices of GBPU polygons
-gbpu_simplify <- ms_simplify(gbpu_2015, keep = 0.25) # reduce number of vertices
+gbpu_simplify <- ms_simplify(gbpu_2018, keep = 0.25) # reduce number of vertices
 
 # Simplify vertices of management unit polygons
 mu_simplify <- ms_simplify(gbpu_mu_dens, keep = 0.25)
