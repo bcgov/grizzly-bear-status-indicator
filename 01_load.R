@@ -13,7 +13,7 @@
 # Loading R libraries ---------------------------------------------------
 Packages <- c("sf", "tidyverse", "maptools", "devtools","bcmaps",
               "leaflet", "rmapshaper", "bcdata", "envreportutils",
-              "viridis", "ggmap", "ggspatial", "here",
+              "viridis", "ggmap", "ggspatial", "here", "readxl",
               "ggrepel", "svglite", "Cairo", "shiny", "htmltools")
 lapply(Packages, library, character.only = TRUE)
 
@@ -35,15 +35,18 @@ lapply(Packages, library, character.only = TRUE)
 # Import grizzly bear threat calculator data from csv prior to the following steps
 # (Not yet in DataBC)
 # Threat calculator data not yet in databc warehouse
-threat_calc <- as_tibble(Threat_Calc) %>%
+data_path <- soe_path("Operations ORCS/Data - Working/plants_animals/grizzly/2019/Raw Data")
+
+threat_calc <- read_xls(file.path(data_path, "Threat_Calc.xls")) %>%
   rename_all(tolower)
 
 # Import 2015 GBPU polygons
-gbpu_2015 <- st_read("C:/dev/grizzly-bear-status-indicator/data/gbpu_2015.shp")
-plot(st_geometry(gbpu_2015))
+gbpu_2018 <- st_read(file.path(data_path, "gbpu_2018.shp")) %>%
+  group_by
+plot(st_geometry(gbpu_2018))
 
 # Import management unit polygons
-gbpu_mu_dens <- st_read("C:/dev/grizzly-bear-status-indicator/data/gbpu_mu_leh_density.shp")
+gbpu_mu_dens <- st_read(file.path(data_path, "Bear_Density_2018.gdb"))
 plot(st_geometry(gbpu_mu_dens))
 
 # Create bounding box
@@ -51,10 +54,11 @@ plot(st_geometry(gbpu_mu_dens))
 # bc_bbox <- st_bbox(bc_bbox) # convert to bbox
 # bc_bbox
 
-# Import grizzly BEI polygons (2019) as sf
-habclass <- st_read("C:/dev/grizzly-bear-status-indicator/habclass.shp")
+# Import grizzly BEC/Ecosection polygons (2019) as sf
+habclass <- bcdc_get_data(record = 'dba6c78a-1bc1-4d4f-b75c-96b5b0e7fd30',
+                          resource = 'd23da745-c8c5-4241-b03d-5654591e117c')
 plot(st_geometry(habclass))
 
 habclass_simp <- ms_simplify(habclass, keep = 0.1, sys = TRUE)
-plot(habclass_simp[2])
+plot(st_geometry(habclass_simp))
 # saveRDS(habclass_simp, "habclass_simp.rds")
