@@ -32,7 +32,9 @@ grizz_dt <- datatable(grizz_summary, width = 500)
 
 # Popups
 popups <- read_rds(here("out/grizz_popups2.rds"))
-popup_table <- leafpop::popupTable(grizz_summary)
+popup_table <- leafpop::popupTable(grizz_summary,
+                                   row.numbers = F, 
+                                   feature.id = F)
 
 popup_options <-  popupOptions(maxWidth = "100%", autoPan = TRUE,
                                keepInView = TRUE,
