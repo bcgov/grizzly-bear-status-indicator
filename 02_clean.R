@@ -11,12 +11,11 @@
 # See the License for the specific language governing permissions and limitations under the License.
 
 ## SPATIAL DATA CLEANING ---------------------------------------------------------
+gbpu_2018 <- gbpu_2018 %>%
+  group_by(POPULATION)
+
 # Simplify vertices of GBPU polygons
 gbpu_simplify <- ms_simplify(gbpu_2018, keep = 0.25) # reduce number of vertices
-
-# Simplify vertices of management unit polygons
-mu_simplify <- ms_simplify(gbpu_mu_dens, keep = 0.25)
-plot(st_geometry(mu_simplify))
 
 # Transform to BC Albers
 gbpu_simplify <- st_transform(gbpu_simplify, crs = 3005)

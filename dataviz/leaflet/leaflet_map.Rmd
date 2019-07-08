@@ -66,8 +66,6 @@ grizzmap %>%
               stroke = T, weight = 1, color = "black", # Add border to polygons
               fillOpacity = 0.5, # Polygon fill
               fillColor = ~palette1(grizzdata_full$rankcode),
-              popup = popups,
-              popupOptions = popup_options,
               label = plotlabs,
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
               highlight = highlightOptions( # Highlight interaction for mouse hover
