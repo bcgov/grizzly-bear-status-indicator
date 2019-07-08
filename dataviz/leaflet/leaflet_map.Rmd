@@ -1,5 +1,7 @@
 ---
-output: html_document
+output:
+  html_document:
+    css: "assets/leaflet_style.css"
 ---
 
 ```{r setup, include=FALSE, warning=FALSE}

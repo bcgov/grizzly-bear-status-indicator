@@ -1,0 +1,5 @@
+/* Fix for NA in legend */
+/* https://github.com/rstudio/leaflet/issues/615#issue-431696781 */
+div.info.legend.leaflet-control br {
+  clear: both;
+}
