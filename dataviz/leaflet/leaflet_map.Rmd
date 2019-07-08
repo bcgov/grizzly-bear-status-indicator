@@ -26,8 +26,17 @@ grizzdata_full <- read_rds(here("data/grizzdata_full.rds"))
 grizzdata_full <- st_transform(grizzdata_full, crs = 4326) # convert to lat/long
 
 # Summary data for popups
-grizz_summary <- dplyr::select(grizzdata_full, gbpu_name, threat_class, est_pop__1, popiso)
+grizz_summary <- dplyr::select(grizzdata_full, gbpu_name, status, est_pop__1, 
+                               popiso, threat_class) %>%
+  rename("Population Name" = gbpu_name,
+         "Overall Status" = status,
+         "Population Size" = est_pop__1,
+         "Isolation" = popiso,
+         "Threat Class" = threat_class) # add trend - not found? 
+
 st_geometry(grizz_summary) <- NULL # as df
+
+# dt option - scratch
 grizz_dt <- datatable(grizz_summary, width = 500)
 
 # Popups
