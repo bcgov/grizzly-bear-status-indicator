@@ -42,10 +42,6 @@ threat_calc <- as_tibble(Threat_Calc) %>%
 gbpu_2018 <- st_read("C:/dev/grizzly-bear-status-indicator/data/gbpu_2018.shp")
 plot(st_geometry(gbpu_2018))
 
-# Import management unit polygons
-gbpu_mu_dens <- st_read("C:/dev/grizzly-bear-status-indicator/data/gbpu_mu_leh_density.shp")
-plot(st_geometry(gbpu_mu_dens))
-
 # Create bounding box
 # bc_bbox <- st_as_sfc(st_bbox(boundbc)) # convert to sfc
 # bc_bbox <- st_bbox(bc_bbox) # convert to bbox
