@@ -26,7 +26,7 @@ popcentroid <- st_centroid(gbpu_simplify$geometry)
 popcentroid <- st_transform(popcentroid, crs = 4326) # convert to lat/long
 
 # Calculate coordinates for centroid of polygons
-popcoords <- st_coordinates(popcentroid) # changes to a matrix
+popcoords <- st_coordinates(popcentroid)
 
 # Spatial join
 grizzdata_full <- cbind(gbpu_simplify, popcoords) # cbind coords and polygons
