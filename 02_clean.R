@@ -12,7 +12,7 @@
 
 ## SPATIAL DATA CLEANING ---------------------------------------------------------
 gbpu_2018 <- gbpu_2018 %>%
-  group_by(POPULATION)
+  group_by(POPULATION_NAME)
 
 # Simplify vertices of GBPU polygons
 gbpu_simplify <- ms_simplify(gbpu_2018, keep = 0.25) # reduce number of vertices
@@ -38,7 +38,7 @@ grizzdata_full <- rename(grizzdata_full, lng = X, lat = Y) %>%
 # Rename 'population name' column
 grizzdata_full <- grizzdata_full %>%
   rename_all(tolower) %>%
-  rename(gbpu_name = population)
+  rename(gbpu_name = population_name)
 
 # Join GBPU polygons (popunits) and threat classification data
 grizzdata_full <- left_join(grizzdata_full, threat_calc, by = "gbpu_name")
