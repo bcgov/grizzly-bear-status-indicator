@@ -13,8 +13,10 @@ library(envreportutils.internal)
 library(raster)
 library(dplyr)
 library(mapview)
+library(bcdata)
+library(rmapshaper)
 
-devtools::install_github("bcgov-c/envreportutils.internal")
+# devtools::install_github("bcgov-c/envreportutils.internal")
 
 # set path to ghostscript executable
 envreportutils.internal:::set_ghostscript('path_to_executable')
@@ -23,11 +25,12 @@ envreportutils.internal:::set_ghostscript('path_to_executable')
 # remotes::install_github("bcgov/bcmaps", ref = "future", force = T)
 
 # Create -out directory
-figsOutDir <- "c:/dev/grizzly-bear-status-indicator/out"
+figsOutDir <- "out"
 
 ## Import grizzly BEI polygons (2019) as sf ---------------------------
-habclass <- st_read("C:/dev/grizzly-bear-status-indicator/data/habclass.shp")
-plot(st_geometry(habclass))
+habclass <- bcdc_get_data(record = 'dba6c78a-1bc1-4d4f-b75c-96b5b0e7fd30',
+                          resource = 'd23da745-c8c5-4241-b03d-5654591e117c')
+# plot(st_geometry(habclass))
 
 ## Simplify BEI polygons ----------------------------------------------
 habclass_simp <- ms_simplify(habclass, keep = 0.05, sys = TRUE)
@@ -42,7 +45,8 @@ habclass_simp <- ms_simplify(habclass, keep = 0.05, sys = TRUE)
 # habclass_simp$RATING <- as.double(habclass_simp$RATING)
 
 ## Add gbpu polygons --------------------------------------------------
-grizzdata_full <- readRDS("data/grizzdata_full.rds")
+grizzdata_full <- readRDS("data/grizzdata_full.rds") %>%
+  transform_bc_albers()
 
 ## Create value with population field
 gbpu_name <- "gbpu_name"
@@ -59,7 +63,8 @@ whole <- fasterize(habclass_simp, whole, field = "RATING")
 plot(whole)
 
 ## Raster by poly ----------------------------------------
-gbpu_rasts <- raster_by_poly(whole, grizzdata_full, gbpu_name)
+# plan(multiprocess(workers = 4))
+gbpu_rasts <- raster_by_poly(whole, grizzdata_full, gbpu_name, parallel = FALSE)
 
 # gbpu_rasts <- c(whole, gbpu_rasts)
 # names(gbpu_rasts)[1] <- "Province"
@@ -67,7 +72,8 @@ gbpu_rasts <- raster_by_poly(whole, grizzdata_full, gbpu_name)
 saveRDS(gbpu_rasts, file = "out/gbpu_rasts.rds")
 
 # Summary
-gbpu_rast_summary <- summarize_raster_list(gbpu_rasts)
+# plan(multiprocess(workers = 4))
+gbpu_rast_summary <- summarize_raster_list(gbpu_rasts, parallel = TRUE)
 
 ## Raster functions
 ggmap_gbpu <- function(grizzdata_full) {
@@ -126,6 +132,7 @@ saveRDS(plot_list, file = "out/plot_list.rds")
 # Popups for leaflet map
 popups <-  leaflet::popupGraph(plot_list, type = "png", width = 500,
                       height = 300)
+saveRDS(popups, "out/grizz_popups2.rds")
 popup_options <-  popupOptions(maxWidth = "100%", autoPan = TRUE,
                                keepInView = TRUE,
                                closeOnClick = TRUE,
