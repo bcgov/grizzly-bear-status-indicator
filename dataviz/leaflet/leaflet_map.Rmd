@@ -27,11 +27,11 @@ grizzdata_full <- st_transform(grizzdata_full, crs = 4326) # convert to lat/long
 
 # Summary data for popups
 grizz_summary <- dplyr::select(grizzdata_full, gbpu_name, status, est_pop__1, 
-                               popiso, threat_class) %>%
+                               iso, threat_class) %>%
   rename("Population Name" = gbpu_name,
          "Overall Status" = status,
          "Population Size" = est_pop__1,
-         "Isolation" = popiso,
+         "Isolation" = iso,
          "Threat Class" = threat_class) # add trend - not found? 
 
 st_geometry(grizz_summary) <- NULL # as df
@@ -59,7 +59,7 @@ plotlabs <- sprintf( # create labels for leaflet map
 # Prep - colour palettes
 palette1 <- colorFactor(palette = 'viridis', grizzdata_full$rankcode,
                         reverse = TRUE, na.color = "#808080")
-palette2 <- colorNumeric("PuBuGn", grizzdata_full$adults,
+palette2 <- colorNumeric("PuBuGn", grizzdata_full$est_pop_de,
                         na.color = "#808080")
 palette3 <- colorFactor("RdBu", grizzdata_full$threat_class,
                         na.color = "#808080")
@@ -97,14 +97,14 @@ grizzmap %>%
   #addLayersControl(overlayGroups = c("Terrain", "Topography"))
 ```
 
-## Population Estimate
+## Population Density Estimate
 
 ``` {r, warning=FALSE, echo=FALSE}
 grizzmap %>%
   addPolygons(data = grizzdata_full, #group = "Population Estimate",
               stroke = T, weight = 1, color = "black",
               fillOpacity = 0.6,
-              fillColor = ~palette2(grizzdata_full$adults),
+              fillColor = ~palette2(grizzdata_full$est_pop_de),
               label = plotlabs,
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
               popup = popups,
@@ -113,8 +113,8 @@ grizzmap %>%
                 weight = 3,
                 color = "yellow",
                 bringToFront = T)) %>%
-  addLegend("bottomright", pal = palette2, values = grizzdata_full$adults,
-            title = "Population",
+  addLegend("bottomright", pal = palette2, values = grizzdata_full$est_pop_de,
+            title = "Population Density",
             opacity = 1) #%>%
   #addLayersControl(overlayGroups = c("Terrain", "Topography"))
 ```
