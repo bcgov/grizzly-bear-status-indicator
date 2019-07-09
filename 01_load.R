@@ -41,8 +41,9 @@ data_path <- soe_path("Operations ORCS/Data - Working/plants_animals/grizzly/201
 threat_calc <- read_xls(file.path(data_path, "Threat_Calc.xls")) %>%
   rename_all(tolower)
 
-# Import 2015 GBPU polygons
-gbpu_2018 <- st_read(file.path(data_path, "gbpu_2018.shp"))
+# Import 2016 GBPU polygons (for now, until we get the newest ones)
+gbpu_2018 <- read_sf(file.path(data_path, "BC_Grizzly_Results_v1_Draft_April2016.gdb"),
+                     layer = "GBPU_BC_edits_v2_20150601")
 plot(st_geometry(gbpu_2018))
 
 # Create bounding box

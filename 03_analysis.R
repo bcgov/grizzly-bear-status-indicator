@@ -15,7 +15,7 @@ grizzdata_full <- st_transform(grizzdata_full, crs = 4326) # convert to lat/long
 
 grizzdata_full <- mutate(grizzdata_full,
   area_sq_km = set_units(st_area(geometry), km2),
-  pop_density = adults / area_sq_km * 1000
+  pop_density = as.numeric(adults / area_sq_km * 1000)
 )
 
 staticmap <- ggplot(grizzdata_full) +
@@ -133,15 +133,17 @@ table_list <- map(gbpu_list, ~ {
   data = filter(threats, gbpu_name == .x)
   gbpu_table(data)
 })
+
 names(table_list) <- gbpu_list
 
-plot_list <- plot_list[names(table_list)]
+# plot_list <- plot_list[names(table_list)]
 
 plot_list_df <- tibble(
-  popup_row1 <- table_list,
-  popup_row2 <- plot_list
+  popup_row1 = table_list
+  # popup_row2 = plot_list
 )
 
 full_popup <- popup_combine_rows(plot_list_df)
 saveRDS(full_popup, file = "out/full_popup.rds")
+saveRDS(grizzdata_full, "data/grizzdata_full.rds")
 
