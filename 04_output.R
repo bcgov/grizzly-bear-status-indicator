@@ -10,56 +10,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-## Threat mapping -------------------------------------------------------------
-# Transportation:
-transport_map <- ggplot(grizzdata_full) +
-  geom_sf(aes(fill = transportationcalc), color = "white", size = 0.1) +
-  labs(title = "Transportation Threats to Grizzly Bear Populations in BC",
-       col = "Threat Rank", fill = "Threat Class") +
-  scale_fill_viridis(alpha = 0.6, discrete = T, option = "viridis",
-                     direction = -1, na.value = "darkgrey") +
-  theme_soe() + theme(plot.title = element_text(hjust = 0.5),
-                      axis.title.x = element_blank(),
-                      axis.title.y = element_blank(),
-                      legend.background = element_rect(
-                        fill = "lightgrey", size = 0.5,
-                        linetype = "solid", colour = "darkgrey")) +
-  geom_text(aes(label = grizzdata_full$gbpu_name, x = grizzdata_full$lng,
-                y = grizzdata_full$lat), size = 2, check_overlap = T)
-transport_map
-
-# Energy map
-energy_map <- ggplot(grizzdata_full) +
-  geom_sf(aes(fill = energycalc), color = "white", size = 0.1) +
-  labs(title = "Energy Threats to Grizzly Bear Populations in BC",
-       col = "Threat Rank", fill = "Threat Class") +
-  scale_fill_viridis(alpha = 0.6, discrete = T, option = "viridis",
-                     na.value = "darkgrey") +
-  theme_soe() + theme(plot.title = element_text(hjust = 0.5),
-                      axis.title.x = element_blank(),
-                      axis.title.y = element_blank(),
-                      legend.background = element_rect(
-    fill = "lightgrey", size = 0.5, linetype = "solid", colour = "darkgrey")) +
-  geom_text(aes(label = grizzdata_full$gbpu_name, x = grizzdata_full$lng,
-                y = grizzdata_full$lat), size = 2, check_overlap = T)
-energy_map
-
-# Human intrusion map
-hi_map <- ggplot(grizzdata_full) +
-  geom_sf(aes(fill = humanintrusioncalc), color = "white", size = 0.1) +
-  labs(title = "Human Intrusion Threats to Grizzly Bear Populations in BC",
-       col = "Threat Rank", fill = "Threat Class") +
-  scale_fill_viridis(alpha = 0.6, discrete = T, option = "viridis",
-                     na.value = "darkgrey", direction = -1) +
-  theme_soe() + theme(plot.title = element_text(hjust = 0.5),
-                      axis.title.x = element_blank(),
-                      axis.title.y = element_blank(),
-                      legend.background = element_rect(
-                        fill = "lightgrey", size = 0.5, linetype = "solid", colour = "darkgrey")) +
-  geom_text(aes(label = grizzdata_full$gbpu_name, x = grizzdata_full$lng,
-                y = grizzdata_full$lat), size = 2, check_overlap = T)
-hi_map
-
 # Mortality loops from earlier version ----------------------------------------
 # Write directory for plot outputs
 dir.create("out", showWarnings = FALSE)
