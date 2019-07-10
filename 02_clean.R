@@ -59,17 +59,4 @@ grizzdata_full <- mutate(grizzdata_full,
 dir.create("data")
 saveRDS(grizzdata_full, file = "data/grizzdata_full.rds")
 
-# Not to be used in new version unless needed:
-# Summarise total pop estimate per management unit
-by_gbpu <- grizzlypop_raw %>%
-  group_by(GBPU) %>%
-  summarise(POP_ESTIMATE = sum(Estimate),
-            Total_Area = sum(Total_Area),
-            # Recalculate Density (bears / 1000 km^2)
-            POP_DENSITY = round(POP_ESTIMATE / (Total_Area / 1000))) %>%
-  rename(gbpu_name = GBPU) %>%
-  rename_all(tolower) # Set to lower case
-glimpse(by_gbpu)
-
-
 
