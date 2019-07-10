@@ -43,7 +43,9 @@ threat_calc <- read_xls(file.path(data_path, "Threat_Calc.xls")) %>%
 
 # Import 2016 GBPU polygons (for now, until we get the newest ones)
 gbpu_2018 <- read_sf(file.path(data_path, "BC_Grizzly_Results_v1_Draft_April2016.gdb"),
-                     layer = "GBPU_BC_edits_v2_20150601")
+                     layer = "GBPU_BC_edits_v2_20150601") %>%
+  transform_bc_albers()
+
 plot(st_geometry(gbpu_2018))
 
 # Create bounding box
