@@ -15,7 +15,7 @@ Packages <- c("sf", "tidyverse", "maptools", "devtools","bcmaps",
               "leaflet", "rmapshaper", "bcdata", "envreportutils",
               "viridis", "ggmap", "ggspatial", "here", "readxl",
               "ggrepel", "svglite", "Cairo", "shiny", "htmltools",
-              "units")
+              "units", "bcdata")
 lapply(Packages, library, character.only = TRUE)
 
 # remotes::install_github("bcgov/bcdata")
@@ -54,8 +54,3 @@ plot(st_geometry(gbpu_2018))
 # Import grizzly BEC/Ecosection polygons (2019) as sf
 habclass <- bcdc_get_data(record = 'dba6c78a-1bc1-4d4f-b75c-96b5b0e7fd30',
                           resource = 'd23da745-c8c5-4241-b03d-5654591e117c')
-plot(st_geometry(habclass))
-
-habclass_simp <- ms_simplify(habclass, keep = 0.1, sys = TRUE)
-plot(st_geometry(habclass_simp))
-# saveRDS(habclass_simp, "habclass_simp.rds")
