@@ -13,11 +13,6 @@
 # Create 'out' directory
 figsOutDir <- "out"
 
-## Import grizzly BEI polygons (2019) as sf ---------------------------
-habclass <- bcdc_get_data(record = 'dba6c78a-1bc1-4d4f-b75c-96b5b0e7fd30',
-                          resource = 'd23da745-c8c5-4241-b03d-5654591e117c')
-# plot(st_geometry(habclass))
-
 ## Simplify BEI polygons ----------------------------------------------
 habclass_simp <- ms_simplify(habclass, keep = 0.05, sys = TRUE)
 # saveRDS(habclass_simp, file = "habclass_simp.rds")
@@ -30,13 +25,6 @@ habclass_simp <- ms_simplify(habclass, keep = 0.05, sys = TRUE)
 # habclass_simp$RATING[habclass_simp$RATING == 99] <- "Extirpated"
 # habclass_simp$RATING <- as.double(habclass_simp$RATING)
 
-## Add gbpu polygons --------------------------------------------------
-grizzdata_full <- readRDS("data/grizzdata_full.rds") %>%
-  transform_bc_albers()
-
-## Create value with population field
-gbpu_name <- "gbpu_name"
-
 # Rasterize whole habitat class
 whole <- raster(habclass_simp, res = 90)
 whole <- fasterize(habclass_simp, whole, field = "RATING")
@@ -47,6 +35,9 @@ whole <- fasterize(habclass_simp, whole, field = "RATING")
 # levels(whole) <- rat1 # Add RAT to raster
 # WriteRaster(whole, filename = file.path(out, "habclass_rast.grd"))
 plot(whole)
+
+## Create value with population field
+gbpu_name <- "gbpu_name"
 
 ## Raster by poly ----------------------------------------
 # plan(multiprocess(workers = 4))
@@ -139,4 +130,31 @@ for (n in names(plot_list)) {
 walk(plot_list, ~ {
   plot(.x$map)
 })
+
+## ----------------------------------------------------------------------------
+
+gbpu_list <- unique(threats$gbpu_name)
+
+gbpu_table <- function(data) {
+  st_geometry(data) = NULL
+  gather(data, key = Threat, value = Rank)
+}
+
+table_list <- map(gbpu_list, ~ {
+  data = filter(threats, gbpu_name == .x)
+  gbpu_table(data)
+})
+
+names(table_list) <- gbpu_list
+
+# plot_list <- plot_list[names(table_list)]
+
+plot_list_df <- tibble(
+  popup_row1 = table_list
+  # popup_row2 = plot_list
+)
+
+full_popup <- popup_combine_rows(plot_list_df)
+saveRDS(full_popup, file = "out/full_popup.rds")
+saveRDS(grizzdata_full, "data/grizzdata_full.rds")
 
