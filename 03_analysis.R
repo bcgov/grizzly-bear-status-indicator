@@ -40,7 +40,8 @@ staticmap # plot map
 
 # Get stamen basemap (terrain)
 stamenbc <- get_stamenmap(bbox = c(-139.658203,48.5,-113.071289,60.261617),
-                          zoom = 7, maptype = "terrain-background", where = "/dev/stamen/")
+                          zoom = 7, maptype = "terrain-background",
+                          where = "/dev/stamen/")
 # saveRDS(stamenbc, file = "/dev/stamen.Rds")
 # readRDS(stamenbc)
 plot(stamenbc) # View basemap
@@ -60,7 +61,8 @@ static_ggmap <- ggmap(stamenbc) + # Generate new map
   theme(plot.title = element_text(hjust = 0.5), axis.title.x = element_blank(),
         axis.title.y = element_blank(),
         legend.background = element_rect(
-          fill = "lightgrey", size = 0.5, linetype = "solid", colour = "darkgrey"))
+          fill = "lightgrey", size = 0.5, linetype = "solid",
+          colour = "darkgrey"))
 plot(static_ggmap)
 
 # Clip + mask raster to BC boundary
