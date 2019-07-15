@@ -39,7 +39,7 @@ staticmap <- ggplot(grizzdata_full) +
 staticmap # plot map
 
 # Get stamen basemap (terrain)
-stamenbc <- get_stamenmap(bbox = c(-139.658203,48,-113.071289,60.261617),
+stamenbc <- get_stamenmap(bbox = c(-139.658203,48.5,-113.071289,60.261617),
                           zoom = 7, maptype = "terrain-background", where = "/dev/stamen/")
 # saveRDS(stamenbc, file = "/dev/stamen.Rds")
 # readRDS(stamenbc)
