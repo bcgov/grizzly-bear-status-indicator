@@ -55,17 +55,16 @@ popup_options <-  popupOptions(autoPan = TRUE,
 
 plotlabs <- sprintf( # create labels for leaflet map
   "<strong>%s</strong>",
-  tools::toTitleCase(tolower(grizzdata_full$gbpu_name))
+  tools::toTitleCase(tolower(grizzdata_full$gbpu_name)),
+  tools::toTitleCase(tolower(grizzdata_full$calcsrank))
 ) %>% lapply(htmltools::HTML)
 
 # Prep - colour palettes
-palette1 <- colorFactor(palette = 'viridis', grizzdata_full$rankcode,
-                        reverse = TRUE, na.color = "#808080")
+palette1 <- colorFactor(palette = 'viridis', grizzdata_full$calcsrank,
+                        reverse = TRUE)
 
-palette2 <- colorNumeric("PuBuGn", grizzdata_full$pop_density,
-                         na.color = "#808080")
-palette3 <- colorFactor("RdBu", grizzdata_full$threat_class,
-                        na.color = "#808080")
+palette2 <- colorNumeric("RdYlBu", grizzdata_full$pop_density)
+palette3 <- colorFactor("PRGn", grizzdata_full$threat_class)
 ```
 
 # {.tabset .tabset-fade}
@@ -84,8 +83,8 @@ grizzmap <- leaflet(width = "900px", height = "500px") %>%  # generate leaflet m
 grizzmap %>% 
   addPolygons(data = grizzdata_full, #group = "Conservation Status",
               stroke = T, weight = 1, color = "black", # Add border to polygons
-              fillOpacity = 0.7, # Polygon fill
-              fillColor = ~palette1(grizzdata_full$calcrank),
+              fillOpacity = 0.6, # Polygon fill
+              fillColor = ~palette1(grizzdata_full$calcsrank),
               label = plotlabs,
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
               popup = popup_table,
@@ -94,7 +93,7 @@ grizzmap %>%
                 weight = 3,
                 color = "yellow",
                 bringToFront = T)) %>%
-  addLegend("bottomright", pal = palette1, values = grizzdata_full$calcrank,
+  addLegend("bottomright", pal = palette1, values = grizzdata_full$calcsrank,
             title = "Conservation Status", na.label = "Extirpated",
             opacity = 1) #%>%
   #addLayersControl(overlayGroups = c("Terrain", "Topography"))
@@ -113,13 +112,13 @@ grizzmap %>%
               popup = popups,
               popupOptions = popup_options,
               highlight = highlightOptions( # Highlight interaction for mouse hover
-                weight = 3,
-                color = "yellow",
-                bringToFront = T)) %>%
+              weight = 3,
+              color = "yellow",
+              bringToFront = T)) %>%
   addLegend("bottomright", pal = palette2, values = grizzdata_full$pop_density,
             title = "Population Density",
             opacity = 1) #%>%
-  #addLayersControl(overlayGroups = c("Terrain", "Topography"))
+  # addLayersControl(overlayGroups = c("Terrain", "Topography"))
 ```
 
 ## Threat Classification
@@ -128,7 +127,7 @@ grizzmap %>%
 grizzmap %>% 
   addPolygons(data = grizzdata_full,
               stroke = T, weight = 1, color = "black", # Add border to polygons
-              fillOpacity = 0.7, # Polygon fill
+              fillOpacity = 0.6, # Polygon fill
               fillColor = ~palette3(grizzdata_full$transportationcalc),
               #popup = popups,
               #popupOptions = popup_options,
