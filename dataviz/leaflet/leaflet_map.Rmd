@@ -26,6 +26,9 @@ library(envreportutils)
 # Load data
 grizzdata_full <- read_rds(here("data/grizzdata_full.rds"))
 grizzdata_full <- st_transform(grizzdata_full, crs = 4326) # convert to lat/long
+```
+
+``` {r popups, include=FALSE, warning=FALSE}
 
 # Summary data for text popups
 grizz_summary <- dplyr::select(grizzdata_full, gbpu_name, status, adults, 
@@ -49,14 +52,23 @@ popup_options <-  popupOptions(autoPan = TRUE,
                                closeOnClick = TRUE,
                                autoPanPaddingTopLeft = c(120, 10),
                                autoPanPaddingBottomRight = c(120,10))
-# label 1
-lab1 <- dplyr::select(grizzdata_full, gbpu_name, calcrank)
-st_geometry(lab1) <- NULL # as df
+# Label 1
+labs <- dplyr::select(grizzdata_full, gbpu_name, pop_density, calcrank, threat_class)
+st_geometry(labs) <- NULL # as df
 
+lab1 <- lapply(seq(nrow(labs)), function(i) {
+  paste0( '<b>', labs[i, "gbpu_name"], ', ',  
+          labs[i, "calcrank"], '</b>') 
+})
 
-labs <- lapply(seq(nrow(lab1)), function(i) {
-  paste0( '<b>', lab1[i, "gbpu_name"], ', ',  
-          lab1[i, "calcrank"], '</b>') 
+lab2 <- lapply(seq(nrow(labs)), function(i) {
+  paste0( '<b>', labs[i, "gbpu_name"], ', ',  
+          labs[i, "pop_density"], '</b>') 
+})
+
+lab3 <- lapply(seq(nrow(labs)), function(i) {
+  paste0( '<b>', labs[i, "gbpu_name"], ', ',  
+          labs[i, "threat_class"], '</b>') 
 })
 
 # Prep - colour palettes
@@ -85,7 +97,7 @@ grizzmap %>%
               stroke = T, weight = 1, color = "black", # Add border to polygons
               fillOpacity = 0.6, # Polygon fill
               fillColor = ~palette1(grizzdata_full$calcsrank),
-              label = lapply(labs, htmltools::HTML),
+              label = lapply(lab1, htmltools::HTML),
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
               popup = popup_table,
               popupOptions = popup_options,
@@ -107,7 +119,7 @@ grizzmap %>%
               stroke = T, weight = 1, color = "black",
               fillOpacity = 0.6,
               fillColor = ~palette2(grizzdata_full$pop_density),
-              label = labs,
+              label = lab2,
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
               popup = popups,
               popupOptions = popup_options,
@@ -132,7 +144,7 @@ grizzmap %>%
               #popup = popups,
               #popupOptions = popup_options,
               group = "Transportation",
-              label = labs,
+              label = lab3,
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
               highlight = highlightOptions( # Highlight interaction for mouse hover
                 weight = 3,
@@ -143,7 +155,7 @@ grizzmap %>%
               fillOpacity = 0.7,
               fillColor = ~palette3(grizzdata_full$energycalc),
               group = "Energy",
-              label = labs,
+              label = lab3,
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
               highlight = highlightOptions(
                 weight = 3,
@@ -154,7 +166,7 @@ grizzmap %>%
               fillOpacity = 0.7,
               fillColor = ~palette3(grizzdata_full$humanintrusioncalc),
               group = "Human Intrusion",
-              label = labs,
+              label = lab3,
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
               highlight = highlightOptions(
                 weight = 3,
@@ -165,7 +177,7 @@ grizzmap %>%
               fillOpacity = 0.7,
               fillColor = ~palette3(grizzdata_full$residentialcalc),
               group = "Residential",
-              label = labs,
+              label = lab3,
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
               highlight = highlightOptions(
                 weight = 3,
@@ -176,7 +188,7 @@ grizzmap %>%
               fillOpacity = 0.7,
               fillColor = ~palette3(grizzdata_full$agriculturecalc),
               group = "Agriculture",
-              label = labs,
+              label = lab3,
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
               highlight = highlightOptions(
                 weight = 3,
@@ -187,7 +199,7 @@ grizzmap %>%
               fillOpacity = 0.7,
               fillColor = ~palette3(grizzdata_full$biousecalc),
               group = "Biouse",
-              label = labs,
+              label = lab3,
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
               highlight = highlightOptions(
                 weight = 3,
@@ -198,7 +210,7 @@ grizzmap %>%
               fillOpacity = 0.7,
               fillColor = ~palette3(grizzdata_full$climatechangecalc),
               group = "Climate Change",
-              label = labs,
+              label = lab3,
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
               highlight = highlightOptions(
                 weight = 3,
