@@ -74,7 +74,6 @@ lab3 <- lapply(seq(nrow(labs)), function(i) {
 # Prep - colour palettes
 palette1 <- colorFactor(palette = 'viridis', grizzdata_full$calcsrank,
                         reverse = TRUE)
-
 palette2 <- colorNumeric("RdYlBu", grizzdata_full$pop_density)
 palette3 <- colorFactor("PRGn", grizzdata_full$threat_class)
 ```
@@ -119,7 +118,7 @@ grizzmap %>%
               stroke = T, weight = 1, color = "black",
               fillOpacity = 0.6,
               fillColor = ~palette2(grizzdata_full$pop_density),
-              label = lab2,
+              label = lapply(lab2, htmltools::HTML),
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
               popup = popups,
               popupOptions = popup_options,
@@ -144,7 +143,7 @@ grizzmap %>%
               #popup = popups,
               #popupOptions = popup_options,
               group = "Transportation",
-              label = lab3,
+              label = lapply(lab3, htmltools::HTML),
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
               highlight = highlightOptions( # Highlight interaction for mouse hover
                 weight = 3,
@@ -155,7 +154,7 @@ grizzmap %>%
               fillOpacity = 0.7,
               fillColor = ~palette3(grizzdata_full$energycalc),
               group = "Energy",
-              label = lab3,
+              label = lapply(lab3, htmltools::HTML),
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
               highlight = highlightOptions(
                 weight = 3,
@@ -166,7 +165,7 @@ grizzmap %>%
               fillOpacity = 0.7,
               fillColor = ~palette3(grizzdata_full$humanintrusioncalc),
               group = "Human Intrusion",
-              label = lab3,
+              label = lapply(lab3, htmltools::HTML),
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
               highlight = highlightOptions(
                 weight = 3,
@@ -177,7 +176,7 @@ grizzmap %>%
               fillOpacity = 0.7,
               fillColor = ~palette3(grizzdata_full$residentialcalc),
               group = "Residential",
-              label = lab3,
+              label = lapply(lab3, htmltools::HTML),
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
               highlight = highlightOptions(
                 weight = 3,
@@ -188,7 +187,7 @@ grizzmap %>%
               fillOpacity = 0.7,
               fillColor = ~palette3(grizzdata_full$agriculturecalc),
               group = "Agriculture",
-              label = lab3,
+              label = lapply(lab3, htmltools::HTML),
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
               highlight = highlightOptions(
                 weight = 3,
@@ -199,7 +198,7 @@ grizzmap %>%
               fillOpacity = 0.7,
               fillColor = ~palette3(grizzdata_full$biousecalc),
               group = "Biouse",
-              label = lab3,
+              label = lapply(lab3, htmltools::HTML),
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
               highlight = highlightOptions(
                 weight = 3,
@@ -210,7 +209,7 @@ grizzmap %>%
               fillOpacity = 0.7,
               fillColor = ~palette3(grizzdata_full$climatechangecalc),
               group = "Climate Change",
-              label = lab3,
+              label = lapply(lab3, htmltools::HTML),
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
               highlight = highlightOptions(
                 weight = 3,
