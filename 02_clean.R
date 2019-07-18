@@ -56,6 +56,7 @@ grizzdata_full <- mutate(grizzdata_full,
 
 # Round to 2 decimal places
 grizzdata_full$pop_density <- round(grizzdata_full$pop_density, digits = 2)
+grizzdata_full$area_sq_km <- round(grizzdata_full$area_sq_km, digits = 2)
 
 grizzdata_full$threat_class <- factor(grizzdata_full$threat_class, ordered = TRUE)
 
@@ -65,5 +66,3 @@ grizzdata_full <- ms_simplify(grizzdata_full, keep = 0.25) # reduce number of ve
 # Write grizzly data file to disk
 dir.create("data")
 saveRDS(grizzdata_full, file = "data/grizzdata_full.rds")
-
-
