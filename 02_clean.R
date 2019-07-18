@@ -39,14 +39,14 @@ grizzdata_full <- left_join(grizzdata_full, threat_calc, by = "gbpu_name")
 
 # Give NA (extirpated) gbpu names
 grizzdata_full <- mutate(grizzdata_full,
-       gbpu_name = as.character(gbpu_name),
-       gbpu_name = case_when(
-         grizzly_bear_population_tag == 47 ~ "Northeast",
-         grizzly_bear_population_tag == 48 ~ "Central Interior",
-         grizzly_bear_population_tag == 53 ~ "Lower Mainland",
-         grizzly_bear_population_tag == 81 ~ "Sunshine Coast",
-         TRUE ~ gbpu_name
-       ))
+                         gbpu_name = as.character(gbpu_name),
+                         gbpu_name = case_when(
+                           grizzly_bear_population_tag == 47 ~ "Northeast",
+                           grizzly_bear_population_tag == 48 ~ "Central Interior",
+                           grizzly_bear_population_tag == 53 ~ "Lower Mainland",
+                           grizzly_bear_population_tag == 81 ~ "Sunshine Coast",
+                           TRUE ~ gbpu_name
+                         ))
 
 # Add population density column
 grizzdata_full <- mutate(grizzdata_full,
@@ -56,6 +56,8 @@ grizzdata_full <- mutate(grizzdata_full,
 
 # Round to 2 decimal places
 grizzdata_full$pop_density <- round(grizzdata_full$pop_density, digits = 2)
+
+grizzdata_full$threat_class <- factor(grizzdata_full$threat_class, ordered = TRUE)
 
 # Simplify vertices of GBPU polygons
 grizzdata_full <- ms_simplify(grizzdata_full, keep = 0.25) # reduce number of vertices
