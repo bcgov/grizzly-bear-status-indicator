@@ -10,102 +10,127 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-## Threat mapping -------------------------------------------------------------
-# Transportation:
-transport_map <- ggplot(grizzdata_full) +
-  geom_sf(aes(fill = transportationcalc), color = "white", size = 0.1) +
-  labs(title = "Transportation Threats to Grizzly Bear Populations in BC",
-       col = "Threat Rank", fill = "Threat Class") +
-  scale_fill_viridis(alpha = 0.6, discrete = T, option = "viridis",
-                     direction = -1, na.value = "darkgrey") +
-  theme_soe() + theme(plot.title = element_text(hjust = 0.5),
-                      axis.title.x = element_blank(),
-                      axis.title.y = element_blank(),
-                      legend.background = element_rect(
-                        fill = "lightgrey", size = 0.5,
-                        linetype = "solid", colour = "darkgrey")) +
-  geom_text(aes(label = grizzdata_full$gbpu_name, x = grizzdata_full$lng,
-                y = grizzdata_full$lat), size = 2, check_overlap = T)
-transport_map
+# Create 'out' directory
+figsOutDir <- "out"
 
-# Energy map
-energy_map <- ggplot(grizzdata_full) +
-  geom_sf(aes(fill = energycalc), color = "white", size = 0.1) +
-  labs(title = "Energy Threats to Grizzly Bear Populations in BC",
-       col = "Threat Rank", fill = "Threat Class") +
-  scale_fill_viridis(alpha = 0.6, discrete = T, option = "viridis",
-                     na.value = "darkgrey") +
-  theme_soe() + theme(plot.title = element_text(hjust = 0.5),
-                      axis.title.x = element_blank(),
-                      axis.title.y = element_blank(),
-                      legend.background = element_rect(
-    fill = "lightgrey", size = 0.5, linetype = "solid", colour = "darkgrey")) +
-  geom_text(aes(label = grizzdata_full$gbpu_name, x = grizzdata_full$lng,
-                y = grizzdata_full$lat), size = 2, check_overlap = T)
-energy_map
+## Simplify BEI polygons ----------------------------------------------
+habclass_simp <- ms_simplify(habclass, keep = 0.05, sys = TRUE)
+# saveRDS(habclass_simp, file = "habclass_simp.rds")
+# habclass_simp <- readRDS("data/habclass_simp.rds")
+# plot(habclass_simp)
+# summary(habclass_simp)
 
-# Human intrusion map
-hi_map <- ggplot(grizzdata_full) +
-  geom_sf(aes(fill = humanintrusioncalc), color = "white", size = 0.1) +
-  labs(title = "Human Intrusion Threats to Grizzly Bear Populations in BC",
-       col = "Threat Rank", fill = "Threat Class") +
-  scale_fill_viridis(alpha = 0.6, discrete = T, option = "viridis",
-                     na.value = "darkgrey", direction = -1) +
-  theme_soe() + theme(plot.title = element_text(hjust = 0.5),
-                      axis.title.x = element_blank(),
-                      axis.title.y = element_blank(),
-                      legend.background = element_rect(
-                        fill = "lightgrey", size = 0.5, linetype = "solid", colour = "darkgrey")) +
-  geom_text(aes(label = grizzdata_full$gbpu_name, x = grizzdata_full$lng,
-                y = grizzdata_full$lat), size = 2, check_overlap = T)
-hi_map
+## Rename values to NAs -----
+# habclass_simp$RATING[habclass_simp$RATING == 66] <- "Never Occupied"
+# habclass_simp$RATING[habclass_simp$RATING == 99] <- "Extirpated"
+# habclass_simp$RATING <- as.double(habclass_simp$RATING)
 
-# Mortality loops from earlier version ----------------------------------------
-# Write directory for plot outputs
-dir.create("out", showWarnings = FALSE)
+# Rasterize whole habitat class
+library(raster)
+library(fasterize)
 
-# Create list of GBPU
-gbpu_list <- unique(mort_summary$gbpu_name)
+whole <- raster(habclass_simp, res = 90)
+whole <- fasterize(habclass_simp, whole, field = "RATING")
+# whole <- projectExtent(whole, crs = grizzdata_full)
+# whole <- as.factor(whole)
+# rat1 <- levels(whole)[[1]]
+# rat1[["rating"]] <- c("1","2","3","4","5","6","NA")
+# levels(whole) <- rat1 # Add RAT to raster
+# WriteRaster(whole, filename = file.path(out, "habclass_rast.grd"))
+plot(whole)
 
-# Create list for plots
-plot_list <- vector(length = length(gbpu_list), mode = "list")
-names(plot_list) <- gbpu_list
+## Create value with population field
+gbpu_name <- "gbpu_name"
 
-# Create plotting function
-Mortality <- function(data, name) {
-  # Create plot for a single GBPU
-  mortality_plot <- ggplot(data, aes(x = hunt_year, y = count,
-                                     fill = kill_code)) +
-    geom_bar(stat = "identity") + # Add bar for each year w/ fill = kill type
-    scale_fill_brewer("Mortality Type", palette = "Set2") +
-    scale_x_continuous(breaks=seq(1970, 2017, by = 5)) +
-    labs(x = "Year", y = "Number of Grizzly Bears Killed",
-         fill = "Mortality Type", caption = caption.text) + # Legend text
-    ggtitle(paste("Mortality History for the '"
-                  , name
-                  , "' Population Unit"
-                  , ", 1976-2017"
-                  ,sep = "")) +
-    theme_soe() + theme(plot.title = element_text(hjust = 0.5), # Centre title
-                        legend.position = "bottom",
-                        plot.caption = element_text(hjust = 0)) # L-align caption
-  mortality_plot
+## Raster by poly ----------------------------------------
+# plan(multiprocess(workers = 4))
+gbpu_rasts <- raster_by_poly(whole, grizzdata_full, gbpu_name, parallel = FALSE)
+
+# gbpu_rasts <- c(whole, gbpu_rasts)
+# names(gbpu_rasts)[1] <- "Province"
+# plot(gbpu_rasts$Province)
+saveRDS(gbpu_rasts, file = "out/gbpu_rasts.rds")
+
+# Summary
+# plan(multiprocess(workers = 4))
+gbpu_rast_summary <- summarize_raster_list(gbpu_rasts, parallel = TRUE) # needed?
+
+## Raster functions
+ggmap_gbpu <- function(grizzdata_full) {
+  e <- extent(grizzdata_full)
+  loc <- c(e[1] - 2, e[3] - 2, e[2] + 2, e[4] + 2)
+  get_map(loc, maptype = "terrain")
 }
 
-# Map call to replace above loop:
-plot_list <- map(gbpu_list, ~ {
-  data <- filter(mort_summary, gbpu_name == .x)
-  Mortality(data, .x)
+gbpuRastMaps <- function(dat, title = "", plot_gmap = F,
+                         legend = T, max_px = 1000000) {
+  if (plot_gmap) {
+    dat <- projectRaster(dat, crs = CRS("+proj=longlat +datum=WGS84"))
+    gmap <- ggmap_gbpu(dat)
+    gg_start <- ggmap(gmap) + rasterVis::gplot(dat, maxpixels = max_px)
+    ext <- extent(dat)
+    coords <- coord_cartesian(xlim = c(ext@xmin, ext@xmax),
+                              ylim = c(ext@ymin, ext@ymax),
+                              expand = TRUE)
+  } else {
+    coords <- coord_fixed()
+    gg_start <- rasterVis::gplot(dat, maxpixels = max_px)
+  }
+  gg_start +
+    geom_raster(aes(fill=factor(value)), alpha=0.8) +
+    coords +
+    scale_x_continuous(expand = c(0,0)) +
+    scale_y_continuous(expand = c(0,0)) +
+    labs(fill = "Habitat Suitability Rank") +
+    theme_minimal() +
+    theme(
+      axis.text=element_blank(),
+      axis.title=element_blank(),
+      legend.position=ifelse(legend, "bottom", "none"),
+      panel.grid = element_blank()
+    )
+}
+
+# Generate plots
+plot_list <- imap(gbpu_rasts, ~ {
+  print(.y)
+  # Graph functions
+  GPGroups <- filter(grizzdata_full, gbpu_name == .y)
+  plotMap <- gbpuRastMaps(.x, title = .y,
+                          plot_gmap = FALSE, legend = T)
+
+  # Save in a list
+  list(map = plotMap)
 })
 
-# name list
-names(plot_list) <- gbpu_list
-
 # Check result
-plot_list[["Valhalla"]]
+plot_list[["Taiga"]]
 
-# Save svgs to plot list
-iwalk(plot_list, ~ save_svg_px(.x, file = paste0("out/", .y, ".svg"),
-                            width = 600, height = 300))
-# Save plots to file
-saveRDS(plot_list, file = "out/grizz_plotlist.rds")
+# Save to disk
+saveRDS(plot_list, file = "out/plot_list.rds")
+
+# Popups for leaflet map
+popups <-  leafpop::popupGraph(plot_list, type = "png", width = 400,
+                               height = 300)
+saveRDS(popups, "out/raster_popups.rds")
+popup_options <-  popupOptions(maxWidth = "100%", autoPan = TRUE,
+                               keepInView = TRUE,
+                               closeOnClick = TRUE,
+                               autoPanPaddingTopLeft = c(120, 10),
+                               autoPanPaddingBottomRight = c(120,10))
+
+# Save pngs of plots:
+for (n in names(plot_list)) {
+  print(n)
+  map <- plot_list[[n]]$map
+  map_fname <- file.path(figsOutDir, paste0(n, "_map.png"))
+  png_retina(filename = map_fname, width = 500, height = 500, units = "px",
+             type = "windows")
+  plot(map)
+  dev.off()
+}
+
+# Walk loops over list, but doesn't return anything to the environment
+walk(plot_list, ~ {
+  plot(.x$map)
+})

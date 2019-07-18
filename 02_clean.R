@@ -10,9 +10,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-## SPATIAL DATA CLEANING ---------------------------------------------------------
+## DATA CLEANING ---------------------------------------------------------
 gbpu_2018 <- gbpu_2018 %>%
-  group_by(POPULATION)
+  group_by(POPULATION_NAME)
 
 # Simplify vertices of GBPU polygons
 gbpu_simplify <- ms_simplify(gbpu_2018, keep = 0.25) # reduce number of vertices
@@ -22,7 +22,7 @@ gbpu_simplify <- st_transform(gbpu_simplify, crs = 3005)
 
 # Find centroid of polygons (for labelling)
 # Note: BC Albers CRS used because lat/long not accepted by st_centroid
-popcentroid <- st_centroid(gbpu_simplify$geometry)
+popcentroid <- st_centroid(st_geometry(gbpu_simplify))
 popcentroid <- st_transform(popcentroid, crs = 4326) # convert to lat/long
 
 # Calculate coordinates for centroid of polygons
@@ -32,37 +32,39 @@ popcoords <- st_coordinates(popcentroid)
 grizzdata_full <- cbind(gbpu_simplify, popcoords) # cbind coords and polygons
 
 # Rename lat and lng columns
-grizzdata_full <- rename(grizzdata_full, lng = X)
-grizzdata_full <- rename(grizzdata_full, lat = Y)
-grizzdata_full <- st_transform(grizzdata_full, crs = 4326) # convert to lat/long
+grizzdata_full <- rename(grizzdata_full, lng = X, lat = Y) %>%
+  st_transform(4326) # convert to lat/long
 
 # Rename 'population name' column
 grizzdata_full <- grizzdata_full %>%
   rename_all(tolower) %>%
-  rename(gbpu_name = population)
+  rename(gbpu_name = population_name)
 
 # Join GBPU polygons (popunits) and threat classification data
 grizzdata_full <- left_join(grizzdata_full, threat_calc, by = "gbpu_name")
 
-# Rename NA gbpu names to Extirpated
-grizzdata_full$gbpu_name <- as.character(grizzdata_full$gbpu_name) # as char
-grizzdata_full$gbpu_name[grizzdata_full$gbpu_name == "Extirpated"] <-
-  c("Central Interior", "Northeast", "Sunshine Coast", "Lower Mainland")
+# Give NA (extirpated) gbpu names
+grizzdata_full <- mutate(grizzdata_full,
+       gbpu_name = as.character(gbpu_name),
+       gbpu_name = case_when(
+         grizzly_bear_population_tag == 47 ~ "Northeast",
+         grizzly_bear_population_tag == 48 ~ "Central Interior",
+         grizzly_bear_population_tag == 53 ~ "Lower Mainland",
+         grizzly_bear_population_tag == 81 ~ "Sunshine Coast",
+         TRUE ~ gbpu_name
+       ))
+
+# Add population density column
+grizzdata_full <- mutate(grizzdata_full,
+                         area_sq_km = set_units(st_area(geometry), km2),
+                         pop_density = as.numeric(adults / area_sq_km * 1000)
+)
+
+# Round to 2 decimal places
+grizzdata_full$pop_density <- round(grizzdata_full$pop_density, digits = 2)
 
 # Write grizzly data file to disk
+dir.create("data")
 saveRDS(grizzdata_full, file = "data/grizzdata_full.rds")
-
-# Not to be used in new version unless needed:
-# Summarise total pop estimate per management unit
-by_gbpu <- grizzlypop_raw %>%
-  group_by(GBPU) %>%
-  summarise(POP_ESTIMATE = sum(Estimate),
-            Total_Area = sum(Total_Area),
-            # Recalculate Density (bears / 1000 km^2)
-            POP_DENSITY = round(POP_ESTIMATE / (Total_Area / 1000))) %>%
-  rename(gbpu_name = GBPU) %>%
-  rename_all(tolower) # Set to lower case
-glimpse(by_gbpu)
-
 
 
