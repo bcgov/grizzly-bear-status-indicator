@@ -14,22 +14,16 @@
 gbpu_2018 <- gbpu_2018 %>%
   group_by(POPULATION_NAME)
 
-# Simplify vertices of GBPU polygons
-gbpu_simplify <- ms_simplify(gbpu_2018, keep = 0.25) # reduce number of vertices
-
-# Transform to BC Albers
-gbpu_simplify <- st_transform(gbpu_simplify, crs = 3005)
-
 # Find centroid of polygons (for labelling)
 # Note: BC Albers CRS used because lat/long not accepted by st_centroid
-popcentroid <- st_centroid(st_geometry(gbpu_simplify))
+popcentroid <- st_centroid(st_geometry(gbpu_2018))
 popcentroid <- st_transform(popcentroid, crs = 4326) # convert to lat/long
 
 # Calculate coordinates for centroid of polygons
 popcoords <- st_coordinates(popcentroid)
 
 # Spatial join
-grizzdata_full <- cbind(gbpu_simplify, popcoords) # cbind coords and polygons
+grizzdata_full <- cbind(gbpu_2018, popcoords) # cbind coords and polygons
 
 # Rename lat and lng columns
 grizzdata_full <- rename(grizzdata_full, lng = X, lat = Y) %>%
@@ -56,12 +50,15 @@ grizzdata_full <- mutate(grizzdata_full,
 
 # Add population density column
 grizzdata_full <- mutate(grizzdata_full,
-                         area_sq_km = set_units(st_area(geometry), km2),
+                         area_sq_km = as.numeric(set_units(st_area(geometry), km2)),
                          pop_density = as.numeric(adults / area_sq_km * 1000)
 )
 
 # Round to 2 decimal places
 grizzdata_full$pop_density <- round(grizzdata_full$pop_density, digits = 2)
+
+# Simplify vertices of GBPU polygons
+grizzdata_full <- ms_simplify(grizzdata_full, keep = 0.25) # reduce number of vertices
 
 # Write grizzly data file to disk
 dir.create("data")
