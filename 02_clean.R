@@ -54,6 +54,14 @@ grizzdata_full <- mutate(grizzdata_full,
          TRUE ~ gbpu_name
        ))
 
+# Add population density column
+grizzdata_full <- mutate(grizzdata_full,
+                         area_sq_km = set_units(st_area(geometry), km2),
+                         pop_density = as.numeric(adults / area_sq_km * 1000)
+)
+
+# Round to 2 decimal places
+grizzdata_full$pop_density <- round(grizzdata_full$pop_density, digits = 2)
 
 # Write grizzly data file to disk
 dir.create("data")
