@@ -26,6 +26,9 @@ habclass_simp <- ms_simplify(habclass, keep = 0.05, sys = TRUE)
 # habclass_simp$RATING <- as.double(habclass_simp$RATING)
 
 # Rasterize whole habitat class
+library(raster)
+library(fasterize)
+
 whole <- raster(habclass_simp, res = 90)
 whole <- fasterize(habclass_simp, whole, field = "RATING")
 # whole <- projectExtent(whole, crs = grizzdata_full)
@@ -107,15 +110,16 @@ plot_list[["Taiga"]]
 saveRDS(plot_list, file = "out/plot_list.rds")
 
 # Popups for leaflet map
-popups <-  leaflet::popupGraph(plot_list, type = "png", width = 500,
+popups <-  leafpop::popupGraph(plot_list, type = "png", width = 400,
                                height = 300)
-saveRDS(popups, "out/grizz_popups2.rds")
+saveRDS(popups, "out/raster_popups.rds")
 popup_options <-  popupOptions(maxWidth = "100%", autoPan = TRUE,
                                keepInView = TRUE,
                                closeOnClick = TRUE,
                                autoPanPaddingTopLeft = c(120, 10),
                                autoPanPaddingBottomRight = c(120,10))
-# save pngs of plots:
+
+# Save pngs of plots:
 for (n in names(plot_list)) {
   print(n)
   map <- plot_list[[n]]$map
