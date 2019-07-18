@@ -12,13 +12,6 @@
 
 # ----------------------------------------------------------------------------
 # STATIC MAPPING -------------------------------------------------------------
-grizzdata_full <- st_transform(grizzdata_full, crs = 4326) # convert to lat/long
-
-grizzdata_full <- mutate(grizzdata_full,
-  area_sq_km = set_units(st_area(geometry), km2),
-  pop_density = as.numeric(adults / area_sq_km * 1000)
-)
-
 staticmap <- ggplot(grizzdata_full) +
   geom_sf(aes(fill = calcrank), color = "white", size = 0.1) +
   labs(title = "Conservation Status of Grizzly Bear Population Units in BC",
