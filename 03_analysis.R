@@ -28,7 +28,7 @@ staticmap <- ggplot(grizzdata_full) +
   geom_text(aes(label = grizzdata_full$gbpu_name, x = grizzdata_full$lng,
                 y = grizzdata_full$lat), size = 2, check_overlap = T)
   #geom_text_repel(aes(label = gbpu_name, x = lng, y = lat),
-                  #size = 2, force =  0.5) # Needs some tweaking - some labels off polygons
+  #size = 2, force =  0.5) # Needs some tweaking - some labels off polygons
 staticmap # plot map
 
 # Get stamen basemap (terrain)
