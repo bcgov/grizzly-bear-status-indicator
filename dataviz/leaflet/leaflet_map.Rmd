@@ -32,12 +32,14 @@ grizzdata_full <- st_transform(grizzdata_full, crs = 4326) # convert to lat/long
 
 # Popup for conservation status tab
 popup_text1 <- dplyr::select(grizzdata_full, gbpu_name, status, adults, 
-                               popiso, trend) %>% # Summary data for text popups
+                               popiso, trend, threat_class, calcrank) %>% # Summary data for text popups
   rename("Population Name" = gbpu_name,
          "Overall Status" = status,
          "Population Size" = adults,
          "Isolation" = popiso,
-         "Trend" = trend) 
+         "Trend" = trend,
+         "Threat Score" = threat_class,
+         "M-Rank" = calcrank) 
 st_geometry(popup_text1) <- NULL # as df
 
 constatus_popup <- leafpop::popupTable(popup_text1,
@@ -50,8 +52,8 @@ raster_popups <- read_rds(here("out/raster_popups.rds"))
 popup_text2 <- dplyr::select(grizzdata_full, gbpu_name, adults, 
                                pop_density, area_sq_km) %>% # Summary data for text popups
   rename("Population Name" = gbpu_name,
-         "Population Size" = adults,
-         "Population Density" = pop_density,
+         "Population Size (Adults)" = adults,
+         "Population Density (Adults/1000^2s)" = pop_density,
          "Habitat Area (Sq. Km.)" = area_sq_km) 
 st_geometry(popup_text2) <- NULL # as df
 
@@ -105,7 +107,7 @@ grizzmap <- leaflet(width = "900px", height = "500px") %>%  # generate leaflet m
 grizzmap %>% 
   addPolygons(data = grizzdata_full, #group = "Conservation Status",
               stroke = T, weight = 1, color = "black", # Add border to polygons
-              fillOpacity = 0.6, # Polygon fill
+              fillOpacity = 0.5, # Polygon fill
               fillColor = ~palette1(grizzdata_full$calcsrank),
               label = lapply(lab1, htmltools::HTML),
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
@@ -127,7 +129,7 @@ grizzmap %>%
 grizzmap %>%
   addPolygons(data = grizzdata_full, #group = "Population Estimate",
               stroke = T, weight = 1, color = "black",
-              fillOpacity = 0.6,
+              fillOpacity = 0.5,
               fillColor = ~palette2(grizzdata_full$pop_density),
               label = lapply(lab2, htmltools::HTML),
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
@@ -149,7 +151,7 @@ grizzmap %>%
 grizzmap %>% 
   addPolygons(data = grizzdata_full,
               stroke = T, weight = 1, color = "black", # Add border to polygons
-              fillOpacity = 0.6, # Polygon fill
+              fillOpacity = 0.5, # Polygon fill
               fillColor = ~palette3(grizzdata_full$transportationcalc),
               popup = raster_popups,
               popupOptions = popup_options,
@@ -162,7 +164,7 @@ grizzmap %>%
                 bringToFront = T)) %>%
   addPolygons(data = grizzdata_full,
               stroke = T, weight = 1, color = "black",
-              fillOpacity = 0.7,
+              fillOpacity = 0.5,
               fillColor = ~palette3(grizzdata_full$energycalc),
               popup = raster_popups,
               popupOptions = popup_options,
@@ -175,7 +177,7 @@ grizzmap %>%
                 bringToFront = T)) %>%
   addPolygons(data = grizzdata_full,
               stroke = T, weight = 1, color = "black",
-              fillOpacity = 0.7,
+              fillOpacity = 0.5,
               fillColor = ~palette3(grizzdata_full$humanintrusioncalc),
               popup = raster_popups,
               popupOptions = popup_options,
@@ -188,7 +190,7 @@ grizzmap %>%
                 bringToFront = T)) %>%
   addPolygons(data = grizzdata_full,
               stroke = T, weight = 1, color = "black",
-              fillOpacity = 0.7,
+              fillOpacity = 0.5,
               fillColor = ~palette3(grizzdata_full$residentialcalc),
               popup = raster_popups,
               popupOptions = popup_options,
@@ -201,7 +203,7 @@ grizzmap %>%
                 bringToFront = T)) %>%
   addPolygons(data = grizzdata_full,
               stroke = T, weight = 1, color = "black",
-              fillOpacity = 0.7,
+              fillOpacity = 0.5,
               fillColor = ~palette3(grizzdata_full$agriculturecalc),
               popup = raster_popups,
               popupOptions = popup_options,
@@ -214,7 +216,7 @@ grizzmap %>%
                 bringToFront = T)) %>%
   addPolygons(data = grizzdata_full,
               stroke = T, weight = 1, color = "black",
-              fillOpacity = 0.7,
+              fillOpacity = 0.5,
               fillColor = ~palette3(grizzdata_full$biousecalc),
               popup = raster_popups,
               popupOptions = popup_options,
@@ -227,7 +229,7 @@ grizzmap %>%
                 bringToFront = T)) %>%
   addPolygons(data = grizzdata_full,
               stroke = T, weight = 1, color = "black",
-              fillOpacity = 0.7,
+              fillOpacity = 0.5,
               fillColor = ~palette3(grizzdata_full$climatechangecalc),
               popup = raster_popups,
               popupOptions = popup_options,
