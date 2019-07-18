@@ -31,15 +31,15 @@ grizzdata_full <- st_transform(grizzdata_full, crs = 4326) # convert to lat/long
 ``` {r popups and labels, include=FALSE, warning=FALSE}
 
 # Popup for conservation status tab
-popup_text1 <- dplyr::select(grizzdata_full, gbpu_name, status, adults, 
-                               popiso, trend, threat_class, calcrank) %>% # Summary data for text popups
+popup_text1 <- dplyr::select(grizzdata_full, gbpu_name, threat_class, adults, 
+                             calcrank, popiso, trend) %>% # Summary data for text popups
   rename("Population Name" = gbpu_name,
-         "Overall Status" = status,
+         "Overall Threat Score" = threat_class,
+         #"Overall Status" = status,
          "Population Size" = adults,
+         "M-Rank" = calcrank,
          "Isolation" = popiso,
-         "Trend" = trend,
-         "Threat Score" = threat_class,
-         "M-Rank" = calcrank) 
+         "Trend" = trend) 
 st_geometry(popup_text1) <- NULL # as df
 
 constatus_popup <- leafpop::popupTable(popup_text1,
