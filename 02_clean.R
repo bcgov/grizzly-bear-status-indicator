@@ -61,6 +61,9 @@ grizzdata_full$area_sq_km <- round(grizzdata_full$area_sq_km, digits = 2)
 grizzdata_full$threat_class <- factor(grizzdata_full$threat_class, ordered = TRUE,
                                       levels = c("VHigh", "High", "Medium", "Low", "Negligible"))
 
+# isolation
+grizzdata_full$popiso <- factor(grizzdata_full$popiso, ordered = TRUE,
+                                levels = c(""))
 # Simplify vertices of GBPU polygons
 grizzdata_full <- ms_simplify(grizzdata_full, keep = 0.25) # reduce number of vertices
 
