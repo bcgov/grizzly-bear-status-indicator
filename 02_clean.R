@@ -58,16 +58,8 @@ grizzdata_full <- mutate(grizzdata_full,
 grizzdata_full$pop_density <- round(grizzdata_full$pop_density, digits = 2)
 grizzdata_full$area_sq_km <- round(grizzdata_full$area_sq_km, digits = 2)
 
-grizzdata_full$threat_class <- factor(grizzdata_full$threat_class, ordered = TRUE)
-
-# Replace NAs with "Extirpated"
-grizzdata_full$calcsrank <- grizzdata_full$calcsrank %>% replace_na("Extirpated")
-grizzdata_full$calcrank <- grizzdata_full$calcrank %>% replace_na("Extirpated")
-grizzdata_full$pop_density <- grizzdata_full$pop_density %>% replace_na("Extirpated")
-grizzdata_full$threat_class <- grizzdata_full$threat_class %>%
-  as.character(grizzdata_full$threat_class) %>%
-  replace_na("Extirpated")
-grizzdata_full$popiso <- grizzdata_full$popiso %>% replace_na("Extirpated")
+grizzdata_full$threat_class <- factor(grizzdata_full$threat_class, ordered = TRUE,
+                                      levels = c("VHigh", "High", "Medium", "Low", "Negligible"))
 
 # Simplify vertices of GBPU polygons
 grizzdata_full <- ms_simplify(grizzdata_full, keep = 0.25) # reduce number of vertices
