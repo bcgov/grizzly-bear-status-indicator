@@ -35,7 +35,7 @@ popup_text1 <- dplyr::select(grizzdata_full, gbpu_name, threat_class, adults,
                              calcrank, popiso, trend) %>% # Summary data for text popups
   rename("Population Name" = gbpu_name,
          "Overall Threat Score" = threat_class,
-         "M-Rank" = calcrank,
+         "Management Rank" = calcrank,
          #"Overall Status" = status,
          "Population Size" = adults,
          "Isolation" = popiso,
