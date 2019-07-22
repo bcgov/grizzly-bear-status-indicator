@@ -35,9 +35,9 @@ popup_text1 <- dplyr::select(grizzdata_full, gbpu_name, threat_class, adults,
                              calcrank, popiso, trend) %>% # Summary data for text popups
   rename("Population Name" = gbpu_name,
          "Overall Threat Score" = threat_class,
+         "M-Rank" = calcrank,
          #"Overall Status" = status,
          "Population Size" = adults,
-         "M-Rank" = calcrank,
          "Isolation" = popiso,
          "Trend" = trend) 
 st_geometry(popup_text1) <- NULL # as df
@@ -87,8 +87,9 @@ lab3 <- lapply(seq(nrow(labs)), function(i) {
 
 # Prep - colour palettes
 palette1 <- colorFactor(palette = 'viridis', grizzdata_full$calcsrank, reverse = TRUE)
-palette2 <- colorNumeric(palette = 'viridis', grizzdata_full$pop_density, reverse = TRUE)
+palette2 <- colorFactor(palette = 'viridis', grizzdata_full$pop_density, reverse = TRUE)
 palette3 <- colorFactor(palette = 'viridis', grizzdata_full$threat_class, reverse = TRUE)
+
 ```
 
 # {.tabset .tabset-fade}
