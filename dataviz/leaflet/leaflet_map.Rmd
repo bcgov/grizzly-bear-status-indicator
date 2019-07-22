@@ -87,7 +87,7 @@ lab3 <- lapply(seq(nrow(labs)), function(i) {
 
 # Prep - colour palettes
 palette1 <- colorFactor(palette = 'viridis', grizzdata_full$calcsrank, reverse = TRUE)
-palette2 <- colorFactor(palette = 'viridis', grizzdata_full$pop_density, reverse = TRUE)
+palette2 <- colorNumeric(palette = 'viridis', grizzdata_full$pop_density, reverse = TRUE)
 palette3 <- colorFactor(palette = 'viridis', grizzdata_full$threat_class, reverse = TRUE)
 
 ```
@@ -141,7 +141,7 @@ grizzmap %>%
               color = "yellow",
               bringToFront = T)) %>%
   addLegend("bottomright", pal = palette2, values = grizzdata_full$pop_density,
-            title = "Population Density",
+            title = "Population Density", na.label = "Extirpated",
             opacity = 1) #%>%
   # addLayersControl(overlayGroups = c("Terrain", "Topography"))
 ```
@@ -247,7 +247,7 @@ grizzmap %>%
     #overlayGroups = c("Terrain", "OSM (Default)"),
     options = layersControlOptions(collapsed = FALSE)) %>%
   addLegend("bottomright", pal = palette3, values = grizzdata_full$threat_class,
-            title = "Threat Rank",
+            title = "Threat Rank", na.label = "Extirpated",
             opacity = 1)
 #%>%
   #addLayersControl(overlayGroups = c("Terrain", "Topography"))
