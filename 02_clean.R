@@ -51,10 +51,10 @@ grizzdata_full <- mutate(grizzdata_full,
 grizzdata_full <- mutate(grizzdata_full,
                          isolation = as.character(popiso),
                          isolation = case_when(
-                           str_detect(isolation, "A") ~ "Isolated (>90%)",
-                           str_detect(isolation, "B") ~ "Moderately-Highly Isolated (66-90%)",
-                           str_detect(isolation, "C") ~ "Somewhat Isolated (25-66%)",
-                           str_detect(isolation, "D") ~ "Not Isolated (<25%")
+                           str_detect(isolation, "^[A-E]A$") ~ "Isolated (>90%)",
+                           str_detect(isolation, "^[A-E]B$") ~ "Moderately-Highly Isolated (66-90%)",
+                           str_detect(isolation, "^[A-E]C$") ~ "Somewhat Isolated (25-66%)",
+                           str_detect(isolation, "^[A-E]D$") ~ "Not Isolated (<25%")
                          )
 
 # Add population density column
