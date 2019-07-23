@@ -54,7 +54,7 @@ grizzdata_full <- mutate(grizzdata_full,
                            str_detect(isolation, "^[A-E]A$") ~ "Isolated (>90%)",
                            str_detect(isolation, "^[A-E]B$") ~ "Moderately-Highly Isolated (66-90%)",
                            str_detect(isolation, "^[A-E]C$") ~ "Somewhat Isolated (25-66%)",
-                           str_detect(isolation, "^[A-E]D$") ~ "Not Isolated (<25%")
+                           str_detect(isolation, "^[A-E]D$") ~ "Not Isolated (<25%)")
                          )
 
 # Add population density column
@@ -67,8 +67,12 @@ grizzdata_full <- mutate(grizzdata_full,
 grizzdata_full$pop_density <- round(grizzdata_full$pop_density, digits = 2)
 grizzdata_full$area_sq_km <- round(grizzdata_full$area_sq_km, digits = 2)
 
+# Change threat class column to ordered factor
 grizzdata_full$threat_class <- factor(grizzdata_full$threat_class, ordered = TRUE,
                                       levels = c("VHigh", "High", "Medium", "Low", "Negligible"))
+
+# Replace NAs in trend column with  "Data Deficient"
+grizzdata_full$trend <- grizzdata_full$trend %>% replace_na("Data Deficient")
 
 # Simplify vertices of GBPU polygons
 grizzdata_full <- ms_simplify(grizzdata_full, keep = 0.25) # reduce number of vertices
