@@ -24,6 +24,9 @@ total_threats <- gather(threat_calc, key = "threat", value = "ranking",
                       Biouse, Human_Intrusion, Climate_Change) %>%
   select(gbpu_name, threat, ranking)
 
+total_threats$ranking <- factor(total_threats$ranking, ordered = TRUE,
+                                      levels = c("Negligible", "Low", "Medium", "High", "Very High"))
+
 # Create list of GBPU
 gbpu_list <- unique(grizzdata_full$gbpu_name)
 
