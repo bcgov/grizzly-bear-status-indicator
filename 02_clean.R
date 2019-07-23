@@ -48,6 +48,15 @@ grizzdata_full <- mutate(grizzdata_full,
                            TRUE ~ gbpu_name
                          ))
 
+grizzdata_full <- mutate(grizzdata_full,
+                         isolation = as.character(popiso),
+                         isolation = case_when(
+                           str_detect(isolation, "A") ~ "Isolated (>90%)",
+                           str_detect(isolation, "B") ~ "Moderately-Highly Isolated (66-90%)",
+                           str_detect(isolation, "C") ~ "Somewhat Isolated (25-66%)",
+                           str_detect(isolation, "D") ~ "Not Isolated (<25%")
+                         )
+
 # Add population density column
 grizzdata_full <- mutate(grizzdata_full,
                          area_sq_km = as.numeric(set_units(st_area(geometry), km2)),
@@ -61,9 +70,6 @@ grizzdata_full$area_sq_km <- round(grizzdata_full$area_sq_km, digits = 2)
 grizzdata_full$threat_class <- factor(grizzdata_full$threat_class, ordered = TRUE,
                                       levels = c("VHigh", "High", "Medium", "Low", "Negligible"))
 
-# isolation
-grizzdata_full$popiso <- factor(grizzdata_full$popiso, ordered = TRUE,
-                                levels = c(""))
 # Simplify vertices of GBPU polygons
 grizzdata_full <- ms_simplify(grizzdata_full, keep = 0.25) # reduce number of vertices
 
