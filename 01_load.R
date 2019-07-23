@@ -18,6 +18,7 @@ Packages <- c("sf", "tidyverse", "maptools", "devtools","bcmaps",
               "units", "bcdata")
 lapply(Packages, library, character.only = TRUE)
 
+# remotes::install_github("ateucher/rmapshaper")
 # remotes::install_github("bcgov/bcdata")
 # install_github("bcgov/envreportutils")
 # devtools::install_github("dkahle/ggmap", force = T)
