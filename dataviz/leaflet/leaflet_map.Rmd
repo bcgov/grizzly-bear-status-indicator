@@ -49,6 +49,9 @@ constatus_popup <- leafpop::popupTable(popup_text1,
 # Habitat classification popup
 raster_popups <- read_rds(here("out/raster_popups.rds"))
 
+# Threat popups
+threat_popups <- read_rds(here("out/threat_plotlist.rds"))
+
 # Popup for population tab
 popup_text2 <- dplyr::select(grizzdata_full, gbpu_name, adults, 
                                pop_density, area_sq_km) %>% # Summary data for text popups
@@ -155,7 +158,7 @@ grizzmap %>%
               stroke = T, weight = 1, color = "black", # Add border to polygons
               fillOpacity = 0.5, # Polygon fill
               fillColor = ~palette3(grizzdata_full$transportationcalc),
-              popup = raster_popups,
+              popup = threat_popups,
               popupOptions = popup_options,
               group = "Transportation",
               label = lapply(lab3, htmltools::HTML),
@@ -168,7 +171,7 @@ grizzmap %>%
               stroke = T, weight = 1, color = "black",
               fillOpacity = 0.5,
               fillColor = ~palette3(grizzdata_full$energycalc),
-              popup = raster_popups,
+              popup = threat_popups,
               popupOptions = popup_options,
               group = "Energy",
               label = lapply(lab3, htmltools::HTML),
@@ -181,7 +184,7 @@ grizzmap %>%
               stroke = T, weight = 1, color = "black",
               fillOpacity = 0.5,
               fillColor = ~palette3(grizzdata_full$humanintrusioncalc),
-              popup = raster_popups,
+              popup = threat_popups,
               popupOptions = popup_options,
               group = "Human Intrusion",
               label = lapply(lab3, htmltools::HTML),
@@ -194,7 +197,7 @@ grizzmap %>%
               stroke = T, weight = 1, color = "black",
               fillOpacity = 0.5,
               fillColor = ~palette3(grizzdata_full$residentialcalc),
-              popup = raster_popups,
+              popup = threat_popups,
               popupOptions = popup_options,
               group = "Residential",
               label = lapply(lab3, htmltools::HTML),
@@ -207,7 +210,7 @@ grizzmap %>%
               stroke = T, weight = 1, color = "black",
               fillOpacity = 0.5,
               fillColor = ~palette3(grizzdata_full$agriculturecalc),
-              popup = raster_popups,
+              popup = threat_popups,
               popupOptions = popup_options,
               group = "Agriculture",
               label = lapply(lab3, htmltools::HTML),
@@ -220,7 +223,7 @@ grizzmap %>%
               stroke = T, weight = 1, color = "black",
               fillOpacity = 0.5,
               fillColor = ~palette3(grizzdata_full$biousecalc),
-              popup = raster_popups,
+              popup = threat_popups,
               popupOptions = popup_options,
               group = "Biouse",
               label = lapply(lab3, htmltools::HTML),
@@ -233,7 +236,7 @@ grizzmap %>%
               stroke = T, weight = 1, color = "black",
               fillOpacity = 0.5,
               fillColor = ~palette3(grizzdata_full$climatechangecalc),
-              popup = raster_popups,
+              popup = threat_popups,
               popupOptions = popup_options,
               group = "Climate Change",
               label = lapply(lab3, htmltools::HTML),
