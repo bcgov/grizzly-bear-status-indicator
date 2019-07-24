@@ -80,3 +80,9 @@ iwalk(threat_plot_list, ~ save_svg(.x, fname = paste0("out/", .y, ".svg"),
 
 # Save plots to file
 saveRDS(threat_plot_list, file = "out/threat_plotlist.rds")
+
+threat_popups <-  leafpop::popupGraph(threat_plot_list, type = "svg", width = 400,
+                               height = 300)
+
+saveRDS(threat_popups, "out/threat_popups.rds")
+
