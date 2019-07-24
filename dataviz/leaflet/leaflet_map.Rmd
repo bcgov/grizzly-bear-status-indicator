@@ -50,7 +50,7 @@ constatus_popup <- leafpop::popupTable(popup_text1,
 raster_popups <- read_rds(here("out/raster_popups.rds"))
 
 # Threat popups
-threat_popups <- read_rds(here("out/threat_plotlist.rds"))
+threat_popups <- read_rds(here("out/threat_popups.rds"))
 
 # Popup for population tab
 popup_text2 <- dplyr::select(grizzdata_full, gbpu_name, adults, 
