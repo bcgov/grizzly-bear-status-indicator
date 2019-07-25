@@ -29,9 +29,11 @@ grizzdata_full <- st_transform(grizzdata_full, crs = 4326) # convert to lat/long
 
 ```
 
-``` {r popups and labels, include=FALSE, warning=FALSE}
+``` {r popups, include=FALSE, warning=FALSE}
 
-# Popup for conservation status tab
+## TEXT POPUPS
+## ----------------------------------------------------------------------------
+# conservation status tab:
 popup_text1 <- dplyr::select(grizzdata_full, gbpu_name, threat_class, adults, 
                              calcrank, isolation, trend) %>% # Summary data for text popups
   rename("Population Name" = gbpu_name,
@@ -46,11 +48,6 @@ st_geometry(popup_text1) <- NULL # as df
 constatus_popup <- leafpop::popupTable(popup_text1,
                                    row.numbers = F, 
                                    feature.id = F)
-# Habitat classification popup
-raster_popups <- read_rds(here("out/raster_popups.rds"))
-
-# Threat popups
-threat_popups <- read_rds(here("out/threat_popups.rds"))
 
 # Popup for population tab
 popup_text2 <- dplyr::select(grizzdata_full, gbpu_name, adults, 
@@ -65,12 +62,23 @@ population_popup <- leafpop::popupTable(popup_text2,
                                    row.numbers = F, 
                                    feature.id = F)
 
+# Threat popups
+threat_popups <- read_rds(here("out/threat_popups.rds"))
+
+# Define popup options
 popup_options <-  popupOptions(autoPan = TRUE,
                                keepInView = TRUE,
                                closeOnClick = TRUE,
                                autoPanPaddingTopLeft = c(120, 10),
                                autoPanPaddingBottomRight = c(120,10))
-# Label 1
+
+# Habitat classification popup
+# raster_popups <- read_rds(here("out/raster_popups.rds"))
+
+```
+
+``` {r labels and palettes}
+# Define polygon labels in leaflet
 labs <- dplyr::select(grizzdata_full, gbpu_name, pop_density, calcrank, threat_class)
 st_geometry(labs) <- NULL # as df
 
@@ -89,7 +97,7 @@ lab3 <- lapply(seq(nrow(labs)), function(i) {
           labs[i, "threat_class"], '</b>') 
 })
 
-# Prep - colour palettes
+# Prep colour palettes
 palette1 <- colorFactor(palette = 'viridis', grizzdata_full$calcsrank, reverse = TRUE)
 palette2 <- colorNumeric(palette = 'viridis', grizzdata_full$pop_density, reverse = TRUE)
 palette3 <- colorFactor(palette = 'viridis', grizzdata_full$threat_class, reverse = TRUE)
