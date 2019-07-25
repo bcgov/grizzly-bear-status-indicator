@@ -10,8 +10,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-# ----------------------------------------------------------------------------
-
+## ----------------------------------------------------------------------------
+## THREAT POPUP MAPPING
+## ----------------------------------------------------------------------------
 # Create 'out' directory
 figsOutDir <- "out"
 
@@ -88,13 +89,12 @@ threat_plot_list[["Valhalla"]]
 # Save plots to file
 # saveRDS(threat_plot_list, file = "out/threat_plotlist.rds")
 
-threat_popups <-  leafpop::popupGraph(threat_plot_list, type = "svg")
+threat_popups <-  leafpop::popupGraph(threat_plot_list, type = "svg",
+                                      width = 500, height = 300)
 
-# width = 500, height = 300
 # names(threat_popups) <- gbpu_list
 
 saveRDS(threat_popups, "out/threat_popups.rds")
-
 
 ## ----------------------------------------------------------------------------
 ## STATIC MAPPING
