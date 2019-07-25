@@ -99,7 +99,8 @@ palette3 <- colorFactor(palette = 'viridis', grizzdata_full$threat_class, revers
 # {.tabset .tabset-fade}
 
 ```{r grizz_map, warning=FALSE, echo=FALSE}
-grizzmap <- leaflet(width = "900px", height = "500px") %>%  # generate leaflet map
+grizzmap <- leaflet(width = "900px", height = "600px", 
+                    options = leafletOptions(minZoom = 5)) %>%  # generate leaflet map
   addProviderTiles(providers$Stamen.Terrain, group = "Terrain") %>%
   add_bc_home_button() %>%
   set_bc_view()
