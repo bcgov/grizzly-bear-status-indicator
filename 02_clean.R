@@ -10,6 +10,46 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
+popiso_table <- tribble(
+  ~popiso, ~popiso_rank_adj,
+  "AA", 4,
+  "AB", 4,
+  "AC", 4,
+  "AD", 3,
+  "BA", 4,
+  "BB", 1.5,
+  "BC", 1,
+  "BD", 0.5,
+  "CA", 4,
+  "CB", 1.5,
+  "CC", 1,
+  "CD", 0,
+  "DA", 3,
+  "DB", 1,
+  "DC", 0.5,
+  "DD", 0,
+  "EA", 2,
+  "EB", 1,
+  "EC", 0.5,
+  "ED", 0
+)
+
+threat_table <- tribble(
+  ~threat_class, ~threat_rank_adj,
+  "VHigh", 2,
+  "High", 1.5,
+  "Medium", 1.0,
+  "Low", 0,
+  "Negligible", 0
+)
+
+rank_calc_check <- threat_calc %>%
+  left_join(popiso_table, by = "popiso") %>%
+  left_join(threat_table, by = "threat_class") %>%
+  mutate(calc_rank_check = 5 - trend - popiso_rank_adj - threat_rank_adj) %>%
+  select(gbpu_name, popiso, trend, threat_class, popiso_rank_adj, threat_rank_adj,
+         calcrank, rank_number, preadj_rank_number, calc_rank_check)
+
 ## DATA CLEANING ---------------------------------------------------------
 gbpu_2018 <- gbpu_2018 %>%
   group_by(POPULATION_NAME)
