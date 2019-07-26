@@ -76,23 +76,21 @@ plots <- for (n in gbpu_list) {
 threat_plot_list[["Valhalla"]]
 
 # Svg function
-# save_svg <- function(x, fname, ...) {
-#  svg_px(file = fname, ...)
-#  plot(x)
-#  dev.off()
-# }
+save_svg <- function(x, fname, ...) {
+  svg_px(file = fname, ...)
+  plot(x)
+  dev.off()
+ }
 
 # Save svgs to plot list
-# iwalk(threat_plot_list, ~ save_svg(.x, fname = paste0("out/", .y, ".svg"),
-#                            width = 600, height = 300))
+iwalk(threat_plot_list, ~ save_svg(.x, fname = paste0("out/", .y, ".svg"),
+                            width = 550, height = 350))
 
 # Save plots to file
 # saveRDS(threat_plot_list, file = "out/threat_plotlist.rds")
 
 threat_popups <-  leafpop::popupGraph(threat_plot_list, type = "svg",
-                                      width = 500, height = 300)
-
-# names(threat_popups) <- gbpu_list
+                                      width = 550, height = 350)
 
 saveRDS(threat_popups, "out/threat_popups.rds")
 
