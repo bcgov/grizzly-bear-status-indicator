@@ -8,33 +8,37 @@ dummydata <- data.frame(gbpu = "Fake",
   mutate(calc_rank = pmax(5 - trend_adj - popiso_adj - threat_adj, 1),
          M_rank = paste0("M", calc_rank))
 
-ggplot(mapping = aes(y = seq(from = 0, to = 1, length.out = 5),
-                     x = dummydata$calc_rank, fill = dummydata$calc_rank)) +
+my_arrow <- arrow(type = "closed", angle = 20, length = unit(0.5, "cm"))
+
+ggplot(dummydata, aes(y = 1, x = calc_rank, fill = calc_rank)) +
   geom_col(width = 0.1)  +
   scale_fill_viridis_c(limits = c(0,5), direction = -1, guide = "none") +
   scale_x_continuous(limits = c(0,5),
+                     expand = c(0,0),
                      labels = c("Extirpated", "M1 (High Concern)",
                                 "M2", "M3", "M4", "M5 (Low Concern)")) +
-  scale_y_continuous(limits = c(0,1), expand = c(0,0)) +
-  annotate("segment", y = 0.25, yend = 0.25,
-           xend = 5 - dummydata$trend_adj,
-           x = 5,
-           arrow = arrow()) +
+  scale_y_continuous(expand = c(0,0.05)) +
+  geom_segment(y = 0.25, yend = 0.25,
+           aes(xend = 5 - trend_adj + 0.05,
+           x = 5),
+           arrow = my_arrow) +
   annotate("text", hjust = 0, y = 0.3, x = 4.5, label = "Trend: >25%") +
-  annotate("segment", y = 0.25, yend = 0.25,
-           xend = 5 - dummydata$trend_adj - dummydata$popiso_adj,
-           x = 5 - dummydata$trend_adj,
-           arrow = arrow()) +
+  geom_segment(y = 0.25, yend = 0.25,
+           aes(xend = 5 - trend_adj - popiso_adj + 0.05,
+           x = 5 - trend_adj),
+           arrow = my_arrow) +
   annotate("text", hjust = 0, y = 0.3, x = 3, label = "Population/Isoaltion: 'EA'") +
-  annotate("segment", y = 0.25, yend = 0.25,
-           xend = 5 - dummydata$trend_adj - dummydata$popiso_adj - dummydata$threat_adj,
-           x = 5 - dummydata$trend_adj - dummydata$popiso_adj,
-           arrow = arrow()) +
+  geom_segment(y = 0.25, yend = 0.25,
+           aes(xend = 5 - trend_adj - popiso_adj - threat_adj + 0.05,
+           x = 5 - trend_adj - popiso_adj),
+           arrow = my_arrow) +
   annotate("text", hjust = 0, y = 0.3, x = 1.5, label = "Threat Score: Medium") +
   coord_flip() +
   theme_void() +
   theme(axis.text.y = element_text(),
-        axis.line.y = element_line())
+        axis.line.y = element_line(),
+        axis.ticks.y = element_line(),
+        plot.margin = unit(c(rep(1,4)), "lines"))
 
 roseplotdata <- dummydata %>%
   select(-ends_with("_cat"), -M_rank, -calc_rank) %>%
