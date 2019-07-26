@@ -75,14 +75,16 @@ save_svg <- function(x, fname, ...) {
 }
 
 # Save svgs to plot list
-iwalk(threat_plot_list, ~ save_svg(.x, fname = paste0("out/", .y, ".svg"),
-                            width = 600, height = 300))
+# iwalk(threat_plot_list, ~ save_svg(.x, fname = paste0("out/", .y, ".svg"),
+#                            width = 600, height = 300))
 
 # Save plots to file
-saveRDS(threat_plot_list, file = "out/threat_plotlist.rds")
+# saveRDS(threat_plot_list, file = "out/threat_plotlist.rds")
 
-threat_popups <-  leafpop::popupGraph(threat_plot_list, type = "svg", width = 400,
-                               height = 300)
+threat_popups <-  leafpop::popupGraph(threat_plot_list, type = "svg")
+
+# width = 500, height = 300
+# names(threat_popups) <- gbpu_list
 
 saveRDS(threat_popups, "out/threat_popups.rds")
 
