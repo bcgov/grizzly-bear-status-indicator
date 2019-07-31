@@ -103,7 +103,7 @@ staticmap <- ggplot(grizzdata_full) +
   geom_sf(aes(fill = calcrank), color = "white", size = 0.1) +
   labs(title = "Conservation Status of Grizzly Bear Population Units in BC",
        col = "Conservation Rank",
-       fill = "Threat Category") +
+       fill = "Management Rank") +
   scale_fill_viridis(alpha = 0.6, discrete = T, option = "viridis",
                      direction = -1, na.value = "darkgrey") +
   theme_soe() + theme(plot.title = element_text(hjust = 0.5),
@@ -113,9 +113,8 @@ staticmap <- ggplot(grizzdata_full) +
                         fill = "lightgrey", size = 0.5,
                         linetype = "solid", colour = "darkgrey")) +
   geom_text(aes(label = grizzdata_full$gbpu_name, x = grizzdata_full$lng,
-                y = grizzdata_full$lat), size = 2, check_overlap = T)
-#geom_text_repel(aes(label = gbpu_name, x = lng, y = lat),
-#size = 2, force =  0.5) # Needs some tweaking - some labels off polygons
+                y = grizzdata_full$lat), size = 2, check_overlap = T) #+
+  #geom_text_repel(aes(label = gbpu_name, x = lng, y = lat), size = 2, force = 0.5) # Needs some tweaking - some labels off polygons
 staticmap # plot map
 
 # Get stamen basemap (terrain)
@@ -137,7 +136,7 @@ static_ggmap <- ggmap(stamenbc) + # Generate new map
                                    option = "viridis", direction = -1,
                                    na.value = "darkgrey") +
   labs(title = "Conservation Status of Grizzly Bear Population Units in BC",
-       fill = "Conservation Rank") +
+       fill = "Management Rank") +
   theme(plot.title = element_text(hjust = 0.5), axis.title.x = element_blank(),
         axis.title.y = element_blank(),
         legend.background = element_rect(
