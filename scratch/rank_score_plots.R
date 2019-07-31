@@ -8,7 +8,7 @@ dummydata <- data.frame(gbpu = "Fake",
   mutate(calc_rank = pmax(5 - trend_adj - popiso_adj - threat_adj, 1),
          M_rank = paste0("M", calc_rank))
 
-my_arrow <- arrow(type = "closed", angle = 20, length = unit(0.5, "cm"))
+my_arrow <- arrow(type = "open", angle = 20, length = unit(0.5, "cm"))
 
 ggplot(dummydata, aes(y = 1, x = calc_rank, fill = calc_rank)) +
   geom_col(width = 0.1)  +
@@ -20,18 +20,19 @@ ggplot(dummydata, aes(y = 1, x = calc_rank, fill = calc_rank)) +
   scale_y_continuous(expand = c(0,0.05)) +
   geom_segment(y = 0.25, yend = 0.25,
            aes(xend = 5 - trend_adj + 0.05,
-           x = 5),
-           arrow = my_arrow) +
+           x = 5, size = 2, color = "red"),
+           arrow = my_arrow, size = 2) +
   annotate("text", hjust = 0, y = 0.3, x = 4.5, label = "Trend: >25%") +
   geom_segment(y = 0.25, yend = 0.25,
            aes(xend = 5 - trend_adj - popiso_adj + 0.05,
            x = 5 - trend_adj),
-           arrow = my_arrow) +
-  annotate("text", hjust = 0, y = 0.3, x = 3, label = "Population/Isoaltion: 'EA'") +
+           arrow = my_arrow, size = 2) +
+  annotate("text", hjust = 0, y = 0.3, x = 3, label = "Population/Isolation: 'EA'") +
   geom_segment(y = 0.25, yend = 0.25,
            aes(xend = 5 - trend_adj - popiso_adj - threat_adj + 0.05,
            x = 5 - trend_adj - popiso_adj),
-           arrow = my_arrow) +
+           arrow = my_arrow, size = 2) +
+  #viridis::scale_colour_viridis(name = )
   annotate("text", hjust = 0, y = 0.3, x = 1.5, label = "Threat Score: Medium") +
   coord_flip() +
   theme_void() +
