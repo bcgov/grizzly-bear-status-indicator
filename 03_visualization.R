@@ -10,7 +10,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-if (!exists("grizzdata_full")) load("data/grizzdata_full.RData")
+if (!exists("grizzdata_full")) load("data/grizzdata_full.rds")
 
 ## ----------------------------------------------------------------------------
 ## THREAT POPUP MAPPING
