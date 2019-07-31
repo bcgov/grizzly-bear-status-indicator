@@ -132,7 +132,7 @@ grizzmap %>%
                 color = "yellow",
                 bringToFront = T)) %>%
   addLegend("bottomright", pal = palette1, values = grizzdata_full$calcsrank,
-            title = "Conservation Status", na.label = "Extirpated",
+            title = "Management Rank", na.label = "Extirpated",
             opacity = 1) #%>%
   #addLayersControl(overlayGroups = c("Terrain", "Topography"))
 ```
