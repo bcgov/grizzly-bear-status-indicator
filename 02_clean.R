@@ -119,4 +119,4 @@ grizzdata_full <- ms_simplify(grizzdata_full, keep = 0.25) # reduce number of ve
 
 # Write grizzly data file to disk
 dir.create("data")
-saveRDS(grizzdata_full, file = "data/grizzdata_full.RData")
+saveRDS(grizzdata_full, file = "data/grizzdata_full.rds")
