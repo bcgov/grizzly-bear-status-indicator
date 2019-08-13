@@ -1,5 +1,30 @@
 library(tidyverse)
 
+
+## work in progress.....
+
+# Conservation Status Pop_up figures
+Tab1_figs <- "out_tab1"
+
+rank_data <- grizzdata_full %>%
+  dplyr::select(gbpu_name, calcrank, calcsrank, calc_rank_check, trend, popiso_rank_adj, threat_rank_adj)
+
+
+# generate a plot per group
+
+# output to the
+
+
+
+
+
+
+
+
+
+
+
+
 dummydata <- data.frame(gbpu = "Fake",
                         trend_cat = ">25%", trend_adj = 1,
                         popiso_cat = "EA", popiso_adj = 2,
