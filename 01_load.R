@@ -47,7 +47,7 @@ gbpu_2018 <- read_sf(file.path(data_path, "BC_Grizzly_Results_v1_Draft_April2016
                      layer = "GBPU_BC_edits_v2_20150601") %>%
   transform_bc_albers()
 
-plot(st_geometry(gbpu_2018))
+#plot(st_geometry(gbpu_2018))
 
 # Create bounding box
 # bc_bbox <- st_as_sfc(st_bbox(boundbc)) # convert to sfc
@@ -55,5 +55,5 @@ plot(st_geometry(gbpu_2018))
 # bc_bbox
 
 # Import grizzly BEC/Ecosection polygons (2019) as sf
-habclass <- bcdc_get_data(record = 'dba6c78a-1bc1-4d4f-b75c-96b5b0e7fd30',
-                          resource = 'd23da745-c8c5-4241-b03d-5654591e117c')
+#habclass <- bcdc_get_data(record = 'dba6c78a-1bc1-4d4f-b75c-96b5b0e7fd30',
+#                          resource = 'd23da745-c8c5-4241-b03d-5654591e117c')
