@@ -12,6 +12,13 @@
 
 if (!exists("grizzdata_full")) load("data/grizzdata_full.rds")
 
+# Management Status pop-ups
+
+#.. in progress
+
+
+
+
 ## ----------------------------------------------------------------------------
 ## THREAT POPUP MAPPING
 ## ----------------------------------------------------------------------------
@@ -47,31 +54,31 @@ names(threat_plot_list) <- gbpu_list
 
 # Create plotting function
 Threat_Plots <- function(data, name) {
-  # Create plot for a single GBPU
   make_plot <- ggplot(data, aes(x = threat, y = ranking,
                                 fill = ranking)) +
     geom_bar(stat = "identity") + # Add bar for each threat variable
     scale_fill_brewer("Threat Ranking", palette = "Set2") +
     labs(x = "Threat", y = "Threat Ranking",
          fill = "Ranking") + # Legend text
-    ggtitle(paste("Threat Ranking for the "
-                  , name
-                  , " Population Unit"
-                  ,sep = "")) +
-    theme_soe() + theme(plot.title = element_text(hjust = 0.5), # Centre title
-                        legend.position = "bottom",
-                        plot.caption = element_text(hjust = 0)) # L-align caption
-  make_plot
+    ggtitle(paste(name," Population Unit Threat Ranking", sep = ""))+
+    theme(legend.position = "none")
+   # theme_soe() + theme(plot.title = element_text(hjust = 0.5), # Centre title
+   #                    legend.position = "none",
+   #                     plot.caption = element_text(hjust = 0))  # L-align caption
+ # scale_y_discrete (limits = c("Negligible", "Low", "Medium", "High", "Very High"))
+ # This line causes problems with no data sites (ie Central Interior)
+
+  make_plot + coord_flip()
 }
 
+#ifelse(!dir.exists(file.path("out/")), dir.create(file.path("out/")), FALSE)
 
-ifelse(!dir.exists(file.path("out/")), dir.create(file.path("out/")), FALSE)
+#n <- gbpu_list[56]
 
 # Create ggplot graph loop
 plots <- for (n in gbpu_list) {
   print(n)
   data <- filter(total_threats, gbpu_name == n)
-  # print(head(data))
   p <- Threat_Plots(data, n)
   threat_plot_list[[n]] <- p
   ggsave(p, file = paste0("out/", n, ".svg"))
@@ -89,13 +96,13 @@ save_svg <- function(x, fname, ...) {
 
 # Save svgs to plot list
 iwalk(threat_plot_list, ~ save_svg(.x, fname = paste0("out/", .y, ".svg"),
-                            width = 550, height = 350))
+                            width = 250, height = 250))
 
 # Save plots to file
 # saveRDS(threat_plot_list, file = "out/threat_plotlist.rds")
 
 threat_popups <-  leafpop::popupGraph(threat_plot_list, type = "svg",
-                                      width = 550, height = 350)
+                                      width = 250, height = 250)
 
 saveRDS(threat_popups, "out/threat_popups.rds")
 
