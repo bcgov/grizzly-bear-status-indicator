@@ -64,6 +64,9 @@ Threat_Plots <- function(data, name) {
   make_plot
 }
 
+
+ifelse(!dir.exists(file.path("out/")), dir.create(file.path("out/")), FALSE)
+
 # Create ggplot graph loop
 plots <- for (n in gbpu_list) {
   print(n)
