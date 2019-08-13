@@ -117,6 +117,14 @@ grizzdata_full$trend <- grizzdata_full$trend %>% replace_na("Data Deficient")
 # Simplify vertices of GBPU polygons
 grizzdata_full <- ms_simplify(grizzdata_full, keep = 0.25) # reduce number of vertices
 
+
+# add numeric values to output table to calculate figures for Management Status
+grizzdata_full <- grizzdata_full %>%
+  left_join(popiso_table, by = "popiso") %>%
+  left_join(threat_table, by = "threat_class") %>%
+  mutate(calc_rank_check = 5 - as.numeric(trend) - popiso_rank_adj - threat_rank_adj)
+
+
 # Write grizzly data file to disk
 dir.create("data")
 saveRDS(grizzdata_full, file = "data/grizzdata_full.rds")
