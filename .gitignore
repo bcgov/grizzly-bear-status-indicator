@@ -10,3 +10,5 @@
 README.html
 *.svg
 .html
+/print_ver/grizzly-bear-status-indicator_cache/
+/print_ver/grizzly-bear-status-indicator_files/
