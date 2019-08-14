@@ -9,12 +9,11 @@
 # Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
+library(dplyr)
 
 if (!exists("grizzdata_full")) load("data/grizzdata_full.rds")
 
-# Management Status pop-ups
-
-#.. in progress
+# Add management status popups?
 
 
 
@@ -44,6 +43,8 @@ total_threats <- gather(threat_calc, key = "threat", value = "ranking",
 
 total_threats$ranking <- factor(total_threats$ranking, ordered = TRUE,
                                 levels = c("Negligible", "Low", "Medium", "High", "Very High"))
+
+saveRDS(total_threats, file = "data/total_threats.rds")
 
 # Create list of GBPU
 gbpu_list <- unique(grizzdata_full$gbpu_name)
