@@ -116,7 +116,7 @@ grizzmap <- leaflet(width = "900px", height = "500px",
 
 ```
 
-## Conservation Status
+## Management Status
 
 ```{r, warning=FALSE, echo=FALSE}
 grizzmap %>% 
@@ -259,8 +259,8 @@ grizzmap %>%
                 bringToFront = T)) %>%
   
   addLayersControl(
-    baseGroups = c("Transportation", "Energy", "Human Intrusion", "Residential",
-                   "Agriculture", "Biouse", "Climate Change"),
+    baseGroups = c("Transportation", "Residential","Human Intrusion", "Energy", 
+                   "Climate Change","Biouse"),
     #overlayGroups = c("Terrain", "OSM (Default)"),
     options = layersControlOptions(collapsed = FALSE)) %>%
   addLegend("bottomright", pal = palette3, values = grizzdata_full$threat_class,
