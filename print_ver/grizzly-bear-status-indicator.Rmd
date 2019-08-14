@@ -1,7 +1,8 @@
 ---
 topic: "plants-and-animals"
 title: "Grizzly Bear Population Status Indicator"
-output: envreportutils.internal::print_ver
+#output: envreportutils.internal::print_ver
+output: html_document
 params:
   draft: TRUE
 ---
@@ -17,40 +18,350 @@ params:
 # Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
-# Instructions:
-#
-# If you don't have a bibliography, delete the bibliography line in the YAML header.
-# If you do have a bibliography, insert the filename. In-text citations are done as:
-# [@Moe-etal-1999]. End the document with the bibliography heading (e.g., # References).
+
 -->
 ```{r set-options, echo=FALSE, cache=FALSE, warning=FALSE, message=FALSE}
-knitr::opts_chunk$set(echo=FALSE, cache=TRUE, message=FALSE, warning=FALSE, 
-                      error=FALSE)
-```
-
-```{r pre}
-```
-
-Grizzly bears *(Ursus arctos horriblis)* are an important part of the British Columbia landscape. They are a symbol of ecological integrity that represents much of what British Columbians and visitors alike appreciate about B.C.’s natural beauty. 
-
-Grizzly bears are habitat generalists which live in a variety of habitats including temperate coastal rainforests, mountainous areas, and semi-desert Arctic tundra. Grizzly bears are an important “umbrella” species, as landscapes that support healthy Grizzly bear populations will be able to sustain many other species. Grizzly bears play a key role in maintaining healthy ecosystems, for example, by distributing salmon nutrients into forests, managing herbivore populations, and transporting seeds through their feces. 
-
--	There are approximately 15,000 Grizzly bears in British Columbia — this is about a quarter of the entire North American population. For administrative reasons, the grizzly bear population has been divided into 55 Grizzly Bear Population Units (GBPUs). 
--	In British Columbia, grizzly bears are an important part of the culture of Indigenous Peoples whose historical relationships with the land are ongoing. 
--	Grizzly bear viewing is an important economic and social component of B.C.’s tourism and recreation industries. Prior to 2018, about 250 grizzly bears were killed by hunters each year
-in B.C.; however, all non-Indigenous grizzly bear hunting is currently illegals. 
--	According to recent research, thirteen population units are 
-
-```{r echo=FALSE, message=FALSE}
 library(ggplot2)
-ggplot(mtcars, aes(x = hp, y = mpg)) + 
-  geom_point() + 
-  geom_smooth()
+library(dplyr)
+library(here)
+library(knitr)
+library(tidyverse)
+library(leaflet)
+library(sf)
+library(geojsonio)
+library(htmltools)
+library(mapview)
+library(DT)
+library(envreportutils)
+
+
+## Read in plotting objects from 03_output.R if not already in environment
+if (!exists("threat_sum_plot")) load(here("tmp", "plots.RData"))
+grizzdata_full <- read_rds(here("data/grizzdata_full.rds"))
+grizzdata_full <- st_transform(grizzdata_full, crs = 4326) 
+
+
+opts_chunk$set(echo=FALSE, cache=TRUE, message=FALSE, warning=FALSE, 
+                      error=FALSE, fig.height = 3.5, fig.width = 6)
+
+
+theme_print <-   theme(axis.text.y = element_text(size = 8),
+                       axis.text.x = element_text(size = 8),
+                       axis.title.y = element_text(size = 10,
+                                                   margin = margin(t = 0, r = 10,
+                                                                   b = 0, l = 0,
+                                                                   unit = "pt")),
+                       plot.title = element_text(size = 10, hjust = 0.5),
+                       plot.margin = unit(c(6,6,6,2),"mm"))
+
+
 ```
+
+* There are approximately XX Grizzly bears in Brish Columbia ^1^
+
+* In BC, the grizzly bear population is divided into 55 Grizzly Bear Population Units (GBPUs). 
+
+* Using GBPUs helps us to identify localised concenservation concerns and prioritise management across the province.
+
+* Each GBPU is assigned a management status (M5 to M1) which represents least concern to highest concern. Management status are based on three main components 1) population size and isolation, 2) population trends and 3) levels of threat to bears or bear habitat. This is based on the NatureServe status assesment method ^2^
+
+* The overall threat was determined by considered six catergories ; Agriculture, Biouse, Climate Change, Energy, Human intrusion, Residential, Transportation.
+
+
+``` {r popups, include=FALSE, warning=FALSE}
+## TEXT POPUPS
+
+# conservation status tab:
+popup_text1 <- dplyr::select(grizzdata_full, gbpu_name, threat_class,
+                  calcrank, adults, isolation, trend) %>% 
+  rename("Population Name" = gbpu_name,
+         "Management Rank" = calcrank,
+         "Overall Threat Score" = threat_class,
+         #"Overall Status" = status,
+         "Population Size" = adults,
+         "Isolation" = isolation,
+         "Trend" = trend) 
+ 
+st_geometry(popup_text1) <- NULL # as df
+
+constatus_popup <- leafpop::popupTable(popup_text1,
+                                   row.numbers = F, 
+                                   feature.id = F)
+
+# Popup for population tab
+popup_text2 <- dplyr::select(grizzdata_full, gbpu_name, adults, 
+                               pop_density, area_sq_km) %>% # Summary data for text popups
+  rename("Population Name" = gbpu_name,
+         "Population Size (Adults)" = adults,
+         "Population Density (Adult/1000m^2)" = pop_density,
+         "Total Area (Km^2)" = area_sq_km) 
+st_geometry(popup_text2) <- NULL # as df
+
+population_popup <- leafpop::popupTable(popup_text2,
+                                   row.numbers = F, 
+                                   feature.id = F)
+
+# Threat popups
+threat_popups <- read_rds(here("out/threat_popups.rds"))
+
+# Define popup options
+popup_options <-  popupOptions(autoPan = TRUE,
+                               keepInView = TRUE,
+                               closeOnClick = TRUE,
+                               autoPanPaddingTopLeft = c(120, 20),
+                               autoPanPaddingBottomRight = c(120,20))
+
+
+```
+
+``` {r labels and palettes, include=FALSE, warning=FALSE}
+# Define polygon labels in leaflet
+labs <- dplyr::select(grizzdata_full, gbpu_name, pop_density, calcrank, threat_class)
+st_geometry(labs) <- NULL # as df
+
+lab1 <- lapply(seq(nrow(labs)), function(i) {
+  paste0( '<b>', labs[i, "gbpu_name"], ', ',  
+          labs[i, "calcrank"], '</b>') 
+})
+
+lab2 <- lapply(seq(nrow(labs)), function(i) {
+  paste0( '<b>', labs[i, "gbpu_name"], ', ',  
+          labs[i, "pop_density"]," Adults/1000m2",'</b>') 
+})
+
+lab3 <- lapply(seq(nrow(labs)), function(i) {
+  paste0( '<b>', labs[i, "gbpu_name"], ', ',  
+          labs[i, "threat_class"], '</b>') 
+})
+
+# Prep colour palettes
+palette1 <- colorFactor(palette = 'viridis', grizzdata_full$calcsrank, reverse = TRUE)
+palette2 <- colorNumeric(palette = 'viridis', grizzdata_full$pop_density, reverse = TRUE)
+palette3 <- colorFactor(palette = 'viridis', grizzdata_full$threat_class, reverse = TRUE)
+
+```
+
+## Interactive Map {.tabset .tabset-fade}
+Click on the tabs and explore the ranking, population and threats facing GBPU across B.C.
+
+```{r grizz_map, warning=FALSE, echo=FALSE}
+grizzmap <- leaflet(width = "900px", height = "500px", 
+                    options = leafletOptions(minZoom = 5)) %>%  # generate leaflet map
+  addProviderTiles(providers$Stamen.Terrain, group = "Terrain") %>%
+  add_bc_home_button() %>%
+  set_bc_view()
+
+```
+
+### Management Status
+
+```{r, warning=FALSE, echo=FALSE}
+grizzmap %>% 
+  addPolygons(data = grizzdata_full, #group = "Conservation Status",
+              stroke = T, weight = 1, color = "black", # Add border to polygons
+              fillOpacity = 0.5, # Polygon fill
+              fillColor = ~palette1(grizzdata_full$calcsrank),
+              label = lapply(lab1, htmltools::HTML),
+              labelOptions = labelOptions(direction = "auto", textsize = "12px"),
+              popup = constatus_popup,
+              popupOptions = popup_options,
+              highlight = highlightOptions( # Highlight interaction for mouse hover
+                weight = 3,
+                color = "yellow",
+                bringToFront = T)) %>%
+  addLegend("bottomright", pal = palette1, values = grizzdata_full$calcsrank,
+            title = "Management Rank", na.label = "Extirpated",
+            opacity = 1) 
+```
+
+### Population Density Estimate
+
+``` {r, warning=FALSE, echo=FALSE}
+grizzmap %>%
+  addPolygons(data = grizzdata_full,
+              stroke = T, weight = 1, color = "black",
+              fillOpacity = 0.5,
+              fillColor = ~palette2(grizzdata_full$pop_density),
+              label = lapply(lab2, htmltools::HTML),
+              labelOptions = labelOptions(direction = "auto", textsize = "12px"),
+              popup = population_popup,
+              popupOptions = popup_options,
+              highlight = highlightOptions( 
+                  weight = 3,
+                  color = "yellow",
+                  bringToFront = T)) %>%
+  addLegend("bottomright", pal = palette2, values = grizzdata_full$pop_density,
+            title = "Population Density", na.label = "Extirpated",
+            opacity = 1) 
+
+# addLayersControl(overlayGroups = c("Terrain", "Topography"))
+```
+
+### Threat Classification
+
+``` {r, warning=FALSE, echo=FALSE}
+grizzmap <- leaflet(width = "900px", height = "500px", 
+                    options = leafletOptions(minZoom = 5)) %>%  # generate leaflet map
+  addProviderTiles(providers$Stamen.Terrain, group = "Terrain") %>%
+  add_bc_home_button() %>%
+  set_bc_view()
+
+grizzmap %>% 
+  addPolygons(data = grizzdata_full,
+              stroke = T, weight = 1, color = "black", # Add border to polygons
+              fillOpacity = 0.5, # Polygon fill
+              fillColor = ~palette3(grizzdata_full$transportationcalc),
+              popup = threat_popups,
+              popupOptions = popup_options,
+              group = "Transportation",
+              label = lapply(lab3, htmltools::HTML),
+              labelOptions = labelOptions(direction = "auto", textsize = "12px"),
+              highlight = highlightOptions( 
+                weight = 3,
+                color = "yellow",
+                bringToFront = T)) %>%
+  addPolygons(data = grizzdata_full,
+              stroke = T, weight = 1, color = "black",
+              fillOpacity = 0.5,
+              fillColor = ~palette3(grizzdata_full$energycalc),
+              popup = threat_popups,
+              popupOptions = popup_options,
+              group = "Energy",
+              label = lapply(lab3, htmltools::HTML),
+              labelOptions = labelOptions(direction = "auto", textsize = "12px"),
+              highlight = highlightOptions(
+                weight = 3,
+                color = "yellow",
+                bringToFront = T)) %>%
+  addPolygons(data = grizzdata_full,
+              stroke = T, weight = 1, color = "black",
+              fillOpacity = 0.5,
+              fillColor = ~palette3(grizzdata_full$humanintrusioncalc),
+              popup = threat_popups,
+              popupOptions = popup_options,
+              group = "Human Intrusion",
+              label = lapply(lab3, htmltools::HTML),
+              labelOptions = labelOptions(direction = "auto", textsize = "12px"),
+              highlight = highlightOptions(
+                weight = 3,
+                color = "yellow",
+                bringToFront = T)) %>%
+  addPolygons(data = grizzdata_full,
+              stroke = T, weight = 1, color = "black",
+              fillOpacity = 0.5,
+              fillColor = ~palette3(grizzdata_full$residentialcalc),
+              popup = threat_popups,
+              popupOptions = popup_options,
+              group = "Residential",
+              label = lapply(lab3, htmltools::HTML),
+              labelOptions = labelOptions(direction = "auto", textsize = "12px"),
+              highlight = highlightOptions(
+                weight = 3,
+                color = "yellow",
+                bringToFront = T)) %>%
+  addPolygons(data = grizzdata_full,
+              stroke = T, weight = 1, color = "black",
+              fillOpacity = 0.5,
+              fillColor = ~palette3(grizzdata_full$agriculturecalc),
+              popup = threat_popups,
+              popupOptions = popup_options,
+              group = "Agriculture",
+              label = lapply(lab3, htmltools::HTML),
+              labelOptions = labelOptions(direction = "auto", textsize = "12px"),
+              highlight = highlightOptions(
+                weight = 3,
+                color = "yellow",
+                bringToFront = T)) %>%
+  addPolygons(data = grizzdata_full,
+              stroke = T, weight = 1, color = "black",
+              fillOpacity = 0.5,
+              fillColor = ~palette3(grizzdata_full$biousecalc),
+              popup = threat_popups,
+              popupOptions = popup_options,
+              group = "Biouse",
+              label = lapply(lab3, htmltools::HTML),
+              labelOptions = labelOptions(direction = "auto", textsize = "12px"),
+              highlight = highlightOptions(
+                weight = 3,
+                color = "yellow",
+                bringToFront = T)) %>%
+  addPolygons(data = grizzdata_full,
+              stroke = T, weight = 1, color = "black",
+              fillOpacity = 0.5,
+              fillColor = ~palette3(grizzdata_full$climatechangecalc),
+              popup = threat_popups,
+              popupOptions = popup_options,
+              group = "Climate Change",
+              label = lapply(lab3, htmltools::HTML),
+              labelOptions = labelOptions(direction = "auto", textsize = "12px"),
+              highlight = highlightOptions(
+                weight = 3,
+                color = "yellow",
+                bringToFront = T)) %>%
+  addLayersControl(
+    baseGroups = c("Transportation", "Residential","Human Intrusion", "Energy",  "Climate Change","Biouse", "Agriculture"),
+    options = layersControlOptions(collapsed = FALSE)) %>%
+  addLegend("bottomright", pal = palette3, values = grizzdata_full$threat_class,
+            title = "Threat Rank", na.label = "Extirpated",
+            opacity = 1)
+
+```
+
+
+## Level of Threat
+
+Of the 55 GBPU, the majority of units were low. The Yahk GBPU, located in the Kooteney-Boundary was ranked as Very High risk due to XZY.
+
+
+```{r overall trends, echo = FALSE}
+overall_threat_plot + theme_print
+
+```
+
+Across all 55 GBPU, the type of threat with the highest impact was Biouse, Transportation and Residential. Threats from human intrusion, energy, climate change and agriculture had a low to negligible threat. 
+
+```{r threat, echo = FALSE}
+
+threat_sum_plot + theme_print
+
+```
+
+## More about Grizzly bears
+
+
+Is this needed? 
+
+
+## Methods
+
+British Columbia's grizzly bear population management units are assigned ranking based on population and isolation, population trend and threats ^1^.
+
+We used internationally recognized methodology, developed by NatureServe ^nature serve ref^ to ensure ranking were in line with international standards on species managemetn criteria (NatureServe and international ranking (IUCN)
+
+The threats are based on the IUCN-CMP (Conservation Measures Partnership) classifications of direct threats . To document the steps for ranking species or ecosystems NatureServe uses an ‘Element Rank Calculator[http://www.natureserve.org/conservation-tools/conservation-rank-calculator] . The calculator includes a summary of the IUCN threats to species13, as well as, population size, trend and other criteria based on standardized ranking methods12. 
+
+The Nature Serve calculator uses the 11 IUCN threat categories  to determine impacts to species (residential and commercial development, agriculture and aqua- culture, energy production and mining, transportation and service corridors, biological resource use, human intrusions and disturbance, natural system modifications, invasives and other problematic species and genes, pollution, geological events, climate change and severe weather). Threat categories are based on threat scope and severity. The NatureServe calculator then combines the individual threats to determine an overall threat category. Appendix 5 in British Columbia’s Guide to Recovery Planning for Species and Ecosystems presents a full description of NatureServe threat assignment using threat scope, severity, and timing. 
+
+Each GBPU starts with a rank of 5 – M5 no conservation concern – this value is reduced based on 1) negative population trend, 2) small and/or isolated population, and 3) overall threat (negligible, low, medium, high & very high) 
+
+
+
+
+
+
+
+
+
+
 
 ## References and Other Useful Links
 
-- [British Columbia conservation Foundation's Bear Aware Program] (https://wildsafebc.com/grizzly-bear/)
+^1^[2019 Grizzly Bear Population Unit Management Ranking] (http:// UPDATE THIS TO RELEASED DATA SET)
+
+^2^ NatureServe. 2015. NatureServe Element Occurrence Viability Calculator Version 1. NatureServe, Arlington, VA. 
+
+
+* [British Columbia conservation Foundation's Bear Aware Program] (https://wildsafebc.com/grizzly-bear/)
 
 ## Data
 
@@ -61,10 +372,14 @@ ggplot(mtcars, aes(x = hp, y = mpg)) +
 \newpage
 ----
 
-Published and Available On-Line at Environmental Reporting BC (July 2019):  
-[](http://www.env.gov.bc.ca/soe)
+Published and Available On-Line at Environmental Reporting BC (August 2019):  
+<http://www.env.gov.bc.ca/soe/indicators/plants-and-animals/grizzly-bears.html>
 
 Email correspondence to: envreportbc@gov.bc.ca
 
-Suggested Citation:  
-Environmental Reporting BC. Year. Indicator Title. State of Environment Reporting, Ministry of Environment and Climate Change Strategy, British Columbia, Canada.
+*Suggested Citation*:  
+Environmental Reporting BC. 2019. Grizzly Bear Population Status in B.C. State of Environment Reporting, Ministry of Environment and Climate Change Strategy, British Columbia, Canada.
+
+
+
+
