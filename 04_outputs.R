@@ -58,7 +58,6 @@ tdata <- total_threats %>%
 tdata$ranking <- factor(tdata$ranking, ordered = TRUE,
                                 levels = c("Negligible", "Low", "Medium", "High"))
 
-
 threat_sum_plot <-
   ggplot(tdata, aes(x = threat, y = count,
                               fill = ranking)) +
@@ -132,5 +131,7 @@ static_ggmap <- ggmap(stamenbc) + # Generate new map
           colour = "darkgrey"))
 plot(static_ggmap)
 
-# Clip + mask raster to BC boundary
-# stamenbc_crop <- raster::crop(stamenbc, bc_boundary)
+
+if (!exists("tmp")) dir.create("tmp", showWarnings = FALSE)
+save(threat_sum_plot, overall_threat_plot, staticmap,
+     file = "tmp/plots.RData")
