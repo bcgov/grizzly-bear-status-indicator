@@ -111,7 +111,6 @@ popup_options <-  popupOptions(autoPan = TRUE,
                                autoPanPaddingTopLeft = c(120, 20),
                                autoPanPaddingBottomRight = c(120,20))
 
-
 ```
 
 ``` {r labels and palettes, include=FALSE, warning=FALSE}
@@ -164,7 +163,7 @@ grizzmap %>%
               label = lapply(lab1, htmltools::HTML),
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
               popup = constatus_popup,
-              popupOptions = popup_options,
+            #  popupOptions = popup_options,
               highlight = highlightOptions( # Highlight interaction for mouse hover
                 weight = 3,
                 color = "yellow",
@@ -185,7 +184,7 @@ grizzmap %>%
               label = lapply(lab2, htmltools::HTML),
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
               popup = population_popup,
-              popupOptions = popup_options,
+              #popupOptions = popup_options,
               highlight = highlightOptions( 
                   weight = 3,
                   color = "yellow",
@@ -212,7 +211,7 @@ grizzmap %>%
               fillOpacity = 0.5, # Polygon fill
               fillColor = ~palette3(grizzdata_full$transportationcalc),
               popup = threat_popups,
-              popupOptions = popup_options,
+             # popupOptions = popup_options,
               group = "Transportation",
               label = lapply(lab3, htmltools::HTML),
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
