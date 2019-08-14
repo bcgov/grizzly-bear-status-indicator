@@ -21,8 +21,7 @@ sdata <- grizzdata_full %>%
   filter(!is.na(threat_class))
 
 sdata <- as.data.frame(sdata)
-
-# drop geometry
+st_geometry(sdata) <- NULL
 
 overall_threat_plot <-
   ggplot(sdata, aes(y = count, x = threat_class)) +
