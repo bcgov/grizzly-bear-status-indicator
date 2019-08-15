@@ -57,15 +57,17 @@ theme_print <-   theme(axis.text.y = element_text(size = 8),
 
 ```
 
-* There are approximately XX Grizzly bears in Brish Columbia ^1^
+* There are approximately XX Grizzly bears in British Columbia ^1^
 
-* In BC, the grizzly bear population is divided into 55 Grizzly Bear Population Units (GBPUs). 
+* In B.C., the grizzly bear population is divided into 55 Grizzly Bear Population Units (GBPUs). These range in size from 2,670 km^2^ to 49,578 km^2^. 
 
-* Using GBPUs helps us to identify localised concenservation concerns and prioritise management across the province.
+* Using GBPUs helps us to track grizzly bear abundance and stability and identify localised concenservation concerns. 
 
-* Each GBPU is assigned a management status (M5 to M1) which represents least concern to highest concern. Management status are based on three main components 1) population size and isolation, 2) population trends and 3) levels of threat to bears or bear habitat. This is based on the NatureServe status assesment method ^2^
+* Each GBPU is assigned a management status ranging from lowest conservation concern (M5) to  highest conservation concern (M1). These ranking are equivalent to international methods used by NatureServe^2^ and IUCN. 
 
-* The overall threat was determined by considered six catergories ; Agriculture, Biouse, Climate Change, Energy, Human intrusion, Residential, Transportation.
+* Grizzly Bear management status ranks are calculated based on 1) population size and isolation, 2) population trends and 3) level of threat to bears or bear habitat. Ranks are deterined using the latest available data and expert opinion. 
+
+* The overall threat was determined by considered six catergories; Agriculture, Biological Resource Use (Biouse), Climate Change, Energy, Human intrusion, Residential, Transportation. See below for detailed methodology ^1^.  
 
 
 ``` {r popups, include=FALSE, warning=FALSE}
@@ -141,7 +143,7 @@ palette3 <- colorFactor(palette = 'viridis', grizzdata_full$threat_class, revers
 ```
 
 ## Interactive Map {.tabset .tabset-fade}
-Click on the tabs and explore the ranking, population and threats facing GBPU across B.C.
+Click on the tabs below and explore the ranking, population and threats facing GBPU across B.C. Click on each GBPU to find out more.
 
 ```{r grizz_map, warning=FALSE, echo=FALSE}
 grizzmap <- leaflet(width = "900px", height = "500px", 
@@ -307,9 +309,9 @@ grizzmap %>%
 ```
 
 
-## Level of Threat
+## Threats to Grizzly Bears
 
-Of the 55 GBPU, the majority of units were low. The Yahk GBPU, located in the Kooteney-Boundary was ranked as Very High risk due to XZY.
+The overall threat for GBPU was assessed from Very High to Negligible. Approximately half of GBPU (23 GBPUs) are in a Low or Negligible overall threat category. The Yahk GBPU, located in the Kooteney-Boundary was ranked as Very High risk due to XZY.
 
 
 ```{r overall trends, echo = FALSE}
@@ -317,7 +319,8 @@ overall_threat_plot + theme_print
 
 ```
 
-Across all 55 GBPU, the type of threat with the highest impact was Biouse, Transportation and Residential. Threats from human intrusion, energy, climate change and agriculture had a low to negligible threat. 
+The largest number of threats was due to Human Intrusion , followed by transportation (road and rail density), energy production and mining, agriculture (livestock density), residential (human density), biological resource use (mortality), and climate-change (salmon decline).
+
 
 ```{r threat, echo = FALSE}
 
@@ -325,30 +328,21 @@ threat_sum_plot + theme_print
 
 ```
 
-## More about Grizzly bears
+## Management Ranks 
 
+Across the province 17 GBPU are ranked as highest concern (M1-2), 14 as moderate concern (M3-4) and 24 as lowest concern (M4-5). In general GBPUs located in the southern portion of the province were of higher concern. GBPU units adjacent to the Central Interior unit, in which grizzly bears have been extirpated, were also ranked higher.  
 
-Is this needed? 
-
+Identifying management status at the population unit can be used to priorities action where the management concerns are highest. Detailed threat information identified for each unit will also help to direct management actions for localised threats identified within the unit.
 
 ## Methods
 
-British Columbia's grizzly bear population management units are assigned ranking based on population and isolation, population trend and threats ^1^.
-
-We used internationally recognized methodology, developed by NatureServe ^nature serve ref^ to ensure ranking were in line with international standards on species managemetn criteria (NatureServe and international ranking (IUCN)
+We used internationally recognized methodology, developed by NatureServe ^2^ to ensure ranks were assigned in line with international standards on species management criteria (NatureServe and international ranking (IUCN). 
 
 The threats are based on the IUCN-CMP (Conservation Measures Partnership) classifications of direct threats . To document the steps for ranking species or ecosystems NatureServe uses an ‘Element Rank Calculator[http://www.natureserve.org/conservation-tools/conservation-rank-calculator] . The calculator includes a summary of the IUCN threats to species13, as well as, population size, trend and other criteria based on standardized ranking methods12. 
 
 The Nature Serve calculator uses the 11 IUCN threat categories  to determine impacts to species (residential and commercial development, agriculture and aqua- culture, energy production and mining, transportation and service corridors, biological resource use, human intrusions and disturbance, natural system modifications, invasives and other problematic species and genes, pollution, geological events, climate change and severe weather). Threat categories are based on threat scope and severity. The NatureServe calculator then combines the individual threats to determine an overall threat category. Appendix 5 in British Columbia’s Guide to Recovery Planning for Species and Ecosystems presents a full description of NatureServe threat assignment using threat scope, severity, and timing. 
 
 Each GBPU starts with a rank of 5 – M5 no conservation concern – this value is reduced based on 1) negative population trend, 2) small and/or isolated population, and 3) overall threat (negligible, low, medium, high & very high) 
-
-
-
-
-
-
-
 
 
 
@@ -360,7 +354,7 @@ Each GBPU starts with a rank of 5 – M5 no conservation concern – this value 
 ^2^ NatureServe. 2015. NatureServe Element Occurrence Viability Calculator Version 1. NatureServe, Arlington, VA. 
 
 
-* [British Columbia conservation Foundation's Bear Aware Program] (https://wildsafebc.com/grizzly-bear/)
+[British Columbia conservation Foundation's Bear Aware Program] (https://wildsafebc.com/grizzly-bear/)
 
 ## Data
 
