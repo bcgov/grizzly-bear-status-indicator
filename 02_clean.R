@@ -10,45 +10,45 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-popiso_table <- tribble(
-  ~popiso, ~popiso_rank_adj,
-  "AA", 4,
-  "AB", 4,
-  "AC", 4,
-  "AD", 3,
-  "BA", 4,
-  "BB", 1.5,
-  "BC", 1,
-  "BD", 0.5,
-  "CA", 4,
-  "CB", 1.5,
-  "CC", 1,
-  "CD", 0,
-  "DA", 3,
-  "DB", 1,
-  "DC", 0.5,
-  "DD", 0,
-  "EA", 2,
-  "EB", 1,
-  "EC", 0.5,
-  "ED", 0
-)
-
-threat_table <- tribble(
-  ~threat_class, ~threat_rank_adj,
-  "VHigh", 2,
-  "High", 1.5,
-  "Medium", 1.0,
-  "Low", 0,
-  "Negligible", 0
-)
-
-rank_calc_check <- threat_calc %>%
-  left_join(popiso_table, by = "popiso") %>%
-  left_join(threat_table, by = "threat_class") %>%
-  mutate(calc_rank_check = 5 - trend - popiso_rank_adj - threat_rank_adj) %>%
-  select(gbpu_name, popiso, trend, threat_class, popiso_rank_adj, threat_rank_adj,
-         calcrank, rank_number, preadj_rank_number, calc_rank_check)
+# popiso_table <- tribble(
+#   ~popiso, ~popiso_rank_adj,
+#   "AA", 4,
+#   "AB", 4,
+#   "AC", 4,
+#   "AD", 3,
+#   "BA", 4,
+#   "BB", 1.5,
+#   "BC", 1,
+#   "BD", 0.5,
+#   "CA", 4,
+#   "CB", 1.5,
+#   "CC", 1,
+#   "CD", 0,
+#   "DA", 3,
+#   "DB", 1,
+#   "DC", 0.5,
+#   "DD", 0,
+#   "EA", 2,
+#   "EB", 1,
+#   "EC", 0.5,
+#   "ED", 0
+# )
+#
+# threat_table <- tribble(
+#   ~threat_class, ~threat_rank_adj,
+#   "Very High", 2,
+#   "High", 1.5,
+#   "Medium", 1.0,
+#   "Low", 0,
+#   "Negligible", 0
+# )
+#
+# rank_calc_check <- threat_calc %>%
+#   left_join(popiso_table, by = "popiso") %>%
+#   left_join(threat_table, by = "threat_class") %>%
+#   mutate(calc_rank_check = 5 - trend - popiso_rank_adj - threat_rank_adj) %>%
+#   select(gbpu_name, popiso, trend, threat_class, popiso_rank_adj, threat_rank_adj,
+#          calcrank, rank_number, preadj_rank_number, calc_rank_check)
 
 ## DATA CLEANING ---------------------------------------------------------
 gbpu_2018 <- gbpu_2018 %>%
@@ -56,14 +56,12 @@ gbpu_2018 <- gbpu_2018 %>%
 
 # Find centroid of polygons (for labelling)
 # Note: BC Albers CRS used because lat/long not accepted by st_centroid
-popcentroid <- st_centroid(st_geometry(gbpu_2018))
-popcentroid <- st_transform(popcentroid, crs = 4326) # convert to lat/long
-
-# Calculate coordinates for centroid of polygons
-popcoords <- st_coordinates(popcentroid)
+popcentroid <- st_centroid(st_geometry(gbpu_2018)) %>%
+  st_transform(popcentroid, crs = 4326)
 
 # Spatial join
-grizzdata_full <- cbind(gbpu_2018, popcoords) # cbind coords and polygons
+grizzdata_full <- cbind(gbpu_2018,
+                        st_coordinates(popcentroid)) # cbind coords and polygons
 
 # Rename lat and lng columns
 grizzdata_full <- rename(grizzdata_full, lng = X, lat = Y) %>%
@@ -97,7 +95,24 @@ grizzdata_full <- mutate(grizzdata_full,
                            str_detect(isolation, "^[A-E]D$") ~ "Not Isolated (<25%)")
                          )
 
+
 # Add population density column
+# calculate the areas of usable habitat
+
+bc_icewater.u <- st_union(bc_icewater)
+
+hab_area <- st_join(gbpu_2018, bc_icewater) %>%
+
+hab_area1 <- hab_area %>%
+  filter(POPULATION_NAME == "Tatshenshini")
+
+# calculate the area after intersect
+
+# add the "habitat ad
+
+
+## Need to update this to usable habitat
+
 grizzdata_full <- mutate(grizzdata_full,
                          area_sq_km = as.numeric(set_units(st_area(geometry), km2)),
                          pop_density = as.numeric(adults / area_sq_km * 1000)
@@ -125,6 +140,10 @@ grizzdata_full <- grizzdata_full %>%
   mutate(calc_rank_check = 5 - as.numeric(trend) - popiso_rank_adj - threat_rank_adj)
 
 
+grizzdata_full <- grizzdata_full %>%
+  mutate(threat_class = ifelse(threat_class == "VHigh","Very High",paste(threat_class)))
+
+
 # Write grizzly data file to disk
-dir.create("data")
+if (!dir.exists("data")) dir.create("data")
 saveRDS(grizzdata_full, file = "data/grizzdata_full.rds")
