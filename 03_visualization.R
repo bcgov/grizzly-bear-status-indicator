@@ -13,7 +13,7 @@ library(dplyr)
 
 if (!exists("grizzdata_full")) load("data/grizzdata_full.rds")
 
-# Add management status popups?
+# Add conservation status popups?
 
 
 
