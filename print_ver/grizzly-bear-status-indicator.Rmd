@@ -1,8 +1,7 @@
 ---
 topic: "plants-and-animals"
 title: "Grizzly Bear Population Status Indicator"
-#output: envreportutils.internal::print_ver
-output: html_document
+output: envreportutils.internal::print_ver
 params:
   draft: TRUE
 ---
@@ -69,11 +68,13 @@ theme_print <-   theme(axis.text.y = element_text(size = 8),
 
 * The overall threat was determined by considered six catergories; Agriculture, Biological Resource Use (Biouse), Climate Change, Energy, Human intrusion, Residential, Transportation. See below for detailed methodology ^1^.  
 
+\newpage 
 
 ``` {r popups, include=FALSE, warning=FALSE}
+
 ## TEXT POPUPS
 
-# conservation status tab:
+# Tab 1: Conservation Concern
 popup_text1 <- dplyr::select(grizzdata_full, gbpu_name, threat_class,
                   calcrank, adults, isolation, trend) %>% 
   rename("Population Name" = gbpu_name,
@@ -90,7 +91,7 @@ constatus_popup <- leafpop::popupTable(popup_text1,
                                    row.numbers = F, 
                                    feature.id = F)
 
-# Popup for population tab
+# Tab 2: Population Density 
 popup_text2 <- dplyr::select(grizzdata_full, gbpu_name, adults, 
                                pop_density, area_sq_km) %>% # Summary data for text popups
   rename("Population Name" = gbpu_name,
@@ -103,7 +104,7 @@ population_popup <- leafpop::popupTable(popup_text2,
                                    row.numbers = F, 
                                    feature.id = F)
 
-# Threat popups
+# Tab 3: Threat Classification
 threat_popups <- read_rds(here("out/threat_popups.rds"))
 
 # Define popup options
@@ -142,8 +143,6 @@ palette3 <- colorFactor(palette = 'viridis', grizzdata_full$threat_class, revers
 
 ```
 
-## Interactive Map {.tabset .tabset-fade}
-Click on the tabs below and explore the ranking, population and threats facing GBPU across B.C. Click on each GBPU to find out more.
 
 ```{r grizz_map, warning=FALSE, echo=FALSE}
 grizzmap <- leaflet(width = "900px", height = "500px", 
@@ -154,160 +153,29 @@ grizzmap <- leaflet(width = "900px", height = "500px",
 
 ```
 
-### Management Status
+### Conservation Concern 
 
 ```{r, warning=FALSE, echo=FALSE}
-grizzmap %>% 
-  addPolygons(data = grizzdata_full, #group = "Conservation Status",
-              stroke = T, weight = 1, color = "black", # Add border to polygons
-              fillOpacity = 0.5, # Polygon fill
-              fillColor = ~palette1(grizzdata_full$calcsrank),
-              label = lapply(lab1, htmltools::HTML),
-              labelOptions = labelOptions(direction = "auto", textsize = "12px"),
-              popup = constatus_popup,
-            #  popupOptions = popup_options,
-              highlight = highlightOptions( # Highlight interaction for mouse hover
-                weight = 3,
-                color = "yellow",
-                bringToFront = T)) %>%
-  addLegend("bottomright", pal = palette1, values = grizzdata_full$calcsrank,
-            title = "Management Rank", na.label = "Extirpated",
-            opacity = 1) 
+
 ```
+
+\newpage 
 
 ### Population Density Estimate
 
 ``` {r, warning=FALSE, echo=FALSE}
-grizzmap %>%
-  addPolygons(data = grizzdata_full,
-              stroke = T, weight = 1, color = "black",
-              fillOpacity = 0.5,
-              fillColor = ~palette2(grizzdata_full$pop_density),
-              label = lapply(lab2, htmltools::HTML),
-              labelOptions = labelOptions(direction = "auto", textsize = "12px"),
-              popup = population_popup,
-              #popupOptions = popup_options,
-              highlight = highlightOptions( 
-                  weight = 3,
-                  color = "yellow",
-                  bringToFront = T)) %>%
-  addLegend("bottomright", pal = palette2, values = grizzdata_full$pop_density,
-            title = "Population Density", na.label = "Extirpated",
-            opacity = 1) 
 
-# addLayersControl(overlayGroups = c("Terrain", "Topography"))
 ```
+
+\newpage 
 
 ### Threat Classification
 
 ``` {r, warning=FALSE, echo=FALSE}
-grizzmap <- leaflet(width = "900px", height = "500px", 
-                    options = leafletOptions(minZoom = 5)) %>%  # generate leaflet map
-  addProviderTiles(providers$Stamen.Terrain, group = "Terrain") %>%
-  add_bc_home_button() %>%
-  set_bc_view()
-
-grizzmap %>% 
-  addPolygons(data = grizzdata_full,
-              stroke = T, weight = 1, color = "black", # Add border to polygons
-              fillOpacity = 0.5, # Polygon fill
-              fillColor = ~palette3(grizzdata_full$transportationcalc),
-              popup = threat_popups,
-             # popupOptions = popup_options,
-              group = "Transportation",
-              label = lapply(lab3, htmltools::HTML),
-              labelOptions = labelOptions(direction = "auto", textsize = "12px"),
-              highlight = highlightOptions( 
-                weight = 3,
-                color = "yellow",
-                bringToFront = T)) %>%
-  addPolygons(data = grizzdata_full,
-              stroke = T, weight = 1, color = "black",
-              fillOpacity = 0.5,
-              fillColor = ~palette3(grizzdata_full$energycalc),
-              popup = threat_popups,
-              popupOptions = popup_options,
-              group = "Energy",
-              label = lapply(lab3, htmltools::HTML),
-              labelOptions = labelOptions(direction = "auto", textsize = "12px"),
-              highlight = highlightOptions(
-                weight = 3,
-                color = "yellow",
-                bringToFront = T)) %>%
-  addPolygons(data = grizzdata_full,
-              stroke = T, weight = 1, color = "black",
-              fillOpacity = 0.5,
-              fillColor = ~palette3(grizzdata_full$humanintrusioncalc),
-              popup = threat_popups,
-              popupOptions = popup_options,
-              group = "Human Intrusion",
-              label = lapply(lab3, htmltools::HTML),
-              labelOptions = labelOptions(direction = "auto", textsize = "12px"),
-              highlight = highlightOptions(
-                weight = 3,
-                color = "yellow",
-                bringToFront = T)) %>%
-  addPolygons(data = grizzdata_full,
-              stroke = T, weight = 1, color = "black",
-              fillOpacity = 0.5,
-              fillColor = ~palette3(grizzdata_full$residentialcalc),
-              popup = threat_popups,
-              popupOptions = popup_options,
-              group = "Residential",
-              label = lapply(lab3, htmltools::HTML),
-              labelOptions = labelOptions(direction = "auto", textsize = "12px"),
-              highlight = highlightOptions(
-                weight = 3,
-                color = "yellow",
-                bringToFront = T)) %>%
-  addPolygons(data = grizzdata_full,
-              stroke = T, weight = 1, color = "black",
-              fillOpacity = 0.5,
-              fillColor = ~palette3(grizzdata_full$agriculturecalc),
-              popup = threat_popups,
-              popupOptions = popup_options,
-              group = "Agriculture",
-              label = lapply(lab3, htmltools::HTML),
-              labelOptions = labelOptions(direction = "auto", textsize = "12px"),
-              highlight = highlightOptions(
-                weight = 3,
-                color = "yellow",
-                bringToFront = T)) %>%
-  addPolygons(data = grizzdata_full,
-              stroke = T, weight = 1, color = "black",
-              fillOpacity = 0.5,
-              fillColor = ~palette3(grizzdata_full$biousecalc),
-              popup = threat_popups,
-              popupOptions = popup_options,
-              group = "Biouse",
-              label = lapply(lab3, htmltools::HTML),
-              labelOptions = labelOptions(direction = "auto", textsize = "12px"),
-              highlight = highlightOptions(
-                weight = 3,
-                color = "yellow",
-                bringToFront = T)) %>%
-  addPolygons(data = grizzdata_full,
-              stroke = T, weight = 1, color = "black",
-              fillOpacity = 0.5,
-              fillColor = ~palette3(grizzdata_full$climatechangecalc),
-              popup = threat_popups,
-              popupOptions = popup_options,
-              group = "Climate Change",
-              label = lapply(lab3, htmltools::HTML),
-              labelOptions = labelOptions(direction = "auto", textsize = "12px"),
-              highlight = highlightOptions(
-                weight = 3,
-                color = "yellow",
-                bringToFront = T)) %>%
-  addLayersControl(
-    baseGroups = c("Transportation", "Residential","Human Intrusion", "Energy",  "Climate Change","Biouse", "Agriculture"),
-    options = layersControlOptions(collapsed = FALSE)) %>%
-  addLegend("bottomright", pal = palette3, values = grizzdata_full$threat_class,
-            title = "Threat Rank", na.label = "Extirpated",
-            opacity = 1)
 
 ```
 
+\newpage 
 
 ## Threats to Grizzly Bears
 
@@ -345,7 +213,7 @@ The Nature Serve calculator uses the 11 IUCN threat categories  to determine imp
 Each GBPU starts with a rank of 5 – M5 no conservation concern – this value is reduced based on 1) negative population trend, 2) small and/or isolated population, and 3) overall threat (negligible, low, medium, high & very high) 
 
 
-
+\newpage 
 
 ## References and Other Useful Links
 
