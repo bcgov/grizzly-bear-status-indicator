@@ -13,9 +13,9 @@ library(dplyr)
 
 if (!exists("grizzdata_full")) load("data/grizzdata_full.rds")
 
-ifelse(!dir.exists(file.path("out/tab1/")), dir.create(file.path("out/tab1/")), FALSE)
-ifelse(!dir.exists(file.path("out/tab2/")), dir.create(file.path("out/tab2/")), FALSE)
-#ifelse(!dir.exists(file.path("out/tab3/")), dir.create(file.path("out/tab3/")), FALSE)
+dir.create("dataviz/leaflet/concern_plots/", showWarnings = FALSE)
+dir.create("dataviz/leaflet/threat_plots/", showWarnings = FALSE)
+
 
 # Create list of GBPU
 gbpu_list <- unique(grizzdata_full$gbpu_name)
@@ -71,7 +71,7 @@ Radar_Plots <- function(data, name) {
 
 }
 
-ggsave("radar_example.png")
+#ggsave("radar_example.png")
 
 # Create ggplot graph loop
 plots <- for (n in gbpu_list) {
@@ -79,7 +79,7 @@ plots <- for (n in gbpu_list) {
   data <- filter(cc_data, gbpu_name == n)
   p <- Radar_Plots(data, n)
   radar_plot_list[[n]] <- p
-  ggsave(p, file = paste0("out/tab1/", n, ".svg"))
+  ggsave(p, file = paste0("dataviz/leaflet/concern_plots/", n, ".svg"))
 }
 
 # Svg function
@@ -90,19 +90,18 @@ save_svg <- function(x, fname, ...) {
 }
 
 # Save svgs to plot list
-iwalk(radar_plot_list, ~ save_svg(.x, fname = paste0("out/tab1/", .y, ".svg"),
+iwalk(radar_plot_list, ~ save_svg(.x, fname = paste0("dataviz/leaflet/concern_plots/", .y, ".svg"),
                                    width = 250, height = 250))
 
 # Save plots to file
-saveRDS(radar_plot_list, file = "out/tab1/radar_plotlist.rds")
+saveRDS(radar_plot_list, file = "dataviz/leaflet/concern_plots/radar_plotlist.rds")
 # create popup and save
 concern_popups <-  leafpop::popupGraph(radar_plot_list, type = "svg")
-saveRDS(concern_popups, "out/tab1/concern_popups.rds")
+saveRDS(concern_popups, "dataviz/leaflet/concern_plots/concern_popups.rds")
 
 ## ----------------------------------------------------------------------------
 ## THREAT POPUP MAPPING
 ## ----------------------------------------------------------------------------
-figsOutDir <- "out/tab2/"
 
 threat_calc <- threat_calc %>%
   select(gbpu_name, ends_with("calc")) %>%
@@ -164,16 +163,15 @@ plots <- for (n in gbpu_list) {
 # Check result
 #threat_plot_list[["Valhalla"]]
 
-# Save svgs to plot list
-iwalk(threat_plot_list, ~ save_svg(.x, fname = paste0("out/tab2/", .y, ".svg"),
-                            width = 250, height = 250))
-
 # Save plots to file
-saveRDS(threat_plot_list, file = "out/tab2/threat_plotlist.rds")
+saveRDS(threat_plot_list, file = "dataviz/leaflet/threat_plots/threat_plotlist.rds")
 
 threat_popups <-  leafpop::popupGraph(threat_plot_list, type = "svg")#,
                                       #width = 250, height = 250)
+saveRDS(threat_popups, "dataviz/leaflet/threat_plots/threat_popups.rds")
 
-saveRDS(threat_popups, "out/tab2/threat_popups.rds")
 
+# Save svgs to plot list id leaflet folder
+iwalk(threat_plot_list, ~ save_svg(.x, fname = paste0("dataviz/leaflet/threat_plots/", .y, ".svg"),
+                            width = 400, height = 300))
 
