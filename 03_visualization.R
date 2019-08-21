@@ -123,7 +123,7 @@ total_threats <- gather(threat_calc, key = "threat", value = "ranking",
 total_threats$ranking <- factor(total_threats$ranking, ordered = TRUE,
                                 levels = c("Negligible", "Low", "Medium", "High", "Very High"))
 
-saveRDS(total_threats, file = "data/total_threats.rds")
+saveRDS(total_threats, file = "dataviz/leaflet/threat_plots/total_threats.rds")
 
 # Create list for plots
 threat_plot_list <- vector(length = length(gbpu_list), mode = "list")
@@ -157,7 +157,7 @@ plots <- for (n in gbpu_list) {
   data <- filter(total_threats, gbpu_name == n)
   p <- Threat_Plots(data, n)
   threat_plot_list[[n]] <- p
-  ggsave(p, file = paste0("out/tab2/", n, ".svg"))
+  ggsave(p, file = paste0("dataviz/leaflet/threat_plots/", n, ".svg"))
 }
 
 # Check result
@@ -169,7 +169,6 @@ saveRDS(threat_plot_list, file = "dataviz/leaflet/threat_plots/threat_plotlist.r
 threat_popups <-  leafpop::popupGraph(threat_plot_list, type = "svg")#,
                                       #width = 250, height = 250)
 saveRDS(threat_popups, "dataviz/leaflet/threat_plots/threat_popups.rds")
-
 
 # Save svgs to plot list id leaflet folder
 iwalk(threat_plot_list, ~ save_svg(.x, fname = paste0("dataviz/leaflet/threat_plots/", .y, ".svg"),
