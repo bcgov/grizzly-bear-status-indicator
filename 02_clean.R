@@ -43,12 +43,10 @@ threat_table <- tribble(
   "Negligible", 0
 )
 
-rank_calc_check <- threat_calc %>%
+threat_calc <- threat_calc %>%
   left_join(popiso_table, by = "popiso") %>%
   left_join(threat_table, by = "threat_class") %>%
-  mutate(calc_rank_check = 5 - trend - popiso_rank_adj - threat_rank_adj) %>%
-  select(gbpu_name, popiso, trend, threat_class, popiso_rank_adj, threat_rank_adj,
-         calcrank, rank_number, preadj_rank_number, calc_rank_check)
+  mutate(calc_rank_check = 5 - trend*-1 - popiso_rank_adj - threat_rank_adj)
 
 ## DATA CLEANING ---------------------------------------------------------
 gbpu_2018 <- gbpu_2018 %>%
