@@ -97,14 +97,15 @@ save_svg <- function(x, fname, ...) {
   dev.off()
  }
 
-# Save svgs to plot list
-iwalk(threat_plot_list, ~ save_svg(.x, fname = paste0("out/", .y, ".svg"),
-                            width = 250, height = 250))
+dir.create("dataviz/leaflet/threat_plots/", showWarnings = FALSE)
+# Save svgs to plot list id leaflet folder
+iwalk(threat_plot_list, ~ save_svg(.x, fname = paste0("dataviz/leaflet/threat_plots/", .y, ".svg"),
+                            width = 400, height = 300))
 
 # Save plots to file
 # saveRDS(threat_plot_list, file = "out/threat_plotlist.rds")
-
-threat_popups <-  leafpop::popupGraph(threat_plot_list, type = "svg")#,
-                                      #width = 250, height = 250)
-
-saveRDS(threat_popups, "out/threat_popups.rds")
+#
+# threat_popups <-  leafpop::popupGraph(threat_plot_list, type = "svg")#,
+#                                       #width = 250, height = 250)
+#
+# saveRDS(threat_popups, "out/threat_popups.rds")

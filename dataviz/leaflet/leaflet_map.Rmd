@@ -25,7 +25,7 @@ grizzdata_full <- st_transform(grizzdata_full, crs = 4326) # convert to lat/long
 
 ```
 
-``` {r popups, include=FALSE, warning=FALSE}
+```{r popups, include=FALSE, warning=FALSE}
 
 ## TEXT POPUPS
 
@@ -60,14 +60,19 @@ population_popup <- leafpop::popupTable(popup_text2,
                                    feature.id = F)
 
 # Threat popups
-threat_popups <- read_rds(here("out/threat_popups.rds"))
+
+threat_popups <- paste0("<img src = ", 
+                        paste0("./threat_plots/", 
+                               gsub("\\s+", "%20", grizzdata_full$gbpu_name), ".svg"), 
+                        ">")
 
 # Define popup options
-popup_options <-  popupOptions(autoPan = TRUE,
+popup_options <-  popupOptions(maxWidth = 400, minWidth = 400, maxHeight = 300,
+                               autoPan = TRUE,
                                keepInView = TRUE,
                                closeOnClick = TRUE,
                                autoPanPaddingTopLeft = c(120, 20),
-                               autoPanPaddingBottomRight = c(120,20))
+                               autoPanPaddingBottomRight = c(150,20))
 
 ```
 
@@ -113,15 +118,17 @@ grizzmap <- leaflet(width = "900px", height = "500px",
 
 ```{r, warning=FALSE, echo=FALSE}
 grizzmap %>% 
-  addPolygons(data = grizzdata_full, #group = "Conservation Status",
+  addPolygons(data = grizzdata_full, group = "Conservation Status",
               stroke = T, weight = 1, color = "black", # Add border to polygons
               fillOpacity = 0.5, # Polygon fill
               fillColor = ~palette1(grizzdata_full$calcsrank),
               label = lapply(lab1, htmltools::HTML),
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
-              popup = constatus_popup,
-            #  popupOptions = popup_options,
-              highlight = highlightOptions( # Highlight interaction for mouse hover
+              popup = constatus_popup, 
+              popupOptions = popupOptions(autoPan = TRUE,
+                               keepInView = TRUE,
+                               closeOnClick = TRUE),
+              highlightOptions = highlightOptions( # Highlight interaction for mouse hover
                 weight = 3,
                 color = "yellow",
                 bringToFront = T)) %>%
@@ -134,15 +141,17 @@ grizzmap %>%
 
 ``` {r, warning=FALSE, echo=FALSE}
 grizzmap %>%
-  addPolygons(data = grizzdata_full,
+  addPolygons(data = grizzdata_full, group = "Population Density",
               stroke = T, weight = 1, color = "black",
               fillOpacity = 0.5,
               fillColor = ~palette2(grizzdata_full$pop_density),
               label = lapply(lab2, htmltools::HTML),
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
               popup = population_popup,
-              #popupOptions = popup_options,
-              highlight = highlightOptions( 
+              popupOptions = popupOptions = popupOptions(autoPan = TRUE,
+                               keepInView = TRUE,
+                               closeOnClick = TRUE),
+              highlightOptions = highlightOptions( 
                   weight = 3,
                   color = "yellow",
                   bringToFront = T)) %>%
@@ -156,23 +165,17 @@ grizzmap %>%
 ## Threat Classification
 
 ``` {r, warning=FALSE, echo=FALSE}
-grizzmap <- leaflet(width = "900px", height = "500px", 
-                    options = leafletOptions(minZoom = 5)) %>%  # generate leaflet map
-  addProviderTiles(providers$Stamen.Terrain, group = "Terrain") %>%
-  add_bc_home_button() %>%
-  set_bc_view()
-
 grizzmap %>% 
   addPolygons(data = grizzdata_full,
               stroke = T, weight = 1, color = "black", # Add border to polygons
               fillOpacity = 0.5, # Polygon fill
               fillColor = ~palette3(grizzdata_full$transportationcalc),
               popup = threat_popups,
-             # popupOptions = popup_options,
+              popupOptions = popup_options,
               group = "Transportation",
               label = lapply(lab3, htmltools::HTML),
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
-              highlight = highlightOptions( 
+              highlightOptions = highlightOptions( 
                 weight = 3,
                 color = "yellow",
                 bringToFront = T)) %>%
@@ -185,7 +188,7 @@ grizzmap %>%
               group = "Energy",
               label = lapply(lab3, htmltools::HTML),
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
-              highlight = highlightOptions(
+              highlightOptions = highlightOptions(
                 weight = 3,
                 color = "yellow",
                 bringToFront = T)) %>%
@@ -198,7 +201,7 @@ grizzmap %>%
               group = "Human Intrusion",
               label = lapply(lab3, htmltools::HTML),
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
-              highlight = highlightOptions(
+              highlightOptions = highlightOptions(
                 weight = 3,
                 color = "yellow",
                 bringToFront = T)) %>%
@@ -211,7 +214,7 @@ grizzmap %>%
               group = "Residential",
               label = lapply(lab3, htmltools::HTML),
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
-              highlight = highlightOptions(
+              highlightOptions = highlightOptions(
                 weight = 3,
                 color = "yellow",
                 bringToFront = T)) %>%
@@ -224,7 +227,7 @@ grizzmap %>%
               group = "Agriculture",
               label = lapply(lab3, htmltools::HTML),
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
-              highlight = highlightOptions(
+              highlightOptions = highlightOptions(
                 weight = 3,
                 color = "yellow",
                 bringToFront = T)) %>%
@@ -237,7 +240,7 @@ grizzmap %>%
               group = "Biouse",
               label = lapply(lab3, htmltools::HTML),
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
-              highlight = highlightOptions(
+              highlightOptions = highlightOptions(
                 weight = 3,
                 color = "yellow",
                 bringToFront = T)) %>%
@@ -250,7 +253,7 @@ grizzmap %>%
               group = "Climate Change",
               label = lapply(lab3, htmltools::HTML),
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
-              highlight = highlightOptions(
+              highlightOptions = highlightOptions(
                 weight = 3,
                 color = "yellow",
                 bringToFront = T)) %>%
