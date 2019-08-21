@@ -49,11 +49,14 @@ gbpu_2018 <- read_sf(file.path(data_path, "BC_Grizzly_Results_v1_Draft_April2016
 
 
 # Import baseline data for density measure (need to update this to web mapping service)
+# open web mapping service instead(
+#https://openmaps.gov.bc.ca/geo/pub/WHSE_BASEMAPPING.BTM_PRESENT_LAND_USE_V1_SVW/ows?service=WMS&request=GetCapabilities
+
 #bc_icewater <- read_sf(file.path(data_path, "BC_Grizzly_Results_v1_Draft_April2016.gdb"),
 #                     layer = "BTM_IceWater") %>%
 #  transform_bc_albers()
 
-# Import baseline data for density measure (need to update this to web mapping service)
+# Import baseline data for density measure (currently not on bcgw)
 gbpu_hab <- read_sf(file.path(data_path, "BC_Grizzly_Results_v1_Draft_April2016.gdb"),
                        layer = "GBPU_MU_LEH_density_2015") %>%
   transform_bc_albers()
@@ -62,8 +65,6 @@ gbpu_hab <- gbpu_hab %>%
   group_by(POPULATION_NAME) %>%
   summarise(H_area_km2 = sum(AREA_KM2, na.rm = TRUE),
             H_area_wice = sum(AREA_KM2_BTMwaterIce, na.rm = TRUE),
-            H_area_nowice = sum(AREA_KM2_noWaterIce, na.rm = TRUE))
-
-# open web mapping service instead(
-#https://openmaps.gov.bc.ca/geo/pub/WHSE_BASEMAPPING.BTM_PRESENT_LAND_USE_V1_SVW/ows?service=WMS&request=GetCapabilities
-
+            H_area_nowice = sum(AREA_KM2_noWaterIce, na.rm = TRUE)) %>%
+  as.data.frame() %>%
+  select(-Shape)
