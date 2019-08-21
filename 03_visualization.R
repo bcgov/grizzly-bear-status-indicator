@@ -33,14 +33,14 @@ threat_calc <- threat_calc %>%
   "Agriculture" = agriculturecalc,
   "Energy" = energycalc,
   "Transportation" = transportationcalc,
-  "Biouse" = biousecalc,
-  "Human_Intrusion" = humanintrusioncalc,
-  "Climate_Change" = climatechangecalc
+  "Biological Use" = biousecalc,
+  "Human Intrusion" = humanintrusioncalc,
+  "Climate Change" = climatechangecalc
 )
 
 total_threats <- gather(threat_calc, key = "threat", value = "ranking",
                         Residential, Agriculture, Energy, Transportation,
-                        Biouse, Human_Intrusion, Climate_Change) %>%
+                        'Biological Use', 'Human Intrusion', 'Climate Change') %>%
   select(gbpu_name, threat, ranking)
 
 total_threats$ranking <- factor(total_threats$ranking, ordered = TRUE,
@@ -58,9 +58,11 @@ names(threat_plot_list) <- gbpu_list
 # Create plotting function
 Threat_Plots <- function(data, name) {
   make_plot <- ggplot(data, aes(x = threat, y = ranking,
-                                fill = ranking)) +
+                                fill = ranking, color = ranking)) +
     geom_bar(stat = "identity") + # Add bar for each threat variable
-    scale_fill_brewer("Threat Ranking", palette = "Set2") +
+    scale_colour_viridis_c(direction = -1, guide = "none") +
+    scale_fill_viridis_c(direction = -1, guide = "none") +
+    #scale_fill_brewer("Threat Ranking", palette = "Set2") +
     labs(x = "Threat", y = "Threat Ranking",
          fill = "Ranking") + # Legend text
     ggtitle(name)+
@@ -76,10 +78,9 @@ Threat_Plots <- function(data, name) {
 
 #ifelse(!dir.exists(file.path("out/")), dir.create(file.path("out/")), FALSE)
 
-#n <- gbpu_list[56]
-
 # Create ggplot graph loop
 plots <- for (n in gbpu_list) {
+  #n <- gbpu_list[56]
   print(n)
   data <- filter(total_threats, gbpu_name == n)
   p <- Threat_Plots(data, n)
