@@ -6,7 +6,7 @@ test <- threat_calc %>%
   select(gbpu_name, calcsrank, trend_adj, popiso_rank_adj, threat_rank_adj) %>%
   gather("metric", "score", -gbpu_name, -calcsrank, trend_adj, popiso_rank_adj, threat_rank_adj) %>%
   mutate(max_val = case_when(metric == "trend_adj" ~ 1, metric == "popiso_rank_adj" ~ 4, metric == "threat_rank_adj" ~ 2),
-         label = case_when(metric == "trend_adj" ~ "Trend", metric == "popiso_rank_adj" ~ "Population/\nIslotion", metric == "threat_rank_adj" ~ "Threat"),
+         label = case_when(metric == "trend_adj" ~ "Trend", metric == "popiso_rank_adj" ~ "Population/\nIsolation", metric == "threat_rank_adj" ~ "Threat"),
          label_pos= case_when(metric == "trend_adj" ~ 2.2, metric == "popiso_rank_adj" ~ 5.5, metric == "threat_rank_adj" ~ 2.8)
          )
 
