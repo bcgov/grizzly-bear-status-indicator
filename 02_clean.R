@@ -52,7 +52,9 @@
 
 ## DATA CLEANING ---------------------------------------------------------
 gbpu_2018 <- gbpu_2018 %>%
-  group_by(POPULATION_NAME)
+  group_by(POPULATION_NAME) %>%
+  left_join(gbpu_hab)
+
 
 # Find centroid of polygons (for labelling)
 # Note: BC Albers CRS used because lat/long not accepted by st_centroid
@@ -97,24 +99,10 @@ grizzdata_full <- mutate(grizzdata_full,
 
 
 # Add population density column
-# calculate the areas of usable habitat
-
-bc_icewater.u <- st_union(bc_icewater)
-
-hab_area <- st_join(gbpu_2018, bc_icewater) %>%
-
-hab_area1 <- hab_area %>%
-  filter(POPULATION_NAME == "Tatshenshini")
-
-# calculate the area after intersect
-
-# add the "habitat ad
-
-
-## Need to update this to usable habitat
 
 grizzdata_full <- mutate(grizzdata_full,
                          area_sq_km = as.numeric(set_units(st_area(geometry), km2)),
+                         use_area_sq_km = as.numeric(set_units)
                          pop_density = as.numeric(adults / area_sq_km * 1000)
 )
 
