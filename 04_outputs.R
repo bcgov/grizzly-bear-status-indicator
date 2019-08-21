@@ -23,11 +23,14 @@ sdata <- grizzdata_full %>%
 sdata <- as.data.frame(sdata)
 st_geometry(sdata) <- NULL
 
+
+pal1<- colorFactor(palette = 'viridis', grizzdata_full$threat_class,na.color = "#808080", reverse = TRUE)
+
 overall_threat_plot <-
   ggplot(sdata, aes(y = count, x = threat_class)) +
   geom_bar(stat = "identity", aes(fill = as.factor(threat_class)), show.legend = FALSE) +
-  scale_fill_brewer(palette = "Set1") +
-  scale_x_discrete(limits = c("Negligible", "Low", "Medium", "High", "VHigh"))+
+  #scale_fill_brewer(palette = "set1") +
+  #scale_x_discrete(limits = c("Negligible", "Low", "Medium", "High", "Very High"))+
   geom_text(aes(label=count), vjust=0.5, hjust = 2) +
   coord_flip() +
   labs(y = "Number of Grizzly Bear Population Units (GBPU)", x = "Overall Threat")+
@@ -61,7 +64,7 @@ threat_sum_plot <-
   ggplot(tdata, aes(x = threat, y = count,
                               fill = ranking)) +
   geom_bar(stat = "identity") + # Add bar for each threat variable
-  scale_fill_brewer("Threat Level", palette = "Set2") +
+  scale_fill_brewer("Threat Level", palette = 'viridis') +
   scale_y_continuous(limits = c(0,55), breaks = seq(0,50,10))+
   ggtitle("Estimated impact of threat catergories") +
   labs(x = "Threat", y = "Number of Grizzly Bear Population Units (n = 55)",
