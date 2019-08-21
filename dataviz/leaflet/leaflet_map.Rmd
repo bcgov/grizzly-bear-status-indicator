@@ -31,11 +31,10 @@ grizzdata_full <- st_transform(grizzdata_full, crs = 4326) # convert to lat/long
 
 # conservation status tab:
 popup_text1 <- dplyr::select(grizzdata_full, gbpu_name, threat_class,
-                  calcrank, adults, isolation, trend) %>% 
+                  calcsrank, adults, isolation, trend) %>% 
   rename("Population Name" = gbpu_name,
-         "Management Rank" = calcrank,
+         "Management Rank" = calcsrank,
          "Overall Threat Score" = threat_class,
-         #"Overall Status" = status,
          "Population Size" = adults,
          "Isolation" = isolation,
          "Trend" = trend) 
@@ -46,13 +45,21 @@ constatus_popup <- leafpop::popupTable(popup_text1,
                                    row.numbers = F, 
                                    feature.id = F)
 
+concern_popups <-  leafpop::popupGraph(radar_plot_list, 
+                                       type = "svg")
+
+#saveRDS(concern_popups, "out/tab1/concern_popups.rds")
+
 # Popup for population tab
 popup_text2 <- dplyr::select(grizzdata_full, gbpu_name, adults, 
-                               pop_density, area_sq_km) %>% # Summary data for text popups
+                               pop_density, use_area_sq_km,
+                              area_sq_km) %>% 
   rename("Population Name" = gbpu_name,
          "Population Size (Adults)" = adults,
-         "Population Density (Adult/1000m^2)" = pop_density,
-         "Total Area (Km^2)" = area_sq_km) 
+         "Population Density (Adult/1000km^2)" = pop_density,
+         "Area of Useable Habitat (km2)" = use_area_sq_km,
+         "Total Area of GBPU(km^2)" = area_sq_km) 
+
 st_geometry(popup_text2) <- NULL # as df
 
 population_popup <- leafpop::popupTable(popup_text2,
@@ -60,7 +67,7 @@ population_popup <- leafpop::popupTable(popup_text2,
                                    feature.id = F)
 
 # Threat popups
-threat_popups <- read_rds(here("out/threat_popups.rds"))
+threat_popups <- read_rds(here("out/tab2/threat_popups.rds"))
 
 # Define popup options
 popup_options <-  popupOptions(autoPan = TRUE,
@@ -73,17 +80,18 @@ popup_options <-  popupOptions(autoPan = TRUE,
 
 ``` {r labels and palettes, include=FALSE, warning=FALSE}
 # Define polygon labels in leaflet
-labs <- dplyr::select(grizzdata_full, gbpu_name, pop_density, calcrank, threat_class)
+labs <- dplyr::select(grizzdata_full, gbpu_name, pop_density,      calcsrank, threat_class)
+
 st_geometry(labs) <- NULL # as df
 
 lab1 <- lapply(seq(nrow(labs)), function(i) {
   paste0( '<b>', labs[i, "gbpu_name"], ', ',  
-          labs[i, "calcrank"], '</b>') 
+          labs[i, "calcsrank"], '</b>') 
 })
 
 lab2 <- lapply(seq(nrow(labs)), function(i) {
   paste0( '<b>', labs[i, "gbpu_name"], ', ',  
-          labs[i, "pop_density"]," Adults/1000m2",'</b>') 
+          labs[i, "pop_density"]," Adults/1000km2",'</b>') 
 })
 
 lab3 <- lapply(seq(nrow(labs)), function(i) {
@@ -119,7 +127,8 @@ grizzmap %>%
               fillColor = ~palette1(grizzdata_full$calcsrank),
               label = lapply(lab1, htmltools::HTML),
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
-              popup = constatus_popup,
+             # popup = c(constatus_popup, concern_popups), 
+              popup = constatus_popup, 
             #  popupOptions = popup_options,
               highlight = highlightOptions( # Highlight interaction for mouse hover
                 weight = 3,
