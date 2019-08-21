@@ -148,7 +148,7 @@ grizzmap %>%
               label = lapply(lab2, htmltools::HTML),
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
               popup = population_popup,
-              popupOptions = popupOptions = popupOptions(autoPan = TRUE,
+              popupOptions = popupOptions(autoPan = TRUE,
                                keepInView = TRUE,
                                closeOnClick = TRUE),
               highlightOptions = highlightOptions( 
