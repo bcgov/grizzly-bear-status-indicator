@@ -9,7 +9,7 @@
 # Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
-
+library(tidyverse)
 library(dplyr)
 
 if (!exists("grizzdata_full")) load("data/grizzdata_full.rds")
@@ -22,20 +22,18 @@ sdata <- grizzdata_full %>%
   filter(!is.na(threat_class))
 
 sdata <- as.data.frame(sdata)
-st_geometry(sdata) <- NULL
+sdata <- sdata %>%
+  select(-geometry)
 
 
-pal1<- colorFactor(palette = 'viridis', grizzdata_full$threat_class,na.color = "#808080", reverse = TRUE)
+#pal1<- colorFactor(palette = 'viridis', grizzdata_full$threat_class,na.color = "#808080", reverse = FALSE)
 
 overall_threat_plot <-
   ggplot(sdata, aes(y = count, x = threat_class)) +
   geom_bar(stat = "identity", aes(fill = as.factor(threat_class)), show.legend = FALSE) +
-  #scale_fill_brewer(palette = "set1") +
-  #scale_x_discrete(limits = c("Negligible", "Low", "Medium", "High", "Very High"))+
-
-  scale_colour_viridis_c(direction = -1, guide = "none") +
-  scale_fill_viridis_c(direction = -1, guide = "none")
-
+  scale_x_discrete(limits = c("Negligible", "Low", "Medium", "High", "Very High"))+
+  scale_colour_viridis(discrete = TRUE, direction = -1) +
+  scale_fill_viridis(discrete = TRUE, direction = -1) +
   geom_text(aes(label=count), vjust=0.5, hjust = 2) +
   coord_flip() +
   labs(y = "Number of Grizzly Bear Population Units (GBPU)", x = "Overall Threat")+
@@ -61,22 +59,24 @@ tdata <- total_threats %>%
   group_by(threat, ranking) %>%
   summarise(count = length(gbpu_name))
 
-
 tdata$ranking <- factor(tdata$ranking, ordered = TRUE,
-                                levels = c("Negligible", "Low", "Medium", "High"))
+                                levels = c("Negligible", "Low", "Medium", "High", "Very High"))
 
 threat_sum_plot <-
-  ggplot(tdata, aes(x = threat, y = count,
+  ggplot(tdata, aes(y = count, x = threat,
                               fill = ranking)) +
-  geom_bar(stat = "identity") + # Add bar for each threat variable
-  scale_fill_brewer("Threat Level", palette = 'viridis') +
+  geom_bar(stat = "identity") +
+  scale_colour_viridis(discrete = TRUE, direction = 1) +
+  scale_fill_viridis(discrete = TRUE, direction = 1) +
   scale_y_continuous(limits = c(0,55), breaks = seq(0,50,10))+
-  ggtitle("Estimated impact of threat catergories") +
+  ggtitle("Estimated Impact of Threat Catergory") +
   labs(x = "Threat", y = "Number of Grizzly Bear Population Units (n = 55)",
        fill = "Ranking") +
   guides(fill= guide_legend (reverse = TRUE))+
   coord_flip() +
   theme_soe()
+
+threat_sum_plot
 
 ## Printing plots for web in SVG formats (and PNG)
 svg_px("./print_ver/threat_sum_plot.svg", width = 500, height = 400)
@@ -89,13 +89,66 @@ plot(threat_sum_plot)
 dev.off()
 
 
+# output radar plots for all gbpu units for static version
+cc_data <- grizz.df %>%
+  mutate(trend_adj = as.numeric(trend) * -1) %>%
+  select(gbpu_name, calcsrank, trend_adj, popiso_rank_adj, threat_rank_adj) %>%
+  gather("metric", "score", -gbpu_name, -calcsrank, trend_adj, popiso_rank_adj, threat_rank_adj) %>%
+  mutate(max_val = case_when(metric == "trend_adj" ~ 1, metric == "popiso_rank_adj" ~ 4, metric == "threat_rank_adj" ~ 2),
+         label = case_when(metric == "trend_adj" ~ "Trend", metric == "popiso_rank_adj" ~ "Population/\nIsolation", metric == "threat_rank_adj" ~ "Threat"),
+         label_pos= case_when(metric == "trend_adj" ~ 2.2, metric == "popiso_rank_adj" ~ 5.5, metric == "threat_rank_adj" ~ 2.8)
+  )
+
+coord_radar <- function (theta = "x", start = 0, direction = 1, clip = "on") {
+  theta <- match.arg(theta, c("x", "y"))
+  r <- if (theta == "x") "y" else "x"
+  ggproto("CordRadar", CoordPolar, theta = theta, r = r, start = start,
+          direction = sign(direction),
+          clip = clip,
+          is_linear = function(coord) TRUE)
+}
+
+# Create radar plot list
+rad_plot <- ggplot(cc_data, aes(x = metric, y = score)) +
+    facet_wrap(~ gbpu_name) +
+    geom_polygon(aes(group = NA, fill = as.numeric(str_extract(calcsrank, "\\d")),
+                     colour = as.numeric(str_extract(calcsrank, "\\d"))),
+                 alpha = 0.6, size = 2) +
+    geom_errorbar(aes(x = metric, ymin = 0, ymax = max_val),
+                  width = 0.1, colour = "grey40") +
+    scale_colour_viridis_c(direction = -1, guide = "none") +
+    scale_fill_viridis_c(direction = -1, guide = "none") +
+    # scale_y_continuous(expand = expand_scale(mult = 0, add = 0)) +
+    #geom_text(aes(x = metric, y = label_pos, label = label),
+    #          colour = "grey40") +
+    #geom_text(aes(label = calcsrank, colour = as.numeric(str_extract(calcsrank, "\\d"))),
+    #          x = 0.5, y = 2, size = 4) +
+    geom_text(aes(label = gbpu_name),
+              x = 0.5, y = 4.5, size = 2, colour = "grey40") +
+    coord_radar(clip = "off") +
+    theme_void() +
+    theme(plot.margin = unit(c(0,0,0,0), "lines"), strip.text = element_blank())
+
+    # add a
+rad_plot
+
+## Printing plots for web in SVG formats (and PNG)
+svg_px("./print_ver/radar_plot.svg", width = 500, height = 400)
+plot(rad_plot)
+dev.off()
+
+png_retina(filename = "./print_ver/radar_plot.png", width = 500, height = 400,
+           units = "px", type = "cairo-png", antialias = "default")
+plot(rad_plot)
+dev.off()
+
 
 ## ----------------------------------------------------------------------------
 ## STATIC MAPPING
 ## ----------------------------------------------------------------------------
 staticmap <- ggplot(grizzdata_full) +
-  geom_sf(aes(fill = calcrank), color = "white", size = 0.1) +
-  labs(title = "Conservation Status of Grizzly Bear Population Units in BC",
+  geom_sf(aes(fill = calcsrank), color = "white", size = 0.1) +
+  labs(title = "Conservation Concern of Grizzly Bear Population Units in BC",
        col = "Conservation Rank",
        fill = "Management Rank") +
   scale_fill_viridis(alpha = 0.6, discrete = T, option = "viridis",
