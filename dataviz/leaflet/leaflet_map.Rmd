@@ -41,10 +41,14 @@ constatus_popup <- leafpop::popupTable(popup_text1,
                                    row.numbers = F, 
                                    feature.id = F)
 
-concern_popups <-  leafpop::popupGraph(radar_plot_list, 
-                                       type = "svg")
+mrank_plot_paths <- paste0("<img src = ", 
+                        paste0("./concern_plots/", 
+                               gsub("\\s+", "%20", grizzdata_full$gbpu_name), ".svg"), 
+                        ">")
 
-#saveRDS(concern_popups, "out/tab1/concern_popups.rds")
+## Insert img tag with path to M Rank plots in html string before the end
+constatus_popup <- str_replace(constatus_popup, "</div></body></html>", 
+                               paste0(mrank_plot_paths, "</div></body></html>"))
 
 # Popup for population tab
 popup_text2 <- grizzdata_full %>% 
