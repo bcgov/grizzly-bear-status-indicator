@@ -9,7 +9,9 @@
 # Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
+
 library(dplyr)
+library*
 
 if (!exists("grizzdata_full")) load("data/grizzdata_full.rds")
 
@@ -31,6 +33,10 @@ overall_threat_plot <-
   geom_bar(stat = "identity", aes(fill = as.factor(threat_class)), show.legend = FALSE) +
   #scale_fill_brewer(palette = "set1") +
   #scale_x_discrete(limits = c("Negligible", "Low", "Medium", "High", "Very High"))+
+
+  scale_colour_viridis_c(direction = -1, guide = "none") +
+  scale_fill_viridis_c(direction = -1, guide = "none")
+
   geom_text(aes(label=count), vjust=0.5, hjust = 2) +
   coord_flip() +
   labs(y = "Number of Grizzly Bear Population Units (GBPU)", x = "Overall Threat")+
