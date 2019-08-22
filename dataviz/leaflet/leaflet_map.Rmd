@@ -41,12 +41,14 @@ popup_text1 <- dplyr::select(grizzdata_full, gbpu_name, threat_class,
  
 st_geometry(popup_text1) <- NULL # as df
 
-constatus_popup <- leafpop::popupTable(popup_text1,
-                                   row.numbers = F, 
-                                   feature.id = F)
+#constatus_popup <- leafpop::popupTable(popup_text1,
+#                                   row.numbers = F, 
+#                                   feature.id = F)
 
-concern_popups <-  leafpop::popupGraph(radar_plot_list, 
-                                       type = "svg")
+concern_popups <-  paste0("<img src = ", 
+                        paste0("./concern_plots/", 
+                               gsub("\\s+", "%20", grizzdata_full$gbpu_name), ".svg"), 
+                        ">")
 
 #saveRDS(concern_popups, "out/tab1/concern_popups.rds")
 
@@ -132,7 +134,7 @@ grizzmap %>%
               label = lapply(lab1, htmltools::HTML),
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
              # popup = c(constatus_popup, concern_popups), 
-              popup = constatus_popup, 
+              popup = concern_popups,
             #  popupOptions = popup_options,
             #  highlight = highlightOptions( # Highlight interaction for mouse hover
               popupOptions = popupOptions(autoPan = TRUE,
