@@ -56,9 +56,9 @@ popup_text2 <- dplyr::select(grizzdata_full, gbpu_name, adults,
                               area_sq_km) %>% 
   rename("Population Name" = gbpu_name,
          "Population Size (Adults)" = adults,
-         "Population Density (Adult/1000km^2)" = pop_density,
+         "Population Density (Adults/1000 km^2)" = pop_density,
          "Area of Useable Habitat (km2)" = use_area_sq_km,
-         "Total Area of GBPU(km^2)" = area_sq_km) 
+         "Total Area of GBPU (km^2)" = area_sq_km) 
 
 st_geometry(popup_text2) <- NULL # as df
 
@@ -67,7 +67,6 @@ population_popup <- leafpop::popupTable(popup_text2,
                                    feature.id = F)
 
 # Threat popups
-
 threat_popups <- paste0("<img src = ", 
                         paste0("./threat_plots/", 
                                gsub("\\s+", "%20", grizzdata_full$gbpu_name), ".svg"), 
@@ -85,7 +84,7 @@ popup_options <-  popupOptions(maxWidth = 400, minWidth = 400, maxHeight = 300,
 
 ``` {r labels and palettes, include=FALSE, warning=FALSE}
 # Define polygon labels in leaflet
-labs <- dplyr::select(grizzdata_full, gbpu_name, pop_density,      calcsrank, threat_class)
+labs <- dplyr::select(grizzdata_full, gbpu_name, pop_density, calcsrank, threat_class)
 
 st_geometry(labs) <- NULL # as df
 
@@ -177,6 +176,20 @@ grizzmap %>%
 
 ``` {r, warning=FALSE, echo=FALSE}
 grizzmap %>% 
+    addPolygons(data = grizzdata_full,
+              stroke = T, weight = 1, color = "black", # Add border to polygons
+              fillOpacity = 0.5, # Polygon fill
+              fillColor = ~palette3(grizzdata_full$threat_class),
+              popup = threat_popups,
+              popupOptions = popup_options,
+              group = "Overall Threat",
+              label = lapply(lab3, htmltools::HTML),
+              labelOptions = labelOptions(direction = "auto", textsize = "12px"),
+              highlightOptions = highlightOptions( 
+                weight = 3,
+                color = "yellow",
+                bringToFront = T)) %>%
+
   addPolygons(data = grizzdata_full,
               stroke = T, weight = 1, color = "black", # Add border to polygons
               fillOpacity = 0.5, # Polygon fill
@@ -248,7 +261,7 @@ grizzmap %>%
               fillColor = ~palette3(grizzdata_full$biousecalc),
               popup = threat_popups,
               popupOptions = popup_options,
-              group = "Biouse",
+              group = "Biological Use",
               label = lapply(lab3, htmltools::HTML),
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
               highlightOptions = highlightOptions(
@@ -269,7 +282,7 @@ grizzmap %>%
                 color = "yellow",
                 bringToFront = T)) %>%
   addLayersControl(
-    baseGroups = c("Transportation", "Residential","Human Intrusion", "Energy",  "Climate Change","Biouse", "Agriculture"),
+    baseGroups = c("Overall Threat","Transportation", "Residential","Human Intrusion", "Energy",  "Climate Change","Biological Use", "Agriculture"),
     options = layersControlOptions(collapsed = FALSE)) %>%
   addLegend("bottomright", pal = palette3, values = grizzdata_full$threat_class,
             title = "Threat Rank", na.label = "Extirpated",
