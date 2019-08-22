@@ -21,18 +21,11 @@ sdata <- grizzdata_full %>%
   summarize(count = n()) %>%
   filter(!is.na(threat_class))
 
-<<<<<<< HEAD
 sdata <- as.data.frame(sdata)
 sdata <- sdata %>%
   select(-geometry)
 
-
-#pal1<- colorFactor(palette = 'viridis', grizzdata_full$threat_class,na.color = "#808080", reverse = FALSE)
-=======
-st_geometry(sdata) <- NULL
-
-pal1 <- colorFactor(palette = 'viridis', grizzdata_full$threat_class,na.color = "#808080", reverse = TRUE)
->>>>>>> 9cacd8e52ace9aa13e9b5566bbbd0debcb52d685
+#pal1 <- colorFactor(palette = 'viridis', grizzdata_full$threat_class,na.color = "#808080", reverse = TRUE)
 
 overall_threat_plot <-
   ggplot(sdata, aes(y = count, x = threat_class)) +
