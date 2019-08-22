@@ -98,9 +98,9 @@ grizzdata_full <- mutate(grizzdata_full,
 
 # Add population density column
 grizzdata_full <- mutate(grizzdata_full,
-                         area_sq_km = round(as.numeric(set_units(st_area(geometry), km2)), digits = 2),
-                         use_area_sq_km = round(as.numeric(h_area_nowice),digits = 2),
-                         pop_density = round(as.numeric(adults / use_area_sq_km * 1000), digits = 2)
+                         area_sq_km = round(as.numeric(set_units(st_area(geometry), km2)), digits = 0),
+                         use_area_sq_km = round(as.numeric(h_area_nowice),digits = 0),
+                         pop_density = round(as.numeric(adults / use_area_sq_km * 1000), digits = 0)
 )
 
 
