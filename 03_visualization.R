@@ -83,15 +83,15 @@ plots <- for (n in gbpu_list) {
 }
 
 # Svg function
-save_svg <- function(x, fname, ...) {
-  svg_px(file = fname, ...)
-  plot(x)
-  dev.off()
-}
+#save_svg <- function(x, fname, ...) {
+#  svg_px(file = fname, ...)
+#  plot(x)
+#  dev.off()
+#}
 
 # Save svgs to plot list
-iwalk(radar_plot_list, ~ save_svg(.x, fname = paste0("dataviz/leaflet/concern_plots/", .y, ".svg"),
-                                   width = 250, height = 250))
+#iwalk(radar_plot_list, ~ save_svg(.x, fname = paste0("dataviz/leaflet/concern_plots/", .y, ".svg"),
+#                                   width = 250, height = 250))
 
 # Save plots to file
 #saveRDS(radar_plot_list, file = "dataviz/leaflet/concern_plots/radar_plotlist.rds")
@@ -168,7 +168,7 @@ plots <- for (n in gbpu_list) {
 }
 
 # Check result
-threat_plot_list[["Yahk"]]
+#threat_plot_list[["Yahk"]]
 
 # Save plots to file
 saveRDS(threat_plot_list, file = "dataviz/leaflet/threat_plots/threat_plotlist.rds")
