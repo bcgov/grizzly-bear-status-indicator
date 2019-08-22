@@ -27,9 +27,8 @@ grizzdata_full <- st_transform(grizzdata_full, crs = 4326) # convert to lat/long
 ## TEXT POPUPS
 
 # conservation status tab:
-popup_text1 <- dplyr::select(grizzdata_full, gbpu_name, threat_class,
-                  calcsrank, adults, isolation, trend) %>% 
-  rename("Population Name" = gbpu_name,
+popup_text1 <- grizzdata_full %>% 
+  select("Population Name" = gbpu_name,
          "Management Rank" = calcsrank,
          "Overall Threat Score" = threat_class,
          "Population Size" = adults,
@@ -48,10 +47,8 @@ concern_popups <-  leafpop::popupGraph(radar_plot_list,
 #saveRDS(concern_popups, "out/tab1/concern_popups.rds")
 
 # Popup for population tab
-popup_text2 <- dplyr::select(grizzdata_full, gbpu_name, adults, 
-                               pop_density, use_area_sq_km,
-                              area_sq_km) %>% 
-  rename("Population Name" = gbpu_name,
+popup_text2 <- grizzdata_full %>% 
+  select("Population Name" = gbpu_name,
          "Population Size (Adults)" = adults,
          "Population Density (Adults/1000 km^2)" = pop_density,
          "Area of Useable Habitat (km2)" = use_area_sq_km,
