@@ -11,7 +11,6 @@
 # See the License for the specific language governing permissions and limitations under the License.
 
 library(dplyr)
-library*
 
 if (!exists("grizzdata_full")) load("data/grizzdata_full.rds")
 
