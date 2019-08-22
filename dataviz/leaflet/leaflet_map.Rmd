@@ -134,8 +134,10 @@ grizzmap %>%
             #  popupOptions = popup_options,
             #  highlight = highlightOptions( # Highlight interaction for mouse hover
               popupOptions = popupOptions(autoPan = TRUE,
-                               keepInView = TRUE,
-                               closeOnClick = TRUE),
+                                          keepInView = TRUE,
+                                          closeOnClick = TRUE,
+                                          autoPanPaddingTopLeft = c(120, 20),
+                                          autoPanPaddingBottomRight = c(150,20)),
               highlightOptions = highlightOptions( # Highlight interaction for mouse hover
                 weight = 3,
                 color = "yellow",
