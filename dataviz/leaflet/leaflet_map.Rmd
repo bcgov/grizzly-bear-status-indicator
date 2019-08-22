@@ -10,11 +10,8 @@ knitr::opts_chunk$set(echo = TRUE)
 library(here)
 library(tidyverse)
 library(leaflet)
+library(leafpop)
 library(sf)
-library(geojsonio)
-library(htmltools)
-library(mapview)
-library(DT)
 
 # SOE + popups
 library(envreportutils)
