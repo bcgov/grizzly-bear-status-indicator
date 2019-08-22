@@ -94,10 +94,11 @@ iwalk(radar_plot_list, ~ save_svg(.x, fname = paste0("dataviz/leaflet/concern_pl
                                    width = 250, height = 250))
 
 # Save plots to file
-saveRDS(radar_plot_list, file = "dataviz/leaflet/concern_plots/radar_plotlist.rds")
+#saveRDS(radar_plot_list, file = "dataviz/leaflet/concern_plots/radar_plotlist.rds")
+
 # create popup and save
-concern_popups <-  leafpop::popupGraph(radar_plot_list, type = "svg")
-saveRDS(concern_popups, "dataviz/leaflet/concern_plots/concern_popups.rds")
+#concern_popups <-  leafpop::popupGraph(radar_plot_list, type = "svg")
+#saveRDS(concern_popups, "dataviz/leaflet/concern_plots/concern_popups.rds")
 
 ## ----------------------------------------------------------------------------
 ## THREAT POPUP MAPPING
@@ -142,9 +143,9 @@ Threat_Plots <- function(data, name) {
     theme(legend.position = "none") +
     theme_soe() + theme(plot.title = element_text(hjust = 0.5), # Centre title
                        legend.position = "none",
-                        plot.caption = element_text(hjust = 0)) #+  # L-align caption
-  #scale_y_discrete(limits = c("Negligible", "Low", "Medium", "High", "Very High"),
-  #                  drop = FALSE)
+                        plot.caption = element_text(hjust = 0)) +  # L-align caption
+   scale_y_discrete(limits = c("Negligible", "Low", "Medium", "High", "Very High"),
+                    drop = FALSE, na.translate = FALSE)
 
  # This line causes problems with no data sites (ie Central Interior)
   make_plot + coord_flip()
@@ -154,14 +155,20 @@ Threat_Plots <- function(data, name) {
 # Create ggplot graph loop
 plots <- for (n in gbpu_list) {
   print(n)
+  #n = "Central Interior"
   data <- filter(total_threats, gbpu_name == n)
+  if(length(data$gbpu_name) == 0) {
+    p = NA
+  } else {
   p <- Threat_Plots(data, n)
-  threat_plot_list[[n]] <- p
   ggsave(p, file = paste0("dataviz/leaflet/threat_plots/", n, ".svg"))
+
+  }
+  threat_plot_list[[n]] <- p
 }
 
 # Check result
-#threat_plot_list[["Valhalla"]]
+threat_plot_list[["Yahk"]]
 
 # Save plots to file
 saveRDS(threat_plot_list, file = "dataviz/leaflet/threat_plots/threat_plotlist.rds")
@@ -171,6 +178,6 @@ threat_popups <-  leafpop::popupGraph(threat_plot_list, type = "svg")#,
 saveRDS(threat_popups, "dataviz/leaflet/threat_plots/threat_popups.rds")
 
 # Save svgs to plot list id leaflet folder
-iwalk(threat_plot_list, ~ save_svg(.x, fname = paste0("dataviz/leaflet/threat_plots/", .y, ".svg"),
-                            width = 400, height = 300))
+#iwalk(threat_plot_list, ~ save_svg(.x, fname = paste0("dataviz/leaflet/threat_plots/", .y, ".svg"),
+#                            width = 400, height = 300))
 
