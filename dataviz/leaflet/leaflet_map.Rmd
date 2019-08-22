@@ -129,10 +129,7 @@ grizzmap %>%
               fillColor = ~palette1(grizzdata_full$calcsrank),
               label = lapply(lab1, htmltools::HTML),
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
-             # popup = c(constatus_popup, concern_popups), 
               popup = constatus_popup, 
-            #  popupOptions = popup_options,
-            #  highlight = highlightOptions( # Highlight interaction for mouse hover
               popupOptions = popupOptions(autoPan = TRUE,
                                           keepInView = TRUE,
                                           closeOnClick = TRUE,
@@ -159,12 +156,12 @@ grizzmap %>%
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
               popup = population_popup,
               popupOptions = popupOptions(autoPan = TRUE,
-                               keepInView = TRUE,
-                               closeOnClick = TRUE),
+                                          keepInView = TRUE,
+                                          closeOnClick = TRUE),
               highlightOptions = highlightOptions( 
-                  weight = 3,
-                  color = "yellow",
-                  bringToFront = T)) %>%
+                weight = 3,
+                color = "yellow",
+                bringToFront = T)) %>%
   addLegend("bottomright", pal = palette2, values = grizzdata_full$pop_density,
             title = "Population Density", na.label = "Extirpated",
             opacity = 1) 
