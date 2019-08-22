@@ -13,6 +13,7 @@ library(dplyr)
 
 if (!exists("grizzdata_full")) load("data/grizzdata_full.rds")
 
+if (!exists("dataviz/leaflet/concern_plots/"))
 dir.create("dataviz/leaflet/concern_plots/", showWarnings = FALSE)
 dir.create("dataviz/leaflet/threat_plots/", showWarnings = FALSE)
 
@@ -44,7 +45,6 @@ coord_radar <- function (theta = "x", start = 0, direction = 1, clip = "on") {
 # Create radar plot list
 radar_plot_list <- vector(length = length(gbpu_list), mode = "list")
 names(radar_plot_list) <- gbpu_list
-
 
 Radar_Plots <- function(data, name) {
 
