@@ -1,5 +1,68 @@
 library(tidyverse)
+library(ggforce)
+library(scales)
+library(here)
+library(sf)
 
+#install.packages("ggparliament")
+library(ggparliament)
+
+
+## work in progress.....
+#if (!exists("threat_sum_plot")) load(here("tmp", "plots.RData"))
+grizzdata_full <- read_rds(here("data/grizzdata_full.rds"))
+grizzdata_full <- st_transform(grizzdata_full, crs = 4326)
+
+# Conservation Status Pop_up figures
+Tab1_figs <- "out_tab1"
+
+rank_data <- grizzdata_full %>%
+  dplyr::select(gbpu_name, calcsrank, calc_rank_check, trend, popiso_rank_adj, threat_rank_adj) %>%
+  mutate(Rank = calc_rank_check,Pop_iso = popiso_rank_adj,
+         threat = threat_rank_adj) %>%
+  select(gbpu_name, Rank, Pop_iso, trend, threat) %>%
+  gather(catergory, "Score", 2:5) %>%
+  mutate(Rscore = as.numeric(Score)*100)
+
+  st_geometry(rank_data) <- NULL
+
+#for(i in 1:length(unique(gbpu_name))) {
+  rdata <- rank_data %>% filter(gbpu_name == "Rocky")
+  rdata <- rdata %>%
+    mutate(colour = c("grey","red","blue",'yellow'))
+
+   ### Example 1:
+  rdata <- parliament_data(election_data = rdata,
+                              type = "semicircle",
+                              parl_rows = 10,
+                              party_seats = rdata$Rscore)
+
+  rep <- ggplot(rdata, aes(x, y, colour = catergory)) +
+    geom_parliament_seats(size = 5) +
+    geom_parliament_bar(colour = colour, party = catergory) +
+    theme_no_axes()
+  rep
+
+  ### Example 1:
+  rdata$catergory <- factor(rdata$catergory)
+  rdata$Share <- as.numeric(rdata$Score) / sum(as.numeric(rdata$Score))
+  rdata$ymax <- cumsum(rdata$Share)
+  rdata$ymin <- c(0, head(rdata$ymax, n= -1))
+
+  rep2 = ggplot(rdata, aes(fill = catergory, ymax = ymax, ymin = ymin, xmax = 2, xmin = 1)) +
+    geom_rect() +
+    coord_polar(theta = "y",start=-pi/2) + xlim(c(0, 2)) + ylim(c(0,2)) +
+    scale_color_manual(values = c("blue","grey", "red","yellow"), aesthetics = "fill") +
+    theme_void() +
+    #geom_text(aes(x = 2, y = 0, label = "M5")) +
+    annotate(geom = "text", x = 2, y = 0, label = "M5", size = 4) +
+    annotate(geom = "text", x = 2, y = 1, label = "M1", size = 4)
+  rep2
+
+
+
+
+# example 1
 dummydata <- data.frame(gbpu = "Fake",
                         trend_cat = ">25%", trend_adj = 1,
                         popiso_cat = "EA", popiso_adj = 2,

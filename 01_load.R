@@ -11,6 +11,7 @@
 # See the License for the specific language governing permissions and limitations under the License.
 
 # Loading R libraries ---------------------------------------------------
+
 Packages <- c("sf", "tidyverse", "maptools", "devtools","bcmaps",
               "leaflet", "rmapshaper", "bcdata", "envreportutils",
               "viridis", "ggmap", "ggspatial", "here", "readxl",
@@ -18,16 +19,15 @@ Packages <- c("sf", "tidyverse", "maptools", "devtools","bcmaps",
               "units", "bcdata")
 lapply(Packages, library, character.only = TRUE)
 
-# remotes::install_github("ateucher/rmapshaper")
-# remotes::install_github("bcgov/bcdata")
-# install_github("bcgov/envreportutils")
-# devtools::install_github("dkahle/ggmap", force = T)
+#remotes::install_github("ateucher/rmapshaper")
+#remotes::install_github("bcgov/bcdata")
+#remotes::install_github("bcgov/envreportutils")
+#devtools::install_github("dkahle/ggmap", force = T)
+#remotes::install_github("bcgov/bcmaps")
 
-# Install envreportutils
-# remotes::install_github("bcgov/envreportutils", force = T)
 
-##
-## Data Downloads -------------------------------------------------------
+
+## Data Download -------------------------------------------------------
 
 ## Get British Columbia grizzly bear population unit boundaries from B.C. Data Catalogue
 ## from https://catalogue.data.gov.bc.ca/dataset/2bf91935-9158-4f77-9c2c-4310480e6c29
@@ -47,13 +47,24 @@ gbpu_2018 <- read_sf(file.path(data_path, "BC_Grizzly_Results_v1_Draft_April2016
                      layer = "GBPU_BC_edits_v2_20150601") %>%
   transform_bc_albers()
 
-plot(st_geometry(gbpu_2018))
 
-# Create bounding box
-# bc_bbox <- st_as_sfc(st_bbox(boundbc)) # convert to sfc
-# bc_bbox <- st_bbox(bc_bbox) # convert to bbox
-# bc_bbox
+# Import baseline data for density measure (need to update this to web mapping service)
+# open web mapping service instead(
+#https://openmaps.gov.bc.ca/geo/pub/WHSE_BASEMAPPING.BTM_PRESENT_LAND_USE_V1_SVW/ows?service=WMS&request=GetCapabilities
 
-# Import grizzly BEC/Ecosection polygons (2019) as sf
-habclass <- bcdc_get_data(record = 'dba6c78a-1bc1-4d4f-b75c-96b5b0e7fd30',
-                          resource = 'd23da745-c8c5-4241-b03d-5654591e117c')
+#bc_icewater <- read_sf(file.path(data_path, "BC_Grizzly_Results_v1_Draft_April2016.gdb"),
+#                     layer = "BTM_IceWater") %>%
+#  transform_bc_albers()
+
+# Import baseline data for density measure (currently not on bcgw)
+gbpu_hab <- read_sf(file.path(data_path, "BC_Grizzly_Results_v1_Draft_April2016.gdb"),
+                       layer = "GBPU_MU_LEH_density_2015") %>%
+  transform_bc_albers()
+
+gbpu_hab <- gbpu_hab %>%
+  group_by(POPULATION_NAME) %>%
+  summarise(H_area_km2 = sum(AREA_KM2, na.rm = TRUE),
+            H_area_wice = sum(AREA_KM2_BTMwaterIce, na.rm = TRUE),
+            H_area_nowice = sum(AREA_KM2_noWaterIce, na.rm = TRUE)) %>%
+  as.data.frame() %>%
+  select(-Shape)

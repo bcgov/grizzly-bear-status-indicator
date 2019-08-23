@@ -36,7 +36,7 @@ popiso_table <- tribble(
 
 threat_table <- tribble(
   ~threat_class, ~threat_rank_adj,
-  "VHigh", 2,
+  "Very High", 2,
   "High", 1.5,
   "Medium", 1.0,
   "Low", 0,
@@ -48,20 +48,20 @@ threat_calc <- threat_calc %>%
   left_join(threat_table, by = "threat_class") %>%
   mutate(calc_rank_check = 5 - trend*-1 - popiso_rank_adj - threat_rank_adj)
 
+
 ## DATA CLEANING ---------------------------------------------------------
 gbpu_2018 <- gbpu_2018 %>%
-  group_by(POPULATION_NAME)
+  group_by(POPULATION_NAME) %>%
+  left_join(gbpu_hab)
 
 # Find centroid of polygons (for labelling)
 # Note: BC Albers CRS used because lat/long not accepted by st_centroid
-popcentroid <- st_centroid(st_geometry(gbpu_2018))
-popcentroid <- st_transform(popcentroid, crs = 4326) # convert to lat/long
-
-# Calculate coordinates for centroid of polygons
-popcoords <- st_coordinates(popcentroid)
+popcentroid <- st_centroid(st_geometry(gbpu_2018)) %>%
+  st_transform(popcentroid, crs = 4326)
 
 # Spatial join
-grizzdata_full <- cbind(gbpu_2018, popcoords) # cbind coords and polygons
+grizzdata_full <- cbind(gbpu_2018,
+                        st_coordinates(popcentroid)) # cbind coords and polygons
 
 # Rename lat and lng columns
 grizzdata_full <- rename(grizzdata_full, lng = X, lat = Y) %>%
@@ -95,19 +95,22 @@ grizzdata_full <- mutate(grizzdata_full,
                            str_detect(isolation, "^[A-E]D$") ~ "Not Isolated (<25%)")
                          )
 
+
 # Add population density column
 grizzdata_full <- mutate(grizzdata_full,
-                         area_sq_km = as.numeric(set_units(st_area(geometry), km2)),
-                         pop_density = as.numeric(adults / area_sq_km * 1000)
+                         area_sq_km = round(as.numeric(set_units(st_area(geometry), km2)), digits = 0),
+                         use_area_sq_km = round(as.numeric(h_area_nowice),digits = 0),
+                         pop_density = round(as.numeric(adults / use_area_sq_km * 1000), digits = 0)
 )
 
-# Round to 2 decimal places
-grizzdata_full$pop_density <- round(grizzdata_full$pop_density, digits = 2)
-grizzdata_full$area_sq_km <- round(grizzdata_full$area_sq_km, digits = 2)
 
 # Change threat class column to ordered factor
+grizzdata_full <- grizzdata_full %>%
+  mutate(threat_class = ifelse(threat_class == "VHigh", "Very High", threat_class))
+
 grizzdata_full$threat_class <- factor(grizzdata_full$threat_class, ordered = TRUE,
-                                      levels = c("VHigh", "High", "Medium", "Low", "Negligible"))
+                                      levels = c("Very High", "High", "Medium", "Low", "Negligible"))
+
 
 # Replace NAs in trend column with  "Data Deficient"
 grizzdata_full$trend <- grizzdata_full$trend %>% replace_na("Data Deficient")
@@ -115,6 +118,13 @@ grizzdata_full$trend <- grizzdata_full$trend %>% replace_na("Data Deficient")
 # Simplify vertices of GBPU polygons
 grizzdata_full <- ms_simplify(grizzdata_full, keep = 0.25) # reduce number of vertices
 
+# add numeric values to output table to calculate figures for Management Status
+#grizzdata_full <- grizzdata_full %>%
+#  left_join(popiso_table, by = "popiso") %>%
+#  left_join(threat_table, by = "threat_class") %>%
+#  mutate(calc_rank_check = 5 - as.numeric(trend) - popiso_rank_adj - threat_rank_adj)
+
+
 # Write grizzly data file to disk
-dir.create("data")
+if (!dir.exists("data")) dir.create("data")
 saveRDS(grizzdata_full, file = "data/grizzdata_full.rds")
