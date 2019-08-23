@@ -12,21 +12,26 @@
 library(tidyverse)
 library(dplyr)
 
-if (!exists("grizzdata_full")) load("data/grizzdata_full.rds")
+library(knitr)
+library(png)
+library(here)
+library(readr)
+library(dplyr)
+library(rmapshaper)
+library(bcmaps)
+library(ggplot2)
+library(sf)
+library(patchwork)
+library(purrr)
+library(forcats)
 
+if (!exists("grizzdata_full")) load("data/grizzdata_full.rds")
 
 # set up colour pallett for figures:
 
 palv <- c("Negligible" = "#440154FF", "Low" = "#3B528BFF" ,
           "Medium" = "#21908CFF", "High" = "#5DC863FF" ,
           "Very High" = "#FDE725FF", "NA" = "#808080")
-
-#palvr <- c("M5"= "#440154FF",  "M4" ="#3B528BFF", "M3" ="#21908CFF",
-#           "M2" ="#5DC863FF", "M1" ="#FDE725FF", "NA" = "#808080")
-
-#palvrn <- c( "5" = "#440154FF",  "4" ="#3B528BFF", "3" ="#21908CFF",
-#             "2" ="#5DC863FF", "1" ="#FDE725FF", "NA" = "#808080")
-
 
 # create static summary plots
 sdata <- grizzdata_full %>%
@@ -37,16 +42,6 @@ sdata <- grizzdata_full %>%
 
 sdata <- as.data.frame(sdata)
 sdata <- sdata %>% select(-geometry)
-
-
-#colour_table <- tribble(
-#  ~calcsrank, ~plot_col,
-#  "M1", "#FDE725FF",
-#  "M2", "#5DC863FF",
-#  "M3", "#21908CFF",
-#  "M4", "#3B528BFF",
-#  "M5", "#440154FF"
-#)
 
 overall_threat_plot <-
   ggplot(sdata, aes(y = count, x = threat_class)) +
@@ -167,39 +162,119 @@ dev.off()
 ## ----------------------------------------------------------------------------
 ## STATIC MAPPING
 ## ----------------------------------------------------------------------------
-staticmap <- ggplot(grizzdata_full) +
-  geom_sf(aes(fill = calcsrank), color = "white", size = 0.1) +
-  labs(title = "Conservation Concern of Grizzly Bear Population Units in BC",
-       col = "Conservation Rank",
-       fill = "Management Rank") +
-  scale_fill_viridis(alpha = 0.6, discrete = T, option = "viridis",
-                     direction = -1, na.value = "darkgrey") +
-  theme_soe() + theme(plot.title = element_text(hjust = 0.5),
-                      axis.title.x = element_blank(),
-                      axis.title.y = element_blank(),
-                      legend.background = element_rect(
-                        fill = "lightgrey", size = 0.5,
-                        linetype = "solid", colour = "darkgrey")) +
-  geom_text(aes(label = grizzdata_full$gbpu_name, x = grizzdata_full$lng,
-                y = grizzdata_full$lat), size = 2, check_overlap = T) #+
-  #geom_text_repel(aes(label = gbpu_name, x = lng, y = lat), size = 2, force = 0.5) # Needs some tweaking - some labels off polygons
+
+# Map 1: concervation concern
+
+cons_smap <- ggplot(grizzdata_full)+
+  geom_sf(aes(fill = calcsrank)) +
+  geom_sf(data = bc_bound(), fill = NA, size = 0.2) +
+  coord_sf(datum = NA) +
+  scale_fill_viridis(discrete = T, alpha = 0.9,
+                     option = "viridis", direction = -1,
+                     na.value = "light grey")+
+  labs(fill = "Management Rank") +
+  theme_minimal() +
+  theme(legend.position = c(0.1, 0.35))
+
+png_retina(filename = "./print_ver/cons_splot.png", width = 500, height = 400,
+           units = "px", type = "cairo-png", antialias = "default")
+plot(cons_smap)
+dev.off()
+
+svg_px("./print_ver/cons_splot.svg", width = 500, height = 400)
+plot(cons_smap)
+dev.off()
+
+
+# Map 2: population density map
+pop_smap <- ggplot(grizzdata_full)+
+  geom_sf(aes(fill = pop_density)) +
+  geom_sf(data = bc_bound(), fill = NA, size = 0.2) +
+  coord_sf(datum = NA) +
+  scale_fill_viridis_c( alpha = 0.9,
+                     option = "viridis", direction = -1,
+                     na.value = "light grey")+
+  labs(fill = "Population Density", reverse = TRUE) +
+  theme_minimal() +
+  theme(legend.position = c(0.1, 0.35))
+
+png_retina(filename = "./print_ver/pop_splot.png", width = 500, height = 400,
+           units = "px", type = "cairo-png", antialias = "default")
+plot(pop_smap)
+dev.off()
+
+svg_px("./print_ver/pop_splot.svg", width = 500, height = 400)
+plot(pop_smap)
+dev.off()
+
+
+# map 3: threat map
+
+pop_smap <- ggplot(grizzdata_full)+
+  geom_sf(aes(fill = threat_calc)) +
+  geom_sf(data = bc_bound(), fill = NA, size = 0.2) +
+  coord_sf(datum = NA) +
+  scale_fill_viridis(discrete = T, alpha = 0.9,
+                     option = "viridis", direction = -1,
+                     na.value = "light grey")+
+  labs(fill = "Threat ", reverse = TRUE) +
+  theme_minimal() +
+  theme(legend.position = c(0.1, 0.35))
+
+png_retina(filename = "./print_ver/pop_splot.png", width = 500, height = 400,
+           units = "px", type = "cairo-png", antialias = "default")
+plot(pop_smap)
+dev.off()
+
+svg_px("./print_ver/pop_splot.svg", width = 500, height = 400)
+plot(pop_smap)
+dev.off()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Create base map
+
+# staticmap <- ggplot(grizzdata_full) +
+#   geom_sf(aes(fill = calcsrank), color = "white", size = 0.1) +
+#   labs(title = "Conservation Concern of Grizzly Bear Population Units in BC",
+#        col = "Conservation Rank",
+#        fill = "Management Rank") +
+#   scale_fill_viridis(alpha = 0.6, discrete = T, option = "viridis",
+#                      direction = -1, na.value = "darkgrey") +
+#   theme_soe() + theme(plot.title = element_text(hjust = 0.5),
+#                       axis.title.x = element_blank(),
+#                       axis.title.y = element_blank(),
+#                       legend.background = element_rect(
+#                         fill = "lightgrey", size = 0.5,
+#                         linetype = "solid", colour = "darkgrey")) +
+#   geom_text(aes(label = grizzdata_full$gbpu_name, x = grizzdata_full$lng,
+#                 y = grizzdata_full$lat), size = 2, check_overlap = T) #+
+#   #geom_text_repel(aes(label = gbpu_name, x = lng, y = lat), size = 2, force = 0.5) # Needs some tweaking - some labels off polygons
 staticmap # plot map
 
 # Get stamen basemap (terrain)
 stamenbc <- get_stamenmap(bbox = c(-139.658203,48.5,-113.071289,60.261617),
                           zoom = 7, maptype = "terrain-background",
                           where = "/dev/stamen/")
-# saveRDS(stamenbc, file = "/dev/stamen.Rds")
-# readRDS(stamenbc)
-plot(stamenbc) # View basemap
+#plot(stamenbc) # View basemap
 
 # Plot stamen map with terrain basemap
 static_ggmap <- ggmap(stamenbc) + # Generate new map
   geom_sf(data = grizzdata_full, aes(fill = calcrank), inherit.aes = F,
           color = "white", size = 0.01) + # plot with boundary
-  #geom_text(aes(label = grizzdata_full$gbpu_name, x = grizzdata_full$lng,
-  #              y = grizzdata_full$lat")) +
-  # geom_label(data = grizzdata_full$gbpu_name) +
   theme_soe() + scale_fill_viridis(discrete = T, alpha = 0.5,
                                    option = "viridis", direction = -1,
                                    na.value = "darkgrey") +
@@ -211,7 +286,6 @@ static_ggmap <- ggmap(stamenbc) + # Generate new map
           fill = "lightgrey", size = 0.5, linetype = "solid",
           colour = "darkgrey"))
 plot(static_ggmap)
-
 
 if (!exists("tmp")) dir.create("tmp", showWarnings = FALSE)
 save(threat_sum_plot, overall_threat_plot, staticmap,
