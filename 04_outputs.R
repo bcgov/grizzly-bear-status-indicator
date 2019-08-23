@@ -210,33 +210,25 @@ dev.off()
 
 # map 3: threat map
 
-pop_smap <- ggplot(grizzdata_full)+
-  geom_sf(aes(fill = threat_calc)) +
+threat_smap <- ggplot(grizzdata_full)+
+  geom_sf(aes(fill = threat_class)) +
   geom_sf(data = bc_bound(), fill = NA, size = 0.2) +
   coord_sf(datum = NA) +
   scale_fill_viridis(discrete = T, alpha = 0.9,
                      option = "viridis", direction = -1,
-                     na.value = "light grey")+
-  labs(fill = "Threat ", reverse = TRUE) +
+                     na.value = "light grey") +
+  labs(fill = "Overall Threat ", reverse = TRUE) +
   theme_minimal() +
   theme(legend.position = c(0.1, 0.35))
 
-png_retina(filename = "./print_ver/pop_splot.png", width = 500, height = 400,
+png_retina(filename = "./print_ver/threat_splot.png", width = 500, height = 400,
            units = "px", type = "cairo-png", antialias = "default")
-plot(pop_smap)
+plot(threat_smap)
 dev.off()
 
-svg_px("./print_ver/pop_splot.svg", width = 500, height = 400)
-plot(pop_smap)
+svg_px("./print_ver/threat_splot.svg", width = 500, height = 400)
+plot(threat_smap)
 dev.off()
-
-
-
-
-
-
-
-
 
 
 
