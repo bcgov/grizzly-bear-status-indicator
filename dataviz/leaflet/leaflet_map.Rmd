@@ -49,10 +49,10 @@ concern_popups <-  paste0("<img src = ",
                                gsub("\\s+", "%20", grizzdata_full$gbpu_name), ".svg"), 
                         ">")
 
+# Insert img tag with rank viz into popup at end of of html div
 constatus_popup <- str_replace(constatus_popup, "</div></body></html>", 
                                paste0(concern_popups, "</div></body></html>"))
 
-#saveRDS(concern_popups, "out/tab1/concern_popups.rds")
 
 # Popup for population tab
 popup_text2 <- dplyr::select(grizzdata_full, gbpu_name, adults, 
@@ -149,12 +149,12 @@ grizzmap %>%
               fillColor = ~palette1(grizzdata_full$calcsrank),
               label = lapply(lab1, htmltools::HTML),
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
-             # popup = c(constatus_popup, concern_popups), 
               popup = constatus_popup,
-            #  popupOptions = popup_options,
               popupOptions = popupOptions(autoPan = TRUE,
                                keepInView = TRUE,
-                               closeOnClick = TRUE),
+                               closeOnClick = TRUE,
+                               autoPanPaddingTopLeft = c(120, 20),
+                               autoPanPaddingBottomRight = c(150,20)),
               highlightOptions = highlightOptions( # Highlight interaction for mouse hover
                 weight = 3,
                 color = "yellow",
