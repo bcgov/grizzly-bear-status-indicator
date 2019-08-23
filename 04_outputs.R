@@ -14,6 +14,20 @@ library(dplyr)
 
 if (!exists("grizzdata_full")) load("data/grizzdata_full.rds")
 
+
+# set up colour pallett for figures:
+
+palv <- c("Negligible" = "#440154FF", "Low" = "#3B528BFF" ,
+          "Medium" = "#21908CFF", "High" = "#5DC863FF" ,
+          "Very High" = "#FDE725FF", "NA" = "#808080")
+
+#palvr <- c("M5"= "#440154FF",  "M4" ="#3B528BFF", "M3" ="#21908CFF",
+#           "M2" ="#5DC863FF", "M1" ="#FDE725FF", "NA" = "#808080")
+
+#palvrn <- c( "5" = "#440154FF",  "4" ="#3B528BFF", "3" ="#21908CFF",
+#             "2" ="#5DC863FF", "1" ="#FDE725FF", "NA" = "#808080")
+
+
 # create static summary plots
 sdata <- grizzdata_full %>%
   group_by(threat_class) %>%
@@ -24,34 +38,21 @@ sdata <- grizzdata_full %>%
 sdata <- as.data.frame(sdata)
 sdata <- sdata %>% select(-geometry)
 
-#pal1 <- colorFactor(palette = 'viridis', grizzdata_full$threat_class,
-#                    ordered = TRUE, na.color = "#808080", reverse = TRUE)
 
-palv <- c("Negligible" = "#440154FF", "Low" = "#3B528BFF" ,
-          "Medium" = "#21908CFF", "High" = "#5DC863FF" ,
-          "Very High" = "#FDE725FF", "NA" = "#808080")
-
-palvr <- c("M5"= "#440154FF",  "M4" ="#3B528BFF", "M3" ="#21908CFF",
-           "M2" ="#5DC863FF", "M1" ="#FDE725FF", "NA" = "#808080")
-palvrn <- c( "5" = "#440154FF",  "4" ="#3B528BFF", "3" ="#21908CFF",
-           "2" ="#5DC863FF", "1" ="#FDE725FF", "NA" = "#808080")
-
-colour_table <- tribble(
-  ~calcsrank, ~plot_col,
-  "M1", "#FDE725FF",
-  "M2", "#5DC863FF",
-  "M3", "#21908CFF",
-  "M4", "#3B528BFF",
-  "M5", "#440154FF"
-)
-
-
+#colour_table <- tribble(
+#  ~calcsrank, ~plot_col,
+#  "M1", "#FDE725FF",
+#  "M2", "#5DC863FF",
+#  "M3", "#21908CFF",
+#  "M4", "#3B528BFF",
+#  "M5", "#440154FF"
+#)
 
 overall_threat_plot <-
   ggplot(sdata, aes(y = count, x = threat_class)) +
   geom_bar(stat = "identity", aes(fill = as.factor(threat_class)), show.legend = FALSE) +
-  scale_x_discrete(limits = c("Negligible", "Low", "Medium", "High", "Very High"))+
-  scale_fill_manual(values = palv)+
+  scale_x_discrete(limits = c("Negligible", "Low", "Medium", "High", "Very High")) +
+  scale_fill_manual(values = palv) +
   geom_text(aes(label=count), vjust=0.5, hjust = 2) +
   coord_flip() +
   labs(y = "Number of Grizzly Bear Population Units (GBPU)", x = "Overall Threat")+
@@ -80,8 +81,7 @@ tdata <- total_threats %>%
 tdata$ranking <- factor(tdata$ranking, ordered = TRUE,
                                 levels = c("Negligible", "Low", "Medium", "High", "Very High"))
 threat_sum_plot <-
-  ggplot(tdata, aes(y = count, x = threat,
-                              fill = ranking)) +
+  ggplot(tdata, aes(y = count, x = threat,fill = ranking)) +
   geom_bar(stat = "identity") +
   scale_fill_manual(values = palv) +
   scale_y_continuous(limits = c(0,55), breaks = seq(0,50,10))+
@@ -133,18 +133,17 @@ rad_plot <- ggplot(cc_data, aes(x = metric, y = score)) +
     geom_polygon(aes(group = NA, fill = as.numeric(str_extract(calcsrank, "\\d")),
                       colour = as.numeric(str_extract(calcsrank, "\\d"))),
                   alpha = 0.6, size = 2) +
-   geom_errorbar(aes(x = metric, ymin = 0, ymax = max_val),
+    geom_errorbar(aes(x = metric, ymin = 0, ymax = max_val),
                   width = 0.1, colour = "grey40") +
     scale_colour_viridis_c(direction = -1, guide = "none") +
     scale_fill_viridis_c(direction = -1, guide = "none") +
-    #scale_fill_manual(values = palvr) +
     #scale_y_continuous(expand = expand_scale(mult = 0, add = 0)) +
     #geom_text(aes(x = metric, y = label_pos, label = label),
     #          colour = "grey40") +
     #geom_text(aes(label = calcsrank, colour = as.numeric(str_extract(calcsrank, "\\d"))),
     #          x = 0.5, y = 2, size = 4) +
     geom_text(aes(label = gbpu_name),
-              x = 0.5, y = 4.5, size = 2, colour = "grey40") +
+              x = 0.5, y = 4.5, size = 2.5, colour = "grey40") +
     coord_radar(clip = "off") +
     theme_void() +
     theme(plot.margin = unit(c(0,0,0,0), "lines"), strip.text = element_blank())
@@ -152,7 +151,6 @@ rad_plot <- ggplot(cc_data, aes(x = metric, y = score)) +
 rad_plot
 
 # add a legend and overall plot to explain positions.
-
 
 
 ## Printing plots for web in SVG formats (and PNG)
