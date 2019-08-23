@@ -43,7 +43,7 @@ grizzdata_full <- st_transform(grizzdata_full, crs = 4326)
 
 ```
 
-* There are approximately ```r sum(grizzdata_full$adults, na.rm = TRUE)``` Grizzly bears in British Columbia ^1^
+* There are approximately 8000 Grizzly bears in British Columbia ^1^
 
 * Grizzly bears are an important part of the British Columbia landscape in many ways:
 
