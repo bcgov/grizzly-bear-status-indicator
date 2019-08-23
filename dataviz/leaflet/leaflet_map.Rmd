@@ -58,7 +58,7 @@ popup_text2 <- dplyr::select(grizzdata_full, gbpu_name, adults,
   rename("Population Name" = gbpu_name,
          "Population Size (Adults)" = adults,
          "Population Density (Adults/1000 km^2)" = pop_density,
-         "Area of Useable Habitat (km2)" = use_area_sq_km,
+         "Area of Useable Habitat (km^2)" = use_area_sq_km,
          "Total Area of GBPU (km^2)" = area_sq_km) 
 
 st_geometry(popup_text2) <- NULL # as df
