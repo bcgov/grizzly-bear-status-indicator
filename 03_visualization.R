@@ -21,6 +21,15 @@ dir.create("dataviz/leaflet/threat_plots/", showWarnings = FALSE)
 # Create list of GBPU
 gbpu_list <- unique(grizzdata_full$gbpu_name)
 
+
+# create the colour pallet for all figures
+palv <- c("Negligible" = "#440154FF", "Low" = "#3B528BFF" ,
+          "Medium" = "#21908CFF", "High" = "#5DC863FF" ,
+          "Very High" = "#FDE725FF", "NA" = "#808080")
+
+
+
+
 # Create Conservation Concern Popup Plots ---------------------------------
 grizz.df <- as.data.frame(grizzdata_full)
 
@@ -135,8 +144,7 @@ Threat_Plots <- function(data, name) {
   make_plot <- ggplot(data, aes(x = threat, y = ranking,
                                 fill = ranking)) +
     geom_bar(stat = "identity") + # Add bar for each threat variable
-    scale_colour_viridis(discrete = TRUE, direction = 1) +
-    scale_fill_viridis(discrete = TRUE, direction = 1) +
+    scale_fill_manual(values = palv) +
     labs(x = "Threat", y = "Threat Ranking",
          fill = "Ranking") +
     ggtitle(name) +
@@ -146,8 +154,6 @@ Threat_Plots <- function(data, name) {
                         plot.caption = element_text(hjust = 0)) +  # L-align caption
    scale_y_discrete(limits = c("Negligible", "Low", "Medium", "High", "Very High"),
                     drop = FALSE, na.translate = FALSE)
-
- # This line causes problems with no data sites (ie Central Interior)
   make_plot + coord_flip()
 
 }
