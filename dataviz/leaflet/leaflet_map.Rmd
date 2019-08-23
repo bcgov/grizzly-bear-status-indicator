@@ -26,7 +26,6 @@ grizzdata_full <- st_transform(grizzdata_full, crs = 4326) # convert to lat/long
 ```
 
 ```{r popups, include=FALSE, warning=FALSE}
-
 ## TEXT POPUPS
 
 # conservation status tab:
@@ -86,7 +85,9 @@ popup_options <-  popupOptions(maxWidth = 400, minWidth = 400, maxHeight = 300,
 
 ``` {r labels and palettes, include=FALSE, warning=FALSE}
 # Define polygon labels in leaflet
-labs <- dplyr::select(grizzdata_full, gbpu_name, pop_density, calcsrank, threat_class)
+labs <- dplyr::select(grizzdata_full, gbpu_name, pop_density, calcsrank, threat_class) %>%
+  mutate(calcsrank = ifelse(is.na(calcsrank), "Extirpated", calcsrank))
+
 
 st_geometry(labs) <- NULL # as df
 
@@ -96,9 +97,21 @@ lab1 <- lapply(seq(nrow(labs)), function(i) {
 })
 
 lab2 <- lapply(seq(nrow(labs)), function(i) {
-  paste0( '<b>', labs[i, "gbpu_name"], ', ',  
-          labs[i, "pop_density"]," Adults/1000km2",'</b>') 
+  ifelse(labs[i,"pop_density"] > 1,  
+    paste0( '<b>', labs[i, "gbpu_name"], ', ',  
+    labs[i, "pop_density"]," Adults/1000km2",'</b>'),
+        ifelse(labs[i,"pop_density"] == 1,  
+          paste0( '<b>', labs[i, "gbpu_name"], ', ',  
+          labs[i, "pop_density"]," Adult/1000km2",'</b>'),
+              ifelse(labs[i,"calcsrank"] == "Extirpated",  
+                  paste0( '<b>', labs[i, "gbpu_name"], ', ',"Extirpated",'</b>'),
+        ifelse(labs[i,"pop_density"] == 0,  
+          paste0( '<b>', labs[i, "gbpu_name"], ', ',  
+          labs[i, "pop_density"]," Adults/1000km2",'</b>'),
+  
+  "test"))))
 })
+  
 
 lab3 <- lapply(seq(nrow(labs)), function(i) {
   paste0( '<b>', labs[i, "gbpu_name"], ', ',  
@@ -136,7 +149,6 @@ grizzmap %>%
              # popup = c(constatus_popup, concern_popups), 
               popup = concern_popups,
             #  popupOptions = popup_options,
-            #  highlight = highlightOptions( # Highlight interaction for mouse hover
               popupOptions = popupOptions(autoPan = TRUE,
                                keepInView = TRUE,
                                closeOnClick = TRUE),
@@ -145,7 +157,7 @@ grizzmap %>%
                 color = "yellow",
                 bringToFront = T)) %>%
   addLegend("bottomright", pal = palette1, values = grizzdata_full$calcsrank,
-            title = "Management Rank", na.label = "Extirpated",
+            title = "Rank", na.label = "Extirpated",
             opacity = 1) 
 ```
 
@@ -167,11 +179,11 @@ grizzmap %>%
                   weight = 3,
                   color = "yellow",
                   bringToFront = T)) %>%
-  addLegend("bottomright", pal = palette2, values = grizzdata_full$pop_density,
+  addLegend("bottomright", pal = palette2, 
+            values = 1:max(grizzdata_full$pop_density,na.rm = TRUE),
             title = "Population Density", na.label = "Extirpated",
             opacity = 1) 
 
-# addLayersControl(overlayGroups = c("Terrain", "Topography"))
 ```
 
 ## Threat Classification
@@ -179,7 +191,7 @@ grizzmap %>%
 ``` {r, warning=FALSE, echo=FALSE}
 grizzmap %>% 
     addPolygons(data = grizzdata_full,
-              stroke = T, weight = 1, color = "black", # Add border to polygons
+              stroke = T, weight = 1, color = "black", 
               fillOpacity = 0.5, # Polygon fill
               fillColor = ~palette3(grizzdata_full$threat_class),
               popup = threat_popups,
