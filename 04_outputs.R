@@ -11,8 +11,6 @@
 # See the License for the specific language governing permissions and limitations under the License.
 library(tidyverse)
 library(dplyr)
-
-library(knitr)
 library(png)
 library(here)
 library(readr)
@@ -21,7 +19,6 @@ library(rmapshaper)
 library(bcmaps)
 library(ggplot2)
 library(sf)
-library(patchwork)
 library(purrr)
 library(forcats)
 
@@ -191,11 +188,12 @@ pop_smap <- ggplot(grizzdata_full)+
   geom_sf(aes(fill = pop_density)) +
   geom_sf(data = bc_bound(), fill = NA, size = 0.2) +
   coord_sf(datum = NA) +
-  scale_fill_viridis_c( alpha = 0.9,
-                     option = "viridis", direction = -1,
-                     na.value = "light grey")+
-  labs(fill = "Population Density", reverse = TRUE) +
+  scale_fill_viridis_c(alpha = 0.9,
+                     option = "viridis", direction = 1,
+                     na.value = "light grey", trans = "reverse") +
+  labs(fill = "Population Density") +
   theme_minimal() +
+  guides(colour = guide_legend(reverse = T)) +
   theme(legend.position = c(0.1, 0.35))
 
 png_retina(filename = "./print_ver/pop_splot.png", width = 500, height = 400,
