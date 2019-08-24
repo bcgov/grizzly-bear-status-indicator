@@ -40,7 +40,6 @@ popup_text1 <- dplyr::select(grizzdata_full, gbpu_name, threat_class,
 
 st_geometry(popup_text1) <- NULL # as df
 
-# create pop_up html from scratch 
 constatus_popup <- leafpop::popupTable(popup_text1,
                                   row.numbers = F,
                                   feature.id = F)
@@ -149,7 +148,9 @@ grizzmap %>%
               popup = constatus_popup,
               popupOptions = popupOptions(autoPan = TRUE,
                                keepInView = TRUE,
-                               closeOnClick = TRUE),
+                               closeOnClick = TRUE,
+                               autoPanPaddingTopLeft = c(120, 20),
+                               autoPanPaddingBottomRight = c(150,20)),
               highlightOptions = highlightOptions( # Highlight interaction for mouse hover
                 weight = 3,
                 color = "yellow",
