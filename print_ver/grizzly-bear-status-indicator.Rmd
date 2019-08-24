@@ -66,12 +66,12 @@ grizzdata_full <- st_transform(grizzdata_full, crs = 4326)
 
 * The overall threat was determined by considered six catergories; Agriculture, Biological Resource Use (Biouse), Climate Change, Energy, Human intrusion, Residential, Transportation. See below for detailed methodology ^1^.  
 
-\newpage 
-
 
 ### Conservation Concern 
 
-```{r, warning=FALSE, echo=FALSE}
+```{r cons_map, echo = FALSE, warning = FALSE, error = FALSE, message = FALSE, results = 'asis', out.width='0.99\\linewidth', fig.align = 'center'}
+
+knitr::include_graphics("./cons_splot.png")
 
 ```
 
@@ -79,7 +79,9 @@ grizzdata_full <- st_transform(grizzdata_full, crs = 4326)
 
 ### Population Density Estimate
 
-``` {r, warning=FALSE, echo=FALSE}
+``` {r pop map, warning=FALSE, echo = FALSE, error = FALSE, message = FALSE, results = 'asis', out.width='0.99\\linewidth', fig.align = 'center'}
+
+knitr::include_graphics("./pop_splot.png")
 
 ```
 
@@ -87,7 +89,9 @@ grizzdata_full <- st_transform(grizzdata_full, crs = 4326)
 
 ### Threat Classification
 
-``` {r, warning=FALSE, echo=FALSE}
+``` {r threat map, warning=FALSE, echo = FALSE, error = FALSE, message = FALSE, results = 'asis', out.width='0.99\\linewidth', fig.align = 'center'}
+
+knitr::include_graphics("./threat_splot.png")
 
 ```
 

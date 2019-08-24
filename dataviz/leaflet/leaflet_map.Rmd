@@ -37,19 +37,18 @@ popup_text1 <- dplyr::select(grizzdata_full, gbpu_name, threat_class,
          "Population Size" = adults,
          "Isolation" = isolation,
          "Trend" = trend) 
- 
+
 st_geometry(popup_text1) <- NULL # as df
 
 constatus_popup <- leafpop::popupTable(popup_text1,
                                   row.numbers = F,
                                   feature.id = F)
 
-concern_popups <-  paste0("<img src = ", 
+concern_popups <- paste0("<img src = ", 
                         paste0("./concern_plots/", 
                                gsub("\\s+", "%20", grizzdata_full$gbpu_name), ".svg"), 
                         ">")
 
-# Insert img tag with rank viz into popup at end of of html div
 constatus_popup <- str_replace(constatus_popup, "</div></body></html>", 
                                paste0(concern_popups, "</div></body></html>"))
 
@@ -63,8 +62,6 @@ popup_text2 <- dplyr::select(grizzdata_full, gbpu_name, adults,
          "Population Density (Adults/1000 km^2)" = pop_density,
          "Area of Useable Habitat (km^2)" = use_area_sq_km,
          "Total Area of GBPU (km^2)" = area_sq_km) 
-
-st_geometry(popup_text2) <- NULL # as df
 
 population_popup <- leafpop::popupTable(popup_text2,
                                    row.numbers = F, 
@@ -109,10 +106,9 @@ lab2 <- lapply(seq(nrow(labs)), function(i) {
               ifelse(labs[i,"calcsrank"] == "Extirpated",  
                   paste0( '<b>', labs[i, "gbpu_name"], ', ',"Extirpated",'</b>'),
         ifelse(labs[i,"pop_density"] == 0,  
-          paste0( '<b>', labs[i, "gbpu_name"], ', ',  
+          paste0( '<b>', labs[i, "gbpu_name"], ', ', 
           labs[i, "pop_density"]," Adults/1000km2",'</b>'),
-  
-  "test"))))
+  "NA"))))
 })
   
 
