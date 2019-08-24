@@ -41,11 +41,18 @@ popup_text1 <- dplyr::select(grizzdata_full, gbpu_name, threat_class,
 st_geometry(popup_text1) <- NULL # as df
 
 # create pop_up html from scratch 
+constatus_popup <- leafpop::popupTable(popup_text1,
+                                  row.numbers = F,
+                                  feature.id = F)
 
 concern_popups <- paste0("<img src = ", 
                         paste0("./concern_plots/", 
                                gsub("\\s+", "%20", grizzdata_full$gbpu_name), ".svg"), 
                         ">")
+
+constatus_popup <- str_replace(constatus_popup, "</div></body></html>", 
+                               paste0(concern_popups, "</div></body></html>"))
+
 
 # Popup for population tab
 popup_text2 <- dplyr::select(grizzdata_full, gbpu_name, adults, 
@@ -139,7 +146,7 @@ grizzmap %>%
               fillColor = ~palette1(grizzdata_full$calcsrank),
               label = lapply(lab1, htmltools::HTML),
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
-              popup = concern_popups,
+              popup = constatus_popup,
               popupOptions = popupOptions(autoPan = TRUE,
                                keepInView = TRUE,
                                closeOnClick = TRUE),
