@@ -9,9 +9,10 @@
 # Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
+
 library(tidyverse)
 library(dplyr)
-library(png)
+#library(png)
 library(here)
 library(readr)
 library(dplyr)
@@ -29,6 +30,10 @@ if (!exists("grizzdata_full")) load("data/grizzdata_full.rds")
 palv <- c("Negligible" = "#440154FF", "Low" = "#3B528BFF" ,
           "Medium" = "#21908CFF", "High" = "#5DC863FF" ,
           "Very High" = "#FDE725FF", "NA" = "#808080")
+
+palvn <- c("M5" = "#440154FF", "M4" = "#3B528BFF" ,
+          "M3" = "#21908CFF", "M2" = "#5DC863FF" ,
+          "M1" = "#FDE725FF", "NA" = "#808080")
 
 # create static summary plots
 sdata <- grizzdata_full %>%
@@ -106,7 +111,7 @@ cc_data <- grizz.df %>%
          label = case_when(metric == "trend_adj" ~ "Trend", metric == "popiso_rank_adj" ~ "Population/\nIsolation", metric == "threat_rank_adj" ~ "Threat"),
          label_pos= case_when(metric == "trend_adj" ~ 2.2, metric == "popiso_rank_adj" ~ 5.5, metric == "threat_rank_adj" ~ 2.8)
   ) %>%
-  left_join(colour_table) %>%
+  #left_join(colour_table) %>%
   filter(!is.na(calcsrank))
 
 
@@ -138,11 +143,38 @@ rad_plot <- ggplot(cc_data, aes(x = metric, y = score)) +
               x = 0.5, y = 4.5, size = 2.5, colour = "grey40") +
     coord_radar(clip = "off") +
     theme_void() +
-    theme(plot.margin = unit(c(0,0,0,0), "lines"), strip.text = element_blank())
+    #theme(plot.margin = unit(c(0,0,0,0), "lines"), strip.text = element_blank())
+    theme(plot.margin = unit(c(0,0,4,0), "lines"), strip.text = element_blank())
+
 
 rad_plot
 
-# add a legend and overall plot to explain positions.
+# add a legend and overall plot to explain positions
+# Note this is not showing on the exported files ? Need to add
+# as a user_font?
+
+library(grid)
+
+rad_plot
+grid.text("Population/Isolation", x = 0.60, y = 0.15, gp = gpar(fontsize = 8, col = "dark grey"))
+grid.text("Trend", x = 0.38, y = 0.15, gp = gpar(fontsize = 8, col = "dark grey"))
+grid.text("Threat", x = 0.45, y = 0.05, gp = gpar(fontsize = 8, col = "dark grey"))
+
+grid.lines(x = unit(c(0.45, 0.45), "npc"),
+           y = unit(c(0.07, 0.12), "npc"),
+           default.units = "npc",
+           gp=gpar(col = "grey"), draw = TRUE, vp = NULL)
+
+grid.lines(x = unit(c(0.43, 0.45), "npc"),
+           y = unit(c(0.14, 0.12), "npc"),
+           default.units = "npc",
+           gp=gpar(col = "grey"), draw = TRUE, vp = NULL)
+
+grid.lines(x = unit(c(0.45, 0.51), "npc"),
+           y = unit(c(0.12, 0.17), "npc"),
+           default.units = "npc",
+           gp=gpar(col = "grey"), draw = TRUE, vp = NULL)
+
 
 
 ## Printing plots for web in SVG formats (and PNG)
@@ -161,20 +193,22 @@ dev.off()
 ## ----------------------------------------------------------------------------
 
 # Map 1: concervation concern
-
-cons_smap <- ggplot(grizzdata_full)+
-  geom_sf(aes(fill = calcsrank)) +
-  geom_sf(data = bc_bound(), fill = NA, size = 0.2) +
+cons_smap <- ggplot(grizzdata_full) +
+  geom_sf(data = bc_bound(), fill = NA, color = "grey", size = 0.2) +
+  geom_sf(aes(fill = calcsrank), alpha = 0.8) +
   coord_sf(datum = NA) +
-  scale_fill_viridis(discrete = T, alpha = 0.9,
-                     option = "viridis", direction = -1,
-                     na.value = "light grey")+
+  scale_fill_manual(values = palvn, na.value = "light grey",
+                    labels = c("M1","M2","M3","M4","M5","Extirpated")) +
   labs(fill = "Management Rank") +
   theme_minimal() +
   theme(legend.position = c(0.1, 0.35))
 
-png_retina(filename = "./print_ver/cons_splot.png", width = 500, height = 400,
-           units = "px", type = "cairo-png", antialias = "default")
+cons_smap
+
+png_retina(filename = "./print_ver/cons_splot.png",
+           width = 500, height = 400,
+           units = "px", type = "cairo-png",
+           antialias = "default")
 plot(cons_smap)
 dev.off()
 
@@ -185,8 +219,8 @@ dev.off()
 
 # Map 2: population density map
 pop_smap <- ggplot(grizzdata_full)+
+  geom_sf(data = bc_bound(), fill = NA, color = "grey", size = 0.2) +
   geom_sf(aes(fill = pop_density)) +
-  geom_sf(data = bc_bound(), fill = NA, size = 0.2) +
   coord_sf(datum = NA) +
   scale_fill_viridis_c(alpha = 0.9,
                      option = "viridis", direction = 1,
@@ -195,6 +229,8 @@ pop_smap <- ggplot(grizzdata_full)+
   theme_minimal() +
   guides(colour = guide_legend(reverse = T)) +
   theme(legend.position = c(0.1, 0.35))
+
+#pop_smap
 
 png_retina(filename = "./print_ver/pop_splot.png", width = 500, height = 400,
            units = "px", type = "cairo-png", antialias = "default")
@@ -209,15 +245,16 @@ dev.off()
 # map 3: threat map
 
 threat_smap <- ggplot(grizzdata_full)+
+  geom_sf(data = bc_bound(), fill = NA, color = "grey", size = 0.2) +
   geom_sf(aes(fill = threat_class)) +
-  geom_sf(data = bc_bound(), fill = NA, size = 0.2) +
   coord_sf(datum = NA) +
-  scale_fill_viridis(discrete = T, alpha = 0.9,
-                     option = "viridis", direction = -1,
-                     na.value = "light grey") +
+  scale_fill_manual(values = palv, na.value = "light grey",
+                    labels = c("Very High","High","Medium","Low","Negligible","Extirpated")) +
   labs(fill = "Overall Threat ", reverse = TRUE) +
   theme_minimal() +
   theme(legend.position = c(0.1, 0.35))
+
+#threat_smap
 
 png_retina(filename = "./print_ver/threat_splot.png", width = 500, height = 400,
            units = "px", type = "cairo-png", antialias = "default")
