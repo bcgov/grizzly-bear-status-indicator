@@ -229,49 +229,6 @@ threat_smap <- ggplot(grizzdata_full)+
   theme_minimal() +
   theme(legend.position = c(0.1, 0.35))
 
-# output tables
-table1 <- dplyr::select(grizz.df, gbpu_name, threat_class,
-                               calcsrank, adults, isolation, trend) %>%
-  rename("Population Name" = gbpu_name,
-         "Management Rank" = calcsrank,
-         "Overall Threat Score" = threat_class,
-         "Population Size" = adults,
-         "Isolation" = isolation,
-         "Trend" = trend)
-
-table2 <- dplyr::select(grizz.df, gbpu_name, adults,
-                             pop_density, use_area_sq_km,
-                             area_sq_km) %>%
-  rename("Population Name" = gbpu_name,
-         "Population Size (Adults)" = adults,
-         "Population Density (Adults/1000 km^2)" = pop_density,
-         "Area of Useable Habitat (km^2)" = use_area_sq_km,
-         "Total Area of GBPU (km^2)" = area_sq_km)
-
-
-table3 <- dplyr::select(grizz.df, gbpu_name, adults,
-                        pop_density, use_area_sq_km,
-                        area_sq_km) %>%
-  rename("Population Name" = gbpu_name,
-         "Population Size (Adults)" = adults,
-         "Population Density (Adults/1000 km^2)" = pop_density,
-         "Area of Useable Habitat (km^2)" = use_area_sq_km,
-         "Total Area of GBPU (km^2)" = area_sq_km)
-
-
-table3 <- grizz.df %>%
-  select(gbpu_name, threat_class,ends_with("calc")) %>%
-  rename(
-    "Overall Threat" = threat_class,
-    "Residential" = residentialcalc,
-    "Agriculture" = agriculturecalc,
-    "Energy" = energycalc,
-    "Transportation" = transportationcalc,
-    "Biological Use" = biousecalc,
-    "Human Intrusion" = humanintrusioncalc,
-    "Climate Change" = climatechangecalc
-  )
-
 # save output maps
 
 png_retina(filename = "./print_ver/cons_splot.png",
