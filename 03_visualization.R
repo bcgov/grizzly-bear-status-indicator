@@ -66,6 +66,8 @@ Radar_Plots <- function(data, name) {
     scale_fill_viridis_c(direction = -1, guide = "none") +
     geom_text(aes(x = metric, y = label_pos, label = label),
               colour = "grey40") +
+   # geom_text(aes( colour = as.numeric(str_extract(calcsrank, "\\d"))),
+  #            x = 0.5, y = 2, size = 4) +
     #geom_text(aes(label = calcsrank, colour = as.numeric(str_extract(calcsrank, "\\d"))),
     #          x = 0.5, y = 2, size = 4) +
     #geom_text(aes(label = gbpu_name),
