@@ -143,8 +143,8 @@ rad_plot <- ggplot(cc_data, aes(x = metric, y = score)) +
               x = 0.5, y = 4.5, size = 2.5, colour = "grey40") +
     coord_radar(clip = "off") +
     theme_void() +
-    #theme(plot.margin = unit(c(0,0,0,0), "lines"), strip.text = element_blank())
-    theme(plot.margin = unit(c(0,0,4,0), "lines"), strip.text = element_blank())
+    theme(plot.margin = unit(c(0,0,0,0), "lines"), strip.text = element_blank())
+    #theme(plot.margin = unit(c(0,0,4,0), "lines"), strip.text = element_blank())
 
 
 rad_plot
@@ -188,9 +188,8 @@ plot(rad_plot)
 dev.off()
 
 
-## ----------------------------------------------------------------------------
-## STATIC MAPPING
-## ----------------------------------------------------------------------------
+
+## Static Maps ----------------------------------------------------------------------------
 
 # Map 1: concervation concern
 cons_smap <- ggplot(grizzdata_full) +
@@ -202,19 +201,6 @@ cons_smap <- ggplot(grizzdata_full) +
   labs(fill = "Management Rank") +
   theme_minimal() +
   theme(legend.position = c(0.1, 0.35))
-
-cons_smap
-
-png_retina(filename = "./print_ver/cons_splot.png",
-           width = 500, height = 400,
-           units = "px", type = "cairo-png",
-           antialias = "default")
-plot(cons_smap)
-dev.off()
-
-svg_px("./print_ver/cons_splot.svg", width = 500, height = 400)
-plot(cons_smap)
-dev.off()
 
 
 # Map 2: population density map
@@ -230,17 +216,6 @@ pop_smap <- ggplot(grizzdata_full)+
   guides(colour = guide_legend(reverse = T)) +
   theme(legend.position = c(0.1, 0.35))
 
-#pop_smap
-
-png_retina(filename = "./print_ver/pop_splot.png", width = 500, height = 400,
-           units = "px", type = "cairo-png", antialias = "default")
-plot(pop_smap)
-dev.off()
-
-svg_px("./print_ver/pop_splot.svg", width = 500, height = 400)
-plot(pop_smap)
-dev.off()
-
 
 # map 3: threat map
 
@@ -254,7 +229,70 @@ threat_smap <- ggplot(grizzdata_full)+
   theme_minimal() +
   theme(legend.position = c(0.1, 0.35))
 
-#threat_smap
+# output tables
+table1 <- dplyr::select(grizz.df, gbpu_name, threat_class,
+                               calcsrank, adults, isolation, trend) %>%
+  rename("Population Name" = gbpu_name,
+         "Management Rank" = calcsrank,
+         "Overall Threat Score" = threat_class,
+         "Population Size" = adults,
+         "Isolation" = isolation,
+         "Trend" = trend)
+
+table2 <- dplyr::select(grizz.df, gbpu_name, adults,
+                             pop_density, use_area_sq_km,
+                             area_sq_km) %>%
+  rename("Population Name" = gbpu_name,
+         "Population Size (Adults)" = adults,
+         "Population Density (Adults/1000 km^2)" = pop_density,
+         "Area of Useable Habitat (km^2)" = use_area_sq_km,
+         "Total Area of GBPU (km^2)" = area_sq_km)
+
+
+table3 <- dplyr::select(grizz.df, gbpu_name, adults,
+                        pop_density, use_area_sq_km,
+                        area_sq_km) %>%
+  rename("Population Name" = gbpu_name,
+         "Population Size (Adults)" = adults,
+         "Population Density (Adults/1000 km^2)" = pop_density,
+         "Area of Useable Habitat (km^2)" = use_area_sq_km,
+         "Total Area of GBPU (km^2)" = area_sq_km)
+
+
+table3 <- grizz.df %>%
+  select(gbpu_name, threat_class,ends_with("calc")) %>%
+  rename(
+    "Overall Threat" = threat_class,
+    "Residential" = residentialcalc,
+    "Agriculture" = agriculturecalc,
+    "Energy" = energycalc,
+    "Transportation" = transportationcalc,
+    "Biological Use" = biousecalc,
+    "Human Intrusion" = humanintrusioncalc,
+    "Climate Change" = climatechangecalc
+  )
+
+# save output maps
+
+png_retina(filename = "./print_ver/cons_splot.png",
+           width = 500, height = 400,
+           units = "px", type = "cairo-png",
+           antialias = "default")
+plot(cons_smap)
+dev.off()
+
+svg_px("./print_ver/cons_splot.svg", width = 500, height = 400)
+plot(cons_smap)
+dev.off()
+
+png_retina(filename = "./print_ver/pop_splot.png", width = 500, height = 400,
+           units = "px", type = "cairo-png", antialias = "default")
+plot(pop_smap)
+dev.off()
+
+svg_px("./print_ver/pop_splot.svg", width = 500, height = 400)
+plot(pop_smap)
+dev.off()
 
 png_retina(filename = "./print_ver/threat_splot.png", width = 500, height = 400,
            units = "px", type = "cairo-png", antialias = "default")
