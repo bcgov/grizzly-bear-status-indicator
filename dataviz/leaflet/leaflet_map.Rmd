@@ -63,6 +63,8 @@ popup_text2 <- dplyr::select(grizzdata_full, gbpu_name, adults,
          "Area of Useable Habitat (km^2)" = use_area_sq_km,
          "Total Area of GBPU (km^2)" = area_sq_km) 
 
+st_geometry(popup_text2) <- NULL 
+
 population_popup <- leafpop::popupTable(popup_text2,
                                    row.numbers = F, 
                                    feature.id = F)
