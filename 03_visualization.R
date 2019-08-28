@@ -73,8 +73,6 @@ Radar_Plots <- function(data, name) {
                   width = 0.1, colour = "grey40") +
     scale_colour_viridis_c(direction = -1, guide = "none") +
     scale_fill_viridis_c(direction = -1, guide = "none") +
-    #scale_fill_manual(values = palvn.df$threat_colour, na.value = "light grey",
-    #                  labels = data$calcsrank) +
     geom_text(aes(x = metric, y = label_pos, label = label),
               colour = "grey40") +
    # geom_text(aes( colour = as.numeric(str_extract(calcsrank, "\\d"))),
