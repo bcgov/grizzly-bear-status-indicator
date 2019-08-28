@@ -27,8 +27,15 @@ palv <- c("Negligible" = "#440154FF", "Low" = "#3B528BFF" ,
           "Medium" = "#21908CFF", "High" = "#5DC863FF" ,
           "Very High" = "#FDE725FF", "NA" = "#808080")
 
-
-
+palvn.df <- tribble(
+  ~threat_class, ~threat_colour,
+  "M1", "#FDE725FF" ,
+  "M2", "#5DC863FF",
+  "M3", "#21908CFF",
+  "M4", "#3B528BFF" ,
+  "M5", "#440154FF",
+  "NA", "#808080"
+)
 
 # Create Conservation Concern Popup Plots ---------------------------------
 grizz.df <- as.data.frame(grizzdata_full)
@@ -41,6 +48,7 @@ cc_data <- grizz.df %>%
          label = case_when(metric == "trend_adj" ~ "Trend", metric == "popiso_rank_adj" ~ "Population/\nIsolation", metric == "threat_rank_adj" ~ "Threat"),
          label_pos= case_when(metric == "trend_adj" ~ 2.2, metric == "popiso_rank_adj" ~ 5.5, metric == "threat_rank_adj" ~ 2.8)
   )
+cc_data <- left_join(cc_data, pa)
 
 coord_radar <- function (theta = "x", start = 0, direction = 1, clip = "on") {
   theta <- match.arg(theta, c("x", "y"))
@@ -57,13 +65,16 @@ names(radar_plot_list) <- gbpu_list
 
 Radar_Plots <- function(data, name) {
   p <- ggplot(data, aes(x = metric, y = score)) +
-    geom_polygon(aes(group = NA, fill = as.numeric(str_extract(calcsrank, "\\d")),
+    geom_polygon(aes(group = NA,
+                     fill = as.numeric(str_extract(calcsrank, "\\d")),
                      colour = as.numeric(str_extract(calcsrank, "\\d"))),
                  alpha = 0.6, size = 2) +
     geom_errorbar(aes(x = metric, ymin = 0, ymax = max_val),
                   width = 0.1, colour = "grey40") +
     scale_colour_viridis_c(direction = -1, guide = "none") +
     scale_fill_viridis_c(direction = -1, guide = "none") +
+    #scale_fill_manual(values = palvn.df$threat_colour, na.value = "light grey",
+    #                  labels = data$calcsrank) +
     geom_text(aes(x = metric, y = label_pos, label = label),
               colour = "grey40") +
    # geom_text(aes( colour = as.numeric(str_extract(calcsrank, "\\d"))),
