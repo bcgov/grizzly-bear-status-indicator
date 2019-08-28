@@ -134,6 +134,9 @@ rad_plot <- ggplot(cc_data, aes(x = metric, y = score)) +
                   width = 0.1, colour = "grey40") +
     scale_colour_viridis_c(direction = -1, guide = "none") +
     scale_fill_viridis_c(direction = -1, guide = "none") +
+    #scale_fill_manual(values = palvn, na.value = "light grey",
+    #                labels = c("M1","M2","M3","M4","M5","Extirpated")) +
+
     #scale_y_continuous(expand = expand_scale(mult = 0, add = 0)) +
     #geom_text(aes(x = metric, y = label_pos, label = label),
     #          colour = "grey40") +
@@ -145,7 +148,6 @@ rad_plot <- ggplot(cc_data, aes(x = metric, y = score)) +
     theme_void() +
     theme(plot.margin = unit(c(0,0,0,0), "lines"), strip.text = element_blank())
     #theme(plot.margin = unit(c(0,0,4,0), "lines"), strip.text = element_blank())
-
 
 rad_plot
 
@@ -186,7 +188,6 @@ png_retina(filename = "./print_ver/radar_plot.png", width = 500, height = 400,
            units = "px", type = "cairo-png", antialias = "default")
 plot(rad_plot)
 dev.off()
-
 
 
 ## Static Maps ----------------------------------------------------------------------------
