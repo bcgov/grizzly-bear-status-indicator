@@ -21,6 +21,22 @@ dir.create("dataviz/leaflet/threat_plots/", showWarnings = FALSE)
 # Create list of GBPU
 gbpu_list <- unique(grizzdata_full$gbpu_name)
 
+
+# create the colour pallet for all figures
+palv <- c("Negligible" = "#440154FF", "Low" = "#3B528BFF" ,
+          "Medium" = "#21908CFF", "High" = "#5DC863FF" ,
+          "Very High" = "#FDE725FF", "NA" = "#808080")
+
+palvn.df <- tribble(
+  ~threat_class, ~threat_colour,
+  "M1", "#FDE725FF" ,
+  "M2", "#5DC863FF",
+  "M3", "#21908CFF",
+  "M4", "#3B528BFF" ,
+  "M5", "#440154FF",
+  "NA", "#808080"
+)
+
 # Create Conservation Concern Popup Plots ---------------------------------
 grizz.df <- as.data.frame(grizzdata_full)
 
@@ -32,6 +48,7 @@ cc_data <- grizz.df %>%
          label = case_when(metric == "trend_adj" ~ "Trend", metric == "popiso_rank_adj" ~ "Population/\nIsolation", metric == "threat_rank_adj" ~ "Threat"),
          label_pos= case_when(metric == "trend_adj" ~ 2.2, metric == "popiso_rank_adj" ~ 5.5, metric == "threat_rank_adj" ~ 2.8)
   )
+cc_data <- left_join(cc_data, pa)
 
 coord_radar <- function (theta = "x", start = 0, direction = 1, clip = "on") {
   theta <- match.arg(theta, c("x", "y"))
@@ -47,23 +64,23 @@ radar_plot_list <- vector(length = length(gbpu_list), mode = "list")
 names(radar_plot_list) <- gbpu_list
 
 Radar_Plots <- function(data, name) {
-
   p <- ggplot(data, aes(x = metric, y = score)) +
-    #facet_wrap(~ gbpu_name) +
-    geom_polygon(aes(group = NA, fill = as.numeric(str_extract(calcsrank, "\\d")),
+    geom_polygon(aes(group = NA,
+                     fill = as.numeric(str_extract(calcsrank, "\\d")),
                      colour = as.numeric(str_extract(calcsrank, "\\d"))),
                  alpha = 0.6, size = 2) +
     geom_errorbar(aes(x = metric, ymin = 0, ymax = max_val),
                   width = 0.1, colour = "grey40") +
     scale_colour_viridis_c(direction = -1, guide = "none") +
     scale_fill_viridis_c(direction = -1, guide = "none") +
-    # scale_y_continuous(expand = expand_scale(mult = 0, add = 0)) +
     geom_text(aes(x = metric, y = label_pos, label = label),
               colour = "grey40") +
-    geom_text(aes(label = calcsrank, colour = as.numeric(str_extract(calcsrank, "\\d"))),
-              x = 0.5, y = 2, size = 4) +
-    geom_text(aes(label = gbpu_name),
-              x = 0.5, y = 4.5, size = 5, colour = "grey40") +
+   # geom_text(aes( colour = as.numeric(str_extract(calcsrank, "\\d"))),
+  #            x = 0.5, y = 2, size = 4) +
+    #geom_text(aes(label = calcsrank, colour = as.numeric(str_extract(calcsrank, "\\d"))),
+    #          x = 0.5, y = 2, size = 4) +
+    #geom_text(aes(label = gbpu_name),
+    #          x = 0.5, y = 4.5, size = 5, colour = "grey40") +
     coord_radar(clip = "off") +
     theme_void() +
     theme(plot.margin = unit(c(0,0,0,0), "lines"), strip.text = element_blank())
@@ -71,16 +88,20 @@ Radar_Plots <- function(data, name) {
 
 }
 
-#ggsave("radar_example.png")
-
 # Create ggplot graph loop
 plots <- for (n in gbpu_list) {
   print(n)
   data <- filter(cc_data, gbpu_name == n)
+  if(length(data$gbpu_name) == 0) {
+    p = NA
+  } else {
   p <- Radar_Plots(data, n)
-  radar_plot_list[[n]] <- p
   ggsave(p, file = paste0("dataviz/leaflet/concern_plots/", n, ".svg"))
 }
+  radar_plot_list[[n]] <- p
+
+}
+
 
 # Svg function
 #save_svg <- function(x, fname, ...) {
@@ -135,19 +156,16 @@ Threat_Plots <- function(data, name) {
   make_plot <- ggplot(data, aes(x = threat, y = ranking,
                                 fill = ranking)) +
     geom_bar(stat = "identity") + # Add bar for each threat variable
-    scale_colour_viridis(discrete = TRUE, direction = 1) +
-    scale_fill_viridis(discrete = TRUE, direction = 1) +
+    scale_fill_manual(values = palv) +
     labs(x = "Threat", y = "Threat Ranking",
          fill = "Ranking") +
     ggtitle(name) +
     theme(legend.position = "none") +
     theme_soe() + theme(plot.title = element_text(hjust = 0.5), # Centre title
                        legend.position = "none",
-                        plot.caption = element_text(hjust = 0)) +  # L-align caption
+                      plot.caption = element_text(hjust = 0)) +  # L-align caption
    scale_y_discrete(limits = c("Negligible", "Low", "Medium", "High", "Very High"),
                     drop = FALSE, na.translate = FALSE)
-
- # This line causes problems with no data sites (ie Central Interior)
   make_plot + coord_flip()
 
 }

@@ -43,35 +43,28 @@ grizzdata_full <- st_transform(grizzdata_full, crs = 4326)
 
 ```
 
-* There are approximately ```r sum(grizzdata_full$adults, na.rm = TRUE)``` Grizzly bears in British Columbia ^1^
+* Grizzly bears are an important part of the British Columbia landscape. They play a key role in maintaining healthy ecosystems, and represent an important part of the culture of First Nations People living in B.C.
 
-* Grizzly bears are an important part of the British Columbia landscape in many ways:
+* Grizzly bears are known as “umbrella” species. This means landscapes that support healthy Grizzly bear populations are able to sustain many other species.
 
-* They are a symbol of ecological integrity that represents much of what British Columbians and visitors alike appreciate about B.C.’s natural beauty.
+* For management purposes, grizzly bears are divided into 55 Grizzly Bear Population Units (GBPUs) across B.C. These range in size from 2,670 km^2^ to 49,578 km^2^. 
 
-* Grizzly bears are known as “umbrella” species, as landscapes that support healthy Grizzly bear populations will be able to sustain many other species.
+* Using GBPUs helps us track grizzly bear abundance and stability, and identifies localised conservation concerns. 
 
-* Grizzly bears play a key role in maintaining healthy ecosystems, for example, by distributing salmon nutrients into forests, and transporting seeds through their feces.
+* Each GBPU is ranked from lowest conservation concern (M5) to highest conservation concern (M1). These ranking are based on international methods used by NatureServe^2^ and IUCN. Population Unit rankings are determined by 1) population size and isolation, 2) population trend and 3) level of threat to bears or bear habitat. Ranks are deterined using the latest available data and expert opinion. 
 
-*They are an important part of the culture of First Nations People living in B.C.
-
-
-* In B.C., the grizzly bear population is divided into 55 Grizzly Bear Population Units (GBPUs). These range in size from 2,670 km^2^ to 49,578 km^2^. 
-
-* Using GBPUs helps us to track grizzly bear abundance and stability and identify localised concenservation concerns. 
-
-* Each GBPU is assigned a management status ranging from lowest conservation concern (M5) to  highest conservation concern (M1). These ranking are equivalent to international methods used by NatureServe^2^ and IUCN. 
-
-* Grizzly Bear management status ranks are calculated based on 1) population size and isolation, 2) population trends and 3) level of threat to bears or bear habitat. Ranks are deterined using the latest available data and expert opinion. 
-
-* The overall threat was determined by considered six catergories; Agriculture, Biological Resource Use (Biouse), Climate Change, Energy, Human intrusion, Residential, Transportation. See below for detailed methodology ^1^.  
+* Seven catergories are considered in determining threat. These include; Agriculture, Biological Use, Climate Change, Energy, Human intrusion, Residential, Transportation. See below for detailed methodology ^1^.  
 
 \newpage 
 
-
 ### Conservation Concern 
 
-```{r, warning=FALSE, echo=FALSE}
+Of the 55 Grizzly Bear Population units (GBPU), three are classed as highest conservation concern (M1) while 11 are conserved of least conservation concern (M5). In general GBPUs located in the southern portion of the province were of higher concern. GBPU units adjacent to the Central Interior unit, in which grizzly bears have been extirpated, were also ranked higher.  
+
+
+```{r cons_map, echo = FALSE, warning = FALSE, error = FALSE, message = FALSE, results = 'asis', out.width='0.99\\linewidth', fig.align = 'center'}
+
+knitr::include_graphics("./cons_splot.png")
 
 ```
 
@@ -79,7 +72,12 @@ grizzdata_full <- st_transform(grizzdata_full, crs = 4326)
 
 ### Population Density Estimate
 
-``` {r, warning=FALSE, echo=FALSE}
+Grizzly Bear population density ranged from 1 - 27 adults/1000 km^2^. North Selkirk
+GBPU had the highest population density.
+
+``` {r pop map, warning=FALSE, echo = FALSE, error = FALSE, message = FALSE, results = 'asis', out.width='0.99\\linewidth', fig.align = 'center'}
+
+knitr::include_graphics("./pop_splot.png")
 
 ```
 
@@ -87,13 +85,34 @@ grizzdata_full <- st_transform(grizzdata_full, crs = 4326)
 
 ### Threat Classification
 
-``` {r, warning=FALSE, echo=FALSE}
+The overall threat for GBPU was assessed from Very High to Negligible. Approximately half of GBPU (23 GBPUs) are in a Low or Negligible overall threat category. The Yahk GBPU, located in the Kooteney-Boundary ranked as Very High threat risk due to XZY.
+
+
+``` {r threat map, warning=FALSE, echo = FALSE, error = FALSE, message = FALSE, results = 'asis', out.width='0.99\\linewidth', fig.align = 'center'}
+
+knitr::include_graphics("./threat_splot.png")
 
 ```
 
 \newpage 
 
-## Threats to Grizzly Bears
+Threat classifications are based on three factors; 1) Population and Isolation, 2) population trend and 3) overall threats. The influence of these three factors on the overall threat rank are show below. 
+
+
+```{r threat_detail, echo = FALSE, message=FALSE, fig.align='center', out.width='0.99\\linewidth'}
+
+knitr::include_graphics("./radar_plot.png")
+
+```
+
+
+
+
+
+
+\newpage 
+
+## Summary of threats to Grizzly Bears
 
 The overall threat for GBPU was assessed from Very High to Negligible. Approximately half of GBPU (23 GBPUs) are in a Low or Negligible overall threat category. The Yahk GBPU, located in the Kooteney-Boundary was ranked as Very High risk due to XZY.
 
@@ -104,8 +123,7 @@ knitr::include_graphics("./othreat_plot.png")
 
 ```
 
-The largest number of threats was due to Human Intrusion , followed by transportation (road and rail density), energy production and mining, agriculture (livestock density), residential (human density), biological resource use (mortality), and climate-change (salmon decline).
-
+The largest number of threats was due to Human Intrusion , followed by transportation (road and rail density), energy production and mining, agriculture (livestock density), residential (human density), biological use (mortality), and climate-change (salmon decline).
 
 ```{r threat sum plot ,echo = FALSE, message=FALSE, fig.align='center', out.width='0.75\\linewidth'}
 
@@ -115,18 +133,7 @@ knitr::include_graphics("./threat_sum_plot.png")
 
 \newpage 
 
-```{r threat_detail, echo = FALSE, message=FALSE, fig.align='center', out.width='0.85\\linewidth'}
 
-knitr::include_graphics("./radar_plot.png")
-
-```
-
-
-## Management Ranks 
-
-Across the province 17 GBPU are ranked as highest concern (M1-2), 14 as moderate concern (M3-4) and 24 as lowest concern (M4-5). In general GBPUs located in the southern portion of the province were of higher concern. GBPU units adjacent to the Central Interior unit, in which grizzly bears have been extirpated, were also ranked higher.  
-
-Identifying management status at the population unit can be used to priorities action where the management concerns are highest. Detailed threat information identified for each unit will also help to direct management actions for localised threats identified within the unit.
 
 ## Methods
 
