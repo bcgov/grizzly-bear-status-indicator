@@ -205,100 +205,100 @@ grizzmap %>%
                 color = "yellow",
                 bringToFront = T)) %>%
 
-  addPolygons(data = grizzdata_full,
-              stroke = T, weight = 1, color = "black", # Add border to polygons
-              fillOpacity = 0.5, # Polygon fill
-              fillColor = ~palette3(grizzdata_full$transportationcalc),
-              popup = threat_popups,
-              popupOptions = popup_options,
-              group = "Transportation",
-              label = lapply(lab3, htmltools::HTML),
-              labelOptions = labelOptions(direction = "auto", textsize = "12px"),
-              highlightOptions = highlightOptions( 
-                weight = 3,
-                color = "yellow",
-                bringToFront = T)) %>%
-  addPolygons(data = grizzdata_full,
-              stroke = T, weight = 1, color = "black",
-              fillOpacity = 0.5,
-              fillColor = ~palette3(grizzdata_full$energycalc),
-              popup = threat_popups,
-              popupOptions = popup_options,
-              group = "Energy",
-              label = lapply(lab3, htmltools::HTML),
-              labelOptions = labelOptions(direction = "auto", textsize = "12px"),
-              highlightOptions = highlightOptions(
-                weight = 3,
-                color = "yellow",
-                bringToFront = T)) %>%
-  addPolygons(data = grizzdata_full,
-              stroke = T, weight = 1, color = "black",
-              fillOpacity = 0.5,
-              fillColor = ~palette3(grizzdata_full$humanintrusioncalc),
-              popup = threat_popups,
-              popupOptions = popup_options,
-              group = "Human Intrusion",
-              label = lapply(lab3, htmltools::HTML),
-              labelOptions = labelOptions(direction = "auto", textsize = "12px"),
-              highlightOptions = highlightOptions(
-                weight = 3,
-                color = "yellow",
-                bringToFront = T)) %>%
-  addPolygons(data = grizzdata_full,
-              stroke = T, weight = 1, color = "black",
-              fillOpacity = 0.5,
-              fillColor = ~palette3(grizzdata_full$residentialcalc),
-              popup = threat_popups,
-              popupOptions = popup_options,
-              group = "Residential",
-              label = lapply(lab3, htmltools::HTML),
-              labelOptions = labelOptions(direction = "auto", textsize = "12px"),
-              highlightOptions = highlightOptions(
-                weight = 3,
-                color = "yellow",
-                bringToFront = T)) %>%
-  addPolygons(data = grizzdata_full,
-              stroke = T, weight = 1, color = "black",
-              fillOpacity = 0.5,
-              fillColor = ~palette3(grizzdata_full$agriculturecalc),
-              popup = threat_popups,
-              popupOptions = popup_options,
-              group = "Agriculture",
-              label = lapply(lab3, htmltools::HTML),
-              labelOptions = labelOptions(direction = "auto", textsize = "12px"),
-              highlightOptions = highlightOptions(
-                weight = 3,
-                color = "yellow",
-                bringToFront = T)) %>%
-  addPolygons(data = grizzdata_full,
-              stroke = T, weight = 1, color = "black",
-              fillOpacity = 0.5,
-              fillColor = ~palette3(grizzdata_full$biousecalc),
-              popup = threat_popups,
-              popupOptions = popup_options,
-              group = "Biological Use",
-              label = lapply(lab3, htmltools::HTML),
-              labelOptions = labelOptions(direction = "auto", textsize = "12px"),
-              highlightOptions = highlightOptions(
-                weight = 3,
-                color = "yellow",
-                bringToFront = T)) %>%
-  addPolygons(data = grizzdata_full,
-              stroke = T, weight = 1, color = "black",
-              fillOpacity = 0.5,
-              fillColor = ~palette3(grizzdata_full$climatechangecalc),
-              popup = threat_popups,
-              popupOptions = popup_options,
-              group = "Climate Change",
-              label = lapply(lab3, htmltools::HTML),
-              labelOptions = labelOptions(direction = "auto", textsize = "12px"),
-              highlightOptions = highlightOptions(
-                weight = 3,
-                color = "yellow",
-                bringToFront = T)) %>%
-  addLayersControl(
-    baseGroups = c("Overall Threat","Transportation", "Residential","Human Intrusion", "Energy",  "Climate Change","Biological Use", "Agriculture"),
-    options = layersControlOptions(collapsed = FALSE)) %>%
+  # addPolygons(data = grizzdata_full,
+  #             stroke = T, weight = 1, color = "black", # Add border to polygons
+  #             fillOpacity = 0.5, # Polygon fill
+  #             fillColor = ~palette3(grizzdata_full$transportationcalc),
+  #             popup = threat_popups,
+  #             popupOptions = popup_options,
+  #             group = "Transportation",
+  #             label = lapply(lab3, htmltools::HTML),
+  #             labelOptions = labelOptions(direction = "auto", textsize = "12px"),
+  #             highlightOptions = highlightOptions( 
+  #               weight = 3,
+  #               color = "yellow",
+  #               bringToFront = T)) %>%
+  # addPolygons(data = grizzdata_full,
+  #             stroke = T, weight = 1, color = "black",
+  #             fillOpacity = 0.5,
+  #             fillColor = ~palette3(grizzdata_full$energycalc),
+  #             popup = threat_popups,
+  #             popupOptions = popup_options,
+  #             group = "Energy",
+  #             label = lapply(lab3, htmltools::HTML),
+  #             labelOptions = labelOptions(direction = "auto", textsize = "12px"),
+  #             highlightOptions = highlightOptions(
+  #               weight = 3,
+  #               color = "yellow",
+  #               bringToFront = T)) %>%
+  # addPolygons(data = grizzdata_full,
+  #             stroke = T, weight = 1, color = "black",
+  #             fillOpacity = 0.5,
+  #             fillColor = ~palette3(grizzdata_full$humanintrusioncalc),
+  #             popup = threat_popups,
+  #             popupOptions = popup_options,
+  #             group = "Human Intrusion",
+  #             label = lapply(lab3, htmltools::HTML),
+  #             labelOptions = labelOptions(direction = "auto", textsize = "12px"),
+  #             highlightOptions = highlightOptions(
+  #               weight = 3,
+  #               color = "yellow",
+  #               bringToFront = T)) %>%
+  # addPolygons(data = grizzdata_full,
+  #             stroke = T, weight = 1, color = "black",
+  #             fillOpacity = 0.5,
+  #             fillColor = ~palette3(grizzdata_full$residentialcalc),
+  #             popup = threat_popups,
+  #             popupOptions = popup_options,
+  #             group = "Residential",
+  #             label = lapply(lab3, htmltools::HTML),
+  #             labelOptions = labelOptions(direction = "auto", textsize = "12px"),
+  #             highlightOptions = highlightOptions(
+  #               weight = 3,
+  #               color = "yellow",
+  #               bringToFront = T)) %>%
+  # addPolygons(data = grizzdata_full,
+  #             stroke = T, weight = 1, color = "black",
+  #             fillOpacity = 0.5,
+  #             fillColor = ~palette3(grizzdata_full$agriculturecalc),
+  #             popup = threat_popups,
+  #             popupOptions = popup_options,
+  #             group = "Agriculture",
+  #             label = lapply(lab3, htmltools::HTML),
+  #             labelOptions = labelOptions(direction = "auto", textsize = "12px"),
+  #             highlightOptions = highlightOptions(
+  #               weight = 3,
+  #               color = "yellow",
+  #               bringToFront = T)) %>%
+  # addPolygons(data = grizzdata_full,
+  #             stroke = T, weight = 1, color = "black",
+  #             fillOpacity = 0.5,
+  #             fillColor = ~palette3(grizzdata_full$biousecalc),
+  #             popup = threat_popups,
+  #             popupOptions = popup_options,
+  #             group = "Biological Use",
+  #             label = lapply(lab3, htmltools::HTML),
+  #             labelOptions = labelOptions(direction = "auto", textsize = "12px"),
+  #             highlightOptions = highlightOptions(
+  #               weight = 3,
+  #               color = "yellow",
+  #               bringToFront = T)) %>%
+  # addPolygons(data = grizzdata_full,
+  #             stroke = T, weight = 1, color = "black",
+  #             fillOpacity = 0.5,
+  #             fillColor = ~palette3(grizzdata_full$climatechangecalc),
+  #             popup = threat_popups,
+  #             popupOptions = popup_options,
+  #             group = "Climate Change",
+  #             label = lapply(lab3, htmltools::HTML),
+  #             labelOptions = labelOptions(direction = "auto", textsize = "12px"),
+  #             highlightOptions = highlightOptions(
+  #               weight = 3,
+  #               color = "yellow",
+  #               bringToFront = T)) %>%
+  # addLayersControl(
+  #   baseGroups = c("Overall Threat","Transportation", "Residential","Human Intrusion", "Energy",  "Climate Change","Biological Use", "Agriculture"),
+  #   options = layersControlOptions(collapsed = FALSE)) %>%
   addLegend("bottomright", pal = palette3, values = grizzdata_full$threat_class,
             title = "Threat Rank", na.label = "Extirpated",
             opacity = 1)
