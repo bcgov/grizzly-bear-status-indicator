@@ -105,7 +105,7 @@ dev.off()
 
 cc_data <- grizz.df %>%
   mutate(trend_adj = as.numeric(trend) * -1) %>%
-  select(gbpu_name, calcsrank, trend_adj, popiso_rank_adj, threat_rank_adj) %>%
+  select(gbpu_name, calcsrank, rank_label, trend_adj, popiso_rank_adj, threat_rank_adj) %>%
   gather("metric", "score", -gbpu_name, -calcsrank, -rank_label, trend_adj, popiso_rank_adj, threat_rank_adj) %>%
   mutate(max_val = case_when(metric == "trend_adj" ~ 1, metric == "popiso_rank_adj" ~ 4, metric == "threat_rank_adj" ~ 2),
          label = case_when(metric == "trend_adj" ~ "Trend", metric == "popiso_rank_adj" ~ "Population/\nIsolation", metric == "threat_rank_adj" ~ "Threat"),
@@ -156,7 +156,6 @@ rad_plot
 # as a user_font?
 
 library(grid)
-
 rad_plot
 grid.text("Population/Isolation", x = 0.60, y = 0.15, gp = gpar(fontsize = 8, col = "dark grey"))
 grid.text("Trend", x = 0.38, y = 0.15, gp = gpar(fontsize = 8, col = "dark grey"))
@@ -199,7 +198,7 @@ cons_smap <- ggplot(grizzdata_full) +
   coord_sf(datum = NA) +
   scale_fill_manual(values = palvn, na.value = "light grey",
                     labels = c("Extreme (M1)","High (M2)","Moderate (M3)","Low (M4)","Negligible (M5)","Extirpated")) +
-  labs(fill = "Management Rank") +
+  labs(fill = "Rank") +
   theme_minimal() +
   theme(legend.position = c(0.1, 0.35))
 
