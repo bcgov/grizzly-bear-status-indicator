@@ -106,7 +106,7 @@ dev.off()
 cc_data <- grizz.df %>%
   mutate(trend_adj = as.numeric(trend) * -1) %>%
   select(gbpu_name, calcsrank, trend_adj, popiso_rank_adj, threat_rank_adj) %>%
-  gather("metric", "score", -gbpu_name, -calcsrank, trend_adj, popiso_rank_adj, threat_rank_adj) %>%
+  gather("metric", "score", -gbpu_name, -calcsrank, -rank_label, trend_adj, popiso_rank_adj, threat_rank_adj) %>%
   mutate(max_val = case_when(metric == "trend_adj" ~ 1, metric == "popiso_rank_adj" ~ 4, metric == "threat_rank_adj" ~ 2),
          label = case_when(metric == "trend_adj" ~ "Trend", metric == "popiso_rank_adj" ~ "Population/\nIsolation", metric == "threat_rank_adj" ~ "Threat"),
          label_pos= case_when(metric == "trend_adj" ~ 2.2, metric == "popiso_rank_adj" ~ 5.5, metric == "threat_rank_adj" ~ 2.8)
@@ -198,7 +198,7 @@ cons_smap <- ggplot(grizzdata_full) +
   geom_sf(aes(fill = calcsrank), alpha = 0.8) +
   coord_sf(datum = NA) +
   scale_fill_manual(values = palvn, na.value = "light grey",
-                    labels = c("M1","M2","M3","M4","M5","Extirpated")) +
+                    labels = c("Extreme (M1)","High (M2)","Moderate (M3)","Low (M4)","Negligible (M5)","Extirpated")) +
   labs(fill = "Management Rank") +
   theme_minimal() +
   theme(legend.position = c(0.1, 0.35))
