@@ -89,10 +89,10 @@ grizzdata_full <- mutate(grizzdata_full,
 grizzdata_full <- mutate(grizzdata_full,
                          isolation = as.character(popiso),
                          isolation = case_when(
-                           str_detect(isolation, "^[A-E]A$") ~ "Totally Isolated (>90%)",
-                           str_detect(isolation, "^[A-E]B$") ~ "Highly Isolated (66-90%)",
-                           str_detect(isolation, "^[A-E]C$") ~ "Moderate Isolated (25-66%)",
-                           str_detect(isolation, "^[A-E]D$") ~ "Not Isolated (<25%)")
+                           str_detect(isolation, "^[A-E]A$") ~ "Totally Isolated",
+                           str_detect(isolation, "^[A-E]B$") ~ "Highly Isolated",
+                           str_detect(isolation, "^[A-E]C$") ~ "Moderate Isolated",
+                           str_detect(isolation, "^[A-E]D$") ~ "Not Isolated")
                          )
 
 grizzdata_full <- mutate(grizzdata_full,
@@ -116,7 +116,10 @@ grizzdata_full <- mutate(grizzdata_full,
 
 # Change threat class column to ordered factor
 grizzdata_full <- grizzdata_full %>%
-  mutate(threat_class = ifelse(threat_class == "VHigh", "Very High", threat_class))
+  mutate(threat_class = ifelse(threat_class == "VHigh", "Very High", threat_class),
+         rank_label = paste0(con_stats ," (", calcsrank, ")",sep = ""),
+         rank_label = ifelse(status == "Extirpated", NA, rank_label)
+)
 
 grizzdata_full$threat_class <- factor(grizzdata_full$threat_class, ordered = TRUE,
                                       levels = c("Very High", "High", "Medium", "Low", "Negligible"))
@@ -138,3 +141,4 @@ grizzdata_full <- ms_simplify(grizzdata_full, keep = 0.25) # reduce number of ve
 # Write grizzly data file to disk
 if (!dir.exists("data")) dir.create("data")
 saveRDS(grizzdata_full, file = "data/grizzdata_full.rds")
+
