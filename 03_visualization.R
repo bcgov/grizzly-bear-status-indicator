@@ -42,13 +42,12 @@ grizz.df <- as.data.frame(grizzdata_full)
 
 cc_data <- grizz.df %>%
   mutate(trend_adj = as.numeric(trend) * -1) %>%
-  select(gbpu_name, calcsrank, trend_adj, popiso_rank_adj, threat_rank_adj) %>%
-  gather("metric", "score", -gbpu_name, -calcsrank, trend_adj, popiso_rank_adj, threat_rank_adj) %>%
+  select(gbpu_name, calcsrank, rank_label, trend_adj, popiso_rank_adj, threat_rank_adj, con_stats) %>%
+  gather("metric", "score", -gbpu_name, -calcsrank, -con_stats, -rank_label, trend_adj, popiso_rank_adj, threat_rank_adj) %>%
   mutate(max_val = case_when(metric == "trend_adj" ~ 1, metric == "popiso_rank_adj" ~ 4, metric == "threat_rank_adj" ~ 2),
          label = case_when(metric == "trend_adj" ~ "Trend", metric == "popiso_rank_adj" ~ "Population/\nIsolation", metric == "threat_rank_adj" ~ "Threat"),
          label_pos= case_when(metric == "trend_adj" ~ 2.2, metric == "popiso_rank_adj" ~ 5.5, metric == "threat_rank_adj" ~ 2.8)
   )
-cc_data <- left_join(cc_data, pa)
 
 coord_radar <- function (theta = "x", start = 0, direction = 1, clip = "on") {
   theta <- match.arg(theta, c("x", "y"))
@@ -62,6 +61,7 @@ coord_radar <- function (theta = "x", start = 0, direction = 1, clip = "on") {
 # Create radar plot list
 radar_plot_list <- vector(length = length(gbpu_list), mode = "list")
 names(radar_plot_list) <- gbpu_list
+
 
 Radar_Plots <- function(data, name) {
   p <- ggplot(data, aes(x = metric, y = score)) +
@@ -97,6 +97,7 @@ plots <- for (n in gbpu_list) {
   } else {
   p <- Radar_Plots(data, n)
   ggsave(p, file = paste0("dataviz/leaflet/concern_plots/", n, ".svg"))
+
 }
   radar_plot_list[[n]] <- p
 
@@ -154,7 +155,7 @@ names(threat_plot_list) <- gbpu_list
 # Create plotting function
 Threat_Plots <- function(data, name) {
   make_plot <- ggplot(data, aes(x = threat, y = ranking,
-                                fill = ranking)) +
+                                fill = ranking, alpha = 0.95)) +
     geom_bar(stat = "identity") + # Add bar for each threat variable
     scale_fill_manual(values = palv) +
     labs(x = "Threat", y = "Threat Ranking",
@@ -164,7 +165,7 @@ Threat_Plots <- function(data, name) {
     theme_soe() + theme(plot.title = element_text(hjust = 0.5), # Centre title
                        legend.position = "none",
                       plot.caption = element_text(hjust = 0)) +  # L-align caption
-   scale_y_discrete(limits = c("Negligible", "Low", "Medium", "High", "Very High"),
+   scale_y_discrete(limits = c("Negligible", "Low", "Medium", "High"),
                     drop = FALSE, na.translate = FALSE)
   make_plot + coord_flip()
 
@@ -173,14 +174,12 @@ Threat_Plots <- function(data, name) {
 # Create ggplot graph loop
 plots <- for (n in gbpu_list) {
   print(n)
-  #n = "Central Interior"
   data <- filter(total_threats, gbpu_name == n)
   if(length(data$gbpu_name) == 0) {
     p = NA
   } else {
   p <- Threat_Plots(data, n)
   ggsave(p, file = paste0("dataviz/leaflet/threat_plots/", n, ".svg"))
-
   }
   threat_plot_list[[n]] <- p
 }
