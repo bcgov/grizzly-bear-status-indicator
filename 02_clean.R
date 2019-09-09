@@ -117,8 +117,11 @@ grizzdata_full <- mutate(grizzdata_full,
 # Change threat class column to ordered factor
 grizzdata_full <- grizzdata_full %>%
   mutate(threat_class = ifelse(threat_class == "VHigh", "Very High", threat_class),
-         rank_label = paste0(con_stats ," (", calcsrank, ")",sep = ""),
-         rank_label = ifelse(status == "Extirpated", NA, rank_label)
+         rank_label = paste0(con_stats ," (", calcsrank, ")"),
+         rank_label = factor(rank_label, ordered = TRUE,
+                             levels = c("Extreme (M1)", "High (M2)",
+                                        "Moderate (M3)", "Low (M4)",
+                                        "Negligible (M5)", NA))
 )
 
 grizzdata_full$threat_class <- factor(grizzdata_full$threat_class, ordered = TRUE,
