@@ -44,9 +44,9 @@ constatus_popup <- leafpop::popupTable(popup_text1,
                                   row.numbers = F,
                                   feature.id = F)
 
-concern_popups <- paste0("<img src = ", 
+concern_popups <- paste0("<img src='", 
                         paste0("./concern_plots/", 
-                               gsub("\\s+", "%20", grizzdata_full$gbpu_name), ".svg"), 
+                               gsub("\\s+", "%20", grizzdata_full$gbpu_name), ".svg'"), 
                         ">")
 
 constatus_popup <- str_replace(constatus_popup, "</div></body></html>", 
@@ -132,7 +132,7 @@ palette3 <- colorFactor(palette = 'viridis', grizzdata_full$threat_class, revers
 # {.tabset .tabset-fade}
 
 ```{r grizz_map, warning=FALSE, echo=FALSE}
-grizzmap <- leaflet(width = "900px", height = "500px", 
+grizzmap <- leaflet(width = "900px", height = "600px", 
                     options = leafletOptions(minZoom = 5)) %>%  # generate leaflet map
   addProviderTiles(providers$Stamen.Terrain, group = "Terrain") %>%
   add_bc_home_button() %>%
@@ -151,11 +151,13 @@ grizzmap %>%
               label = lapply(lab1, htmltools::HTML),
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
               popup = constatus_popup,
-              popupOptions = popupOptions(autoPan = TRUE,
-                               keepInView = TRUE,
-                               closeOnClick = TRUE,
-                               autoPanPaddingTopLeft = c(120, 20),
-                               autoPanPaddingBottomRight = c(150,20)),
+              popupOptions = popupOptions(maxWidth = 300, minWidth = 300, 
+                                          maxHeight = 300,
+                                          autoPan = TRUE,
+                                          keepInView = TRUE,
+                                          closeOnClick = TRUE,
+                                          autoPanPaddingTopLeft = c(120, 20),
+                                          autoPanPaddingBottomRight = c(150,20)),
               highlightOptions = highlightOptions( # Highlight interaction for mouse hover
                 weight = 3,
                 color = "yellow",

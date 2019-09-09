@@ -68,22 +68,19 @@ Radar_Plots <- function(data, name) {
     geom_polygon(aes(group = NA,
                      fill = as.numeric(str_extract(calcsrank, "\\d")),
                      colour = as.numeric(str_extract(calcsrank, "\\d"))),
-                 alpha = 0.6, size = 2) +
+                 alpha = 0.6, size = 3) +
     geom_errorbar(aes(x = metric, ymin = 0, ymax = max_val),
-                  width = 0.1, colour = "grey40") +
+                  width = 0.1, colour = "grey40", size = 1.5) +
     scale_colour_viridis_c(direction = -1, guide = "none") +
     scale_fill_viridis_c(direction = -1, guide = "none") +
     geom_text(aes(x = metric, y = label_pos, label = label),
-              colour = "grey40") +
-   # geom_text(aes( colour = as.numeric(str_extract(calcsrank, "\\d"))),
-  #            x = 0.5, y = 2, size = 4) +
-    #geom_text(aes(label = calcsrank, colour = as.numeric(str_extract(calcsrank, "\\d"))),
-    #          x = 0.5, y = 2, size = 4) +
-    #geom_text(aes(label = gbpu_name),
-    #          x = 0.5, y = 4.5, size = 5, colour = "grey40") +
+              colour = "grey40", size = 6) +
+    # geom_text(aes(label = calcsrank), colour = "grey40",
+    #          x = 0.5, y = 2, size = 12) +
     coord_radar(clip = "off") +
     theme_void() +
-    theme(plot.margin = unit(c(0,0,0,0), "lines"), strip.text = element_blank())
+    theme(strip.text = element_blank(),
+          plot.margin = unit(c(-4, -6, -6, -13), "cm"))
  p
 
 }
@@ -96,7 +93,8 @@ plots <- for (n in gbpu_list) {
     p = NA
   } else {
   p <- Radar_Plots(data, n)
-  ggsave(p, file = paste0("dataviz/leaflet/concern_plots/", n, ".svg"))
+  ggsave(p, file = paste0("dataviz/leaflet/concern_plots/", n, ".svg"),
+         width = unit(6, "in"), height = unit(5, "in"))
 
 }
   radar_plot_list[[n]] <- p
