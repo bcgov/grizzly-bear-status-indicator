@@ -34,7 +34,7 @@ grizzdata_full <- st_transform(grizzdata_full, crs = 4326) # convert to lat/long
 popup_text1 <- dplyr::select(grizzdata_full, gbpu_name, rank_label, 
                   threat_class, adults, isolation, trend) %>% 
   rename("Population Name" = gbpu_name,
-         "Conservation Rank" = rank_label,
+         "Conservation Concern" = rank_label,
          "Overall Threat Score" = threat_class,
          "Population Size" = adults,
          "Isolation" = isolation,
@@ -165,7 +165,7 @@ grizzmap %>%
                 color = "yellow",
                 bringToFront = T)) %>%
   addLegend("bottomright", pal = palette1a, values = grizzdata_full$rank_label,
-            title = "Rank", na.label = "Extirpated",
+            title = "Conservation Concern", na.label = "Extirpated",
             opacity = 1) 
 ```
 
