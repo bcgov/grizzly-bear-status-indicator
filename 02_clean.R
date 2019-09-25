@@ -102,26 +102,24 @@ grizzdata_full <- mutate(grizzdata_full,
                            str_detect(calcsrank, "5") ~ "Negligible")
 )
 
-ns <- grizzdata_full[grizzdata_full$gbpu_name =="North Selkirk",]
 
 # Add population density column
 grizzdata_full <- mutate(grizzdata_full,
                          area_sq_km = round(as.numeric(set_units(st_area(geometry), km2)), digits = 0),
                          use_area_sq_km = round(as.numeric(h_area_nowice),digits = 0),
-                         pop_density = round(as.numeric(adults / use_area_sq_km * 1000), digits = 0)
+                         pop_density = round(as.numeric(gbpu.pop / use_area_sq_km * 1000), digits = 0)
 )
-
-
 
 # Change threat class column to ordered factor
 grizzdata_full <- grizzdata_full %>%
-  mutate(threat_class = ifelse(threat_class == "VHigh", "Very High", threat_class),
-         rank_label = paste0(con_stats ," (", calcsrank, ")"),
-         rank_label = factor(rank_label, ordered = TRUE,
-                             levels = c("Extreme (M1)", "High (M2)",
-                                        "Moderate (M3)", "Low (M4)",
-                                        "Negligible (M5)", NA))
-)
+  mutate(threat_class = ifelse(threat_class == "VHigh", "Very High", threat_class))
+
+#         rank_label = paste0(con_stats ," (", calcsrank, ")"),
+#         rank_label = factor(rank_label, ordered = TRUE,
+#                             levels = c("Extreme (M1)", "High (M2)",
+#                                        "Moderate (M3)", "Low (M4)",
+#                                        "Negligible (M5)", NA))
+#)
 
 grizzdata_full$threat_class <- factor(grizzdata_full$threat_class, ordered = TRUE,
                                       levels = c("Very High", "High", "Medium", "Low", "Negligible"))
@@ -133,11 +131,12 @@ grizzdata_full$trend <- grizzdata_full$trend %>% replace_na("Data Deficient")
 # Simplify vertices of GBPU polygons
 grizzdata_full <- ms_simplify(grizzdata_full, keep = 0.25) # reduce number of vertices
 
-# add numeric values to output table to calculate figures for Management Status
-#grizzdata_full <- grizzdata_full %>%
-#  left_join(popiso_table, by = "popiso") %>%
-#  left_join(threat_table, by = "threat_class") %>%
-#  mutate(calc_rank_check = 5 - as.numeric(trend) - popiso_rank_adj - threat_rank_adj)
+
+# remove extra columns:
+grizzdata_full <- grizzdata_full %>%
+  select(-c(display_name, grizzly_bear_pop_unit_id, grizzly_bear_population_tag,
+            display_name,within_bc_ind, version_name, version_year_modified ))
+
 
 
 # Write grizzly data file to disk
