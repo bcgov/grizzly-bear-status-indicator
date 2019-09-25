@@ -54,6 +54,7 @@ gbpu_2018 <- gbpu_2018 %>%
   group_by(POPULATION_NAME) %>%
   left_join(gbpu_hab)
 
+
 # Find centroid of polygons (for labelling)
 # Note: BC Albers CRS used because lat/long not accepted by st_centroid
 popcentroid <- st_centroid(st_geometry(gbpu_2018)) %>%
@@ -105,6 +106,7 @@ grizzdata_full <- mutate(grizzdata_full,
                            str_detect(calcsrank, "5") ~ "Negligible")
 )
 
+ns <- grizzdata_full[grizzdata_full$gbpu_name =="North Selkirk",]
 
 # Add population density column
 grizzdata_full <- mutate(grizzdata_full,
@@ -113,6 +115,8 @@ grizzdata_full <- mutate(grizzdata_full,
                          pop_density = round(as.numeric(adults / use_area_sq_km * 1000), digits = 0)
 )
 
+
+"North Selkirk"
 
 # Change threat class column to ordered factor
 grizzdata_full <- grizzdata_full %>%
