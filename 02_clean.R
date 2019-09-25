@@ -50,10 +50,6 @@ threat_calc <- threat_calc %>%
 
 
 ## DATA CLEANING ---------------------------------------------------------
-gbpu_2018 <- gbpu_2018 %>%
-  group_by(POPULATION_NAME) %>%
-  left_join(gbpu_hab)
-
 
 # Find centroid of polygons (for labelling)
 # Note: BC Albers CRS used because lat/long not accepted by st_centroid
@@ -116,7 +112,6 @@ grizzdata_full <- mutate(grizzdata_full,
 )
 
 
-"North Selkirk"
 
 # Change threat class column to ordered factor
 grizzdata_full <- grizzdata_full %>%
