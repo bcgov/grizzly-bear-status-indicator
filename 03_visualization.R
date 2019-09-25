@@ -102,23 +102,6 @@ plots <- for (n in gbpu_list) {
 }
 
 
-# Svg function
-#save_svg <- function(x, fname, ...) {
-#  svg_px(file = fname, ...)
-#  plot(x)
-#  dev.off()
-#}
-
-# Save svgs to plot list
-#iwalk(radar_plot_list, ~ save_svg(.x, fname = paste0("dataviz/leaflet/concern_plots/", .y, ".svg"),
-#                                   width = 250, height = 250))
-
-# Save plots to file
-#saveRDS(radar_plot_list, file = "dataviz/leaflet/concern_plots/radar_plotlist.rds")
-
-# create popup and save
-#concern_popups <-  leafpop::popupGraph(radar_plot_list, type = "svg")
-#saveRDS(concern_popups, "dataviz/leaflet/concern_plots/concern_popups.rds")
 
 ## ----------------------------------------------------------------------------
 ## THREAT POPUP MAPPING
@@ -181,9 +164,4 @@ plots <- for (n in gbpu_list) {
   }
   threat_plot_list[[n]] <- p
 }
-
-
-# Save svgs to plot list id leaflet folder
-#iwalk(threat_plot_list, ~ save_svg(.x, fname = paste0("dataviz/leaflet/threat_plots/", .y, ".svg"),
-#                            width = 400, height = 300))
 
