@@ -48,12 +48,28 @@ grizz.df <- grizz.df %>%
 
 ```
 
-* **Grizzly bears are an important part of the British Columbia landscape.** They play a key role in maintaining healthy ecosystems and are culturally important to  First Nations People living in B.C.
+* **Grizzly bears are an important part of the British Columbia landscape.** 
+  + They are a symbol of ecological integrity that represents much of what British Columbians and visitors alike appreciate about B.C.’s natural beauty.
+  + B.C. is host to some of North America’s last remaining places where large predators and their prey play out their millennia-old roles. Grizzly bears are a key part of these systems.
+  +	They are an important “umbrella” species, as landscapes that support healthy Grizzly bear populations will be able to sustain many other species.
+  +	Grizzly bears play a key role in maintaining healthy ecosystems, for example, by distributing salmon nutrients into forests, and transporting seeds through their feces.
+  +	They are an important part of the culture of First Nations People living in B.C.
+  +	Grizzly bear viewing is an important economic and social components of B.C.’s tourism and recreation industries.
 
 
 * **For management purposes, grizzly bears are divided into 55 Grizzly Bear Population Units (GBPUs) across B.C.** These units range in size from 2,670 km^2^ to 49,578 km^2^. Managing by local population units allows us to identify local conservation concerns and track grizzly bear abundance and stability. 
 
-* **GBPUs are ranked by conservation concern.** Rankings vary from lowest conservation (M5) to highest conservation concern (M1) using international methods developed by NatureServe^2^ and IUCN. GBPU conservation rankings are determined by three factors; 1) population size and isolation, 2) population trend, and 3) level of threat to bears or bear habitat. An overall level of threat was determined by considering threat level for seven sub-catergories. These include; Agriculture, Biological Use, Climate Change, Energy, Human intrusion, Residential, Transportation. See below for detailed methodology ^1^. Ranks are determined using the latest available data and expert opinion.
+* **GBPUs are ranked by conservation concern.** Rankings vary from lowest conservation (M5) to highest conservation concern (M1) using international methods developed by NatureServe^2^ and IUCN. GBPU conservation rankings are determined by three factors; 1) population size and isolation, 2) population trend, and 3) level of threat to bears or bear habitat. An overall level of threat was determined by considering threat level for seven sub-catergories. These include; Residential, Agriculture, Energy, Transportation, Biological Use, Human intrusion and Climate Change. See below for detailed methodology ^1^. 
+
+* Grizzly bears are ranked S3 (Vulnerable Uncertain; 2015) in B.C. by the Conservation Data Centre, and are classified as a ‘Species of Concern’ under the federal Species at Risk ACT (SARA; 2018).
+
+* The cumulative effects of human development is the greatest threat to Grizzly bears in B.C. These effects impact bears in three main (often overlapping) ways:
+  +	Conflicts between bears and humans increase in frequency, often resulting in bears being killed or relocated;
+  + Bear populations become isolated because of human settlements, agriculture, and utility corridors in major valley bottoms;
+  +	Habitat may be lost or degraded by development, alienated through bears’ avoidance of humans and human activities, or fragmented—for example, by high density road networks with high traffic volumes.
+  
+•	Roads are known to have a negative effect on Grizzly bear habitat use when they reach a density of about 0.6 km^REFERENCE^ of road per sq km. This effect gets stronger when road density increases over ~0.75 km/sq km. In addition, new or improved roads bring people into contact with Grizzly bears more frequently, and sometimes those encounters are lethal for bears.
+
 
 \newpage
 
@@ -68,7 +84,7 @@ knitr::include_graphics("./cons_splot.png")
 ```
 
 
-Of the 55 Grizzly Bear Population units (GBPU), three are classed as highest conservation concern (M1) while 11 are conserved of least conservation concern (M5). In general GBPUs located in the southern portion of the province were of higher concern. GBPU units adjacent to the Central Interior unit, in which grizzly bears have been extirpated, were also ranked higher. Refer to Appendices for full dataset.
+Of the 55 Grizzly Bear Population units (GBPU), three are classed as extreme conservation concern (M1) while 12 are ranked as least conservation concern (M5). In general GBPUs located in the southern portion of the province were of higher concern. GBPU units adjacent to the Central Interior unit, in which grizzly bears have been extirpated, were also ranked higher. Refer to Appendices for full dataset.
 
 
 \newpage
@@ -98,7 +114,7 @@ knitr::include_graphics("./threat_splot.png")
 
 ```
 
-The overall threat for GBPU was assessed from Very High to Negligible. Approximately half of GBPU (23 GBPUs) are in a Low or Negligible overall threat category. The Yahk GBPU, located in the Kooteney-Boundary ranked as Very High threat risk due to XZY.
+The overall threat for GBPU was assessed from Very High to Negligible. Approximately half of GBPU (23 GBPUs) are in a Low or Negligible overall threat category. The Yahk GBPU, located in the Kooteney-Boundary ranked as Very High threat risk due to the combinated threats of Agriculture, Human intrusion, Residential, Transportation and Biological Use. 
 
 
 
@@ -116,7 +132,6 @@ knitr::include_graphics("./radar_plot.png")
 
 ## Summary of threats to Grizzly Bears
 
-The overall threat for GBPU was assessed from Very High to Negligible. Approximately half of GBPU (23 GBPUs) are in a Low or Negligible overall threat category. The Yahk GBPU, located in the Kooteney-Boundary was ranked as Very High risk due to XZY.
 
 
 ```{r image-ref-for-in-text, echo = FALSE, message=FALSE, fig.align='center', out.width='0.70\\linewidth'}
@@ -136,25 +151,24 @@ knitr::include_graphics("./threat_sum_plot.png")
 
 ## Methods
 
-* Conservation ranks were based on internationally recognized tools developed by NatureServe ^2^. This enabled conservation rankings in line with international standards on species management criteria (NatureServe and international ranking (IUCN)). 
+* Conservation concern ranks were generated using a variation of NatureServe’s‘Element Rank Calculator’^2^. In conjunction with Provincial bear biologists the calculator was modified for application to Grizzly Bear Population Units in British Columbia. This enabled rankings consistent with recognized standards on species ranking criteria (B.C. Conservation Data Centre, NatureServe, and IUCN).
 
-* Each GBPU was assigned a rank based on population size and trend, genetic and demograpohic isolation, and overall threat to grizzly bears and bear habitat. Each GBPU starts with a rank of 5 – M5 no conservation concern – this value is reduced based on 1) negative population trend, 2) small and/or isolated population, and 3) overall threat (negligible, low, medium, high & very high) 
 
-* details on population metrics?
+* Each GBPU was assigned a rank based on population size and trend, genetic and demographic isolation, and overall threat to grizzly bears and bear habitat. Each GBPU starts with a rank of 5 – M5 no conservation concern – this value is reduced based on 1) negative population trend, 2) small and/or isolated population, and 3) overall threat (negligible, low, medium, high & very high) 
 
-* details on trend metrics?
 
-* Threats considered in the analysis were based on IUCN-CMP (Conservation Measures Partnership) classifications of direct threats. Threat categories are based on threat scope and severity. [The NatureServe calculator](https://www.natureserve.org/conservation-tools/conservation-rank-calculator) was used to combine the individual threats to determine an overall threat category.
+* Population trend over 3 generations (~30 years) modifies the rank, such that if the population decrease is >25% then the population/risk rank value gets downgraded.
 
-* Numeric values generated from the calculator were reviewed by experts to ensure accurate assesment used. 
+*	Population size and isolation are combined such that smaller isolated population’s rank scores can be reduced by as much as 4 points, whereas large well connected populations are not downgraded.
 
-* Where numeric rankings spanned multiple catergories (i.e. M1M2), a conservative approach was applied with the highest concern catergory used.
+* •	Threats considered in the ranking were based on IUCN-CMP (Conservation Measures Partnership) classifications of direct threats. Threats were quantified using published spatial data, including Statistics Canada, B.C.’s Baseline Thematic Mapping, Digital Road Atlas, Fish and Wildlife hunter and mortality data and Federal Department of Fisheries and Oceans’ Salmon escapement.  [The NatureServe calculator](https://www.natureserve.org/conservation-tools/conservation-rank-calculator) combined individual threats into  an overall threat class.
+
 
 \newpage
 
 ## References and Other Useful Links
 
-*^1^ 2019 Grizzly Bear Population Unit Management Ranking Report [add link].
+*^1^ 2019 Ranking the Conservation Concern of Grizzly Bear Population Units report[add link].
 
 *^2^ NatureServe. 2015. [NatureServe Element Occurrence Viability Calculator Version 1](http://www.natureserve.org/conservation-tools/conservation-rank-calculator). NatureServe, Arlington, VA.
 
@@ -174,10 +188,17 @@ knitr::include_graphics("./threat_sum_plot.png")
 
 - [Grizzly Bear Population Units](https://catalogue.data.gov.bc.ca/dataset/grizzly-bear-population-units)
 
+- [DataBC](https://catalogue.data.gov.bc.ca/dataset?download_audience=Public) – [Digital Road Atlas](https://www2.gov.bc.ca/gov/content/data/geographic-data-services/topographic-data/roads), mining and energy infrastructure , [BTM – urban and agriculture areas] (link)
+-	[Statistic Canada](https://www150.statcan.gc.ca/n1//en/type/data?MM=1#tables) – human and livestock density
+-	FLNRORD Fish and Wildlife data – hunter day density, grizzly bear mortality
+-	Provincial Cumulative Effects data – Mid-seral forest, Front country
+-	DFO NuSEDS – changes in salmon escapement
+
+
 
 ----
 
-Published and Available On-Line at Environmental Reporting BC (August 2019):  
+Published and Available On-Line at Environmental Reporting BC (October 2019):  
 <http://www.env.gov.bc.ca/soe/indicators/plants-and-animals/grizzly-bears.html>
 
 Email correspondence to: envreportbc@gov.bc.ca
