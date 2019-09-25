@@ -12,7 +12,6 @@
 
 library(tidyverse)
 library(dplyr)
-#library(png)
 library(here)
 library(readr)
 library(dplyr)
@@ -197,8 +196,8 @@ cons_smap <- ggplot(grizzdata_full) +
   geom_sf(aes(fill = calcsrank), alpha = 0.8) +
   coord_sf(datum = NA) +
   scale_fill_manual(values = palvn, na.value = "light grey",
-                    labels = c("Extreme (M1)","High (M2)","Moderate (M3)","Low (M4)","Negligible (M5)","Extirpated")) +
-  labs(fill = "Rank") +
+                    labels = c("Extreme","High","Moderate","Low","Negligible","Extirpated")) +
+  labs(fill = "Conservation Concern") +
   theme_minimal() +
   theme(legend.position = c(0.1, 0.35))
 
@@ -224,7 +223,7 @@ threat_smap <- ggplot(grizzdata_full)+
   coord_sf(datum = NA) +
   scale_fill_manual(values = palv, na.value = "light grey",
                     labels = c("Very High","High","Medium","Low","Negligible","Extirpated")) +
-  labs(fill = "Overall Threat ", reverse = TRUE) +
+  labs(fill = "Threat ", reverse = TRUE) +
   theme_minimal() +
   theme(legend.position = c(0.1, 0.35))
 
