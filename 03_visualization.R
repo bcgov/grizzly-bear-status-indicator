@@ -21,28 +21,27 @@ dir.create("dataviz/leaflet/threat_plots/", showWarnings = FALSE)
 # Create list of GBPU
 gbpu_list <- unique(grizzdata_full$gbpu_name)
 
-
 # create the colour pallet for all figures
 palv <- c("Negligible" = "#440154FF", "Low" = "#3B528BFF" ,
           "Medium" = "#21908CFF", "High" = "#5DC863FF" ,
           "Very High" = "#FDE725FF", "NA" = "#808080")
 
-mrank_palette <- c(
-  "M1" = "#FDE725FF" ,
-  "M2" = "#5DC863FF",
-  "M3" = "#21908CFF",
-  "M4" = "#3B528BFF" ,
-  "M5" = "#440154FF",
-  "NA" = "#808080"
-)
+#mrank_palette <- c(
+#  "M1" = "#FDE725FF" ,
+#  "M2" = "#5DC863FF",
+#  "M3" = "#21908CFF",
+#  "M4" = "#3B528BFF" ,
+#  "M5" = "#440154FF",
+#  "NA" = "#808080"
+#)
 
 # Create Conservation Concern Popup Plots ---------------------------------
 grizz.df <- as.data.frame(grizzdata_full)
 
 cc_data <- grizz.df %>%
   mutate(trend_adj = as.numeric(trend) * -1) %>%
-  select(gbpu_name, calcsrank, rank_label, trend_adj, popiso_rank_adj, threat_rank_adj, con_stats) %>%
-  gather("metric", "score", -gbpu_name, -calcsrank, -con_stats, -rank_label, trend_adj, popiso_rank_adj, threat_rank_adj) %>%
+  select(gbpu_name, calcsrank, trend_adj, popiso_rank_adj, threat_rank_adj, con_stats) %>%
+  gather("metric", "score", -gbpu_name, -calcsrank, -con_stats, trend_adj, popiso_rank_adj, threat_rank_adj) %>%
   mutate(max_val = case_when(metric == "trend_adj" ~ 1, metric == "popiso_rank_adj" ~ 4, metric == "threat_rank_adj" ~ 2),
          label = case_when(metric == "trend_adj" ~ "Trend", metric == "popiso_rank_adj" ~ "Population/\nIsolation", metric == "threat_rank_adj" ~ "Threat"),
          label_pos= case_when(metric == "trend_adj" ~ 2.2, metric == "popiso_rank_adj" ~ 5.5, metric == "threat_rank_adj" ~ 2.8)
@@ -65,15 +64,15 @@ names(radar_plot_list) <- gbpu_list
 Radar_Plots <- function(data, name) {
   p <- ggplot(data, aes(x = metric, y = score)) +
     geom_polygon(aes(group = NA,
-                     fill = calcsrank,
-                     colour = calcsrank),
+                     fill = con_stats,
+                     colour = con_stats),
                  alpha = 0.7, size = 4) +
     geom_errorbar(aes(x = metric, ymin = 0, ymax = max_val),
                   width = 0.1, colour = "grey40", size = 1.5) +
     scale_colour_manual(guide = "none",
-                           values = mrank_palette) +
+                           values = palv) +
     scale_fill_manual(guide = "none",
-                         values = mrank_palette) +
+                         values = palv) +
     geom_text(aes(x = metric, y = label_pos, label = label),
               colour = "grey40", size = 6) +
     # geom_text(aes(label = calcsrank), colour = "grey40",
@@ -183,8 +182,6 @@ plots <- for (n in gbpu_list) {
   threat_plot_list[[n]] <- p
 }
 
-# Check result
-#threat_plot_list[["Yahk"]]
 
 # Save svgs to plot list id leaflet folder
 #iwalk(threat_plot_list, ~ save_svg(.x, fname = paste0("dataviz/leaflet/threat_plots/", .y, ".svg"),
