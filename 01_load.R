@@ -42,29 +42,26 @@ data_path <- soe_path("Operations ORCS/Data - Working/plants_animals/grizzly/201
 threat_calc <- read_xls(file.path(data_path, "Threat_Calc.xls")) %>%
   rename_all(tolower)
 
+
 # Import 2016 GBPU polygons (for now, until we get the newest ones)
 gbpu_2018 <- read_sf(file.path(data_path, "BC_Grizzly_Results_v1_Draft_April2016.gdb"),
                      layer = "GBPU_BC_edits_v2_20150601") %>%
   transform_bc_albers()
 
 
-# Import baseline data for density measure (need to update this to web mapping service)
-# open web mapping service instead(
-#https://openmaps.gov.bc.ca/geo/pub/WHSE_BASEMAPPING.BTM_PRESENT_LAND_USE_V1_SVW/ows?service=WMS&request=GetCapabilities
+# Import 2018 GBPU polygons (for now, until we get the newest ones)
+gbpu_hab <- read_sf(file.path(data_path, "Bear_Density_2018.gdb"),
+                    layer = "GBPU_MU_LEH_2015_2018_bear_density_DRAFT") %>%
+  transform_bc_albers() %>%
+  select(c( "POPULATION" , "AREA_KM2" , "AREA_KM2_B" , "AREA_KM2_n", "EST_POP_21",
+            "geometry")) %>%
+  group_by(POPULATION) %>%
+  summarise(gbpu.pop = sum(EST_POP_21, na.rm = TRUE),
+            H_area_km2 = sum(AREA_KM2, na.rm = TRUE),
+            H_area_wice = sum(AREA_KM2_B, na.rm = TRUE),  # amount of water/ ice
+            H_area_nowice = sum(AREA_KM2_n, na.rm = TRUE)) %>%
+  mutate(POPULATION_NAME  = POPULATION) %>%
+  st_drop_geometry() %>%
+  as.data.frame()
 
-#bc_icewater <- read_sf(file.path(data_path, "BC_Grizzly_Results_v1_Draft_April2016.gdb"),
-#                     layer = "BTM_IceWater") %>%
-#  transform_bc_albers()
-
-# Import baseline data for density measure (currently not on bcgw)
-gbpu_hab <- read_sf(file.path(data_path, "BC_Grizzly_Results_v1_Draft_April2016.gdb"),
-                       layer = "GBPU_MU_LEH_density_2015") %>%
-  transform_bc_albers()
-
-gbpu_hab <- gbpu_hab %>%
-  group_by(POPULATION_NAME) %>%
-  summarise(H_area_km2 = sum(AREA_KM2, na.rm = TRUE),
-            H_area_wice = sum(AREA_KM2_BTMwaterIce, na.rm = TRUE),
-            H_area_nowice = sum(AREA_KM2_noWaterIce, na.rm = TRUE)) %>%
-  as.data.frame() %>%
-  select(-Shape)
+gbpu_2018 <- left_join(gbpu_2018, gbpu_hab)
