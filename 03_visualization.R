@@ -26,14 +26,14 @@ palv <- c("Negligible" = "#440154FF", "Low" = "#3B528BFF" ,
           "Medium" = "#21908CFF", "High" = "#5DC863FF" ,
           "Very High" = "#FDE725FF", "NA" = "#808080")
 
-#mrank_palette <- c(
-#  "M1" = "#FDE725FF" ,
-#  "M2" = "#5DC863FF",
-#  "M3" = "#21908CFF",
-#  "M4" = "#3B528BFF" ,
-#  "M5" = "#440154FF",
-#  "NA" = "#808080"
-#)
+mrank_palette <- c(
+  "M1" = "#FDE725FF" ,
+  "M2" = "#5DC863FF",
+  "M3" = "#21908CFF",
+  "M4" = "#3B528BFF" ,
+  "M5" = "#440154FF",
+  "NA" = "#808080"
+)
 
 # Create Conservation Concern Popup Plots ---------------------------------
 grizz.df <- as.data.frame(grizzdata_full)
@@ -64,15 +64,16 @@ names(radar_plot_list) <- gbpu_list
 Radar_Plots <- function(data, name) {
   p <- ggplot(data, aes(x = metric, y = score)) +
     geom_polygon(aes(group = NA,
-                     fill = con_stats,
-                     colour = con_stats),
+
+                     fill = calcsrank,
+                     colour = calcsrank),
                  alpha = 0.7, size = 4) +
     geom_errorbar(aes(x = metric, ymin = 0, ymax = max_val),
                   width = 0.1, colour = "grey40", size = 1.5) +
     scale_colour_manual(guide = "none",
-                           values = palv) +
+                           values = mrank_palette ) +
     scale_fill_manual(guide = "none",
-                         values = palv) +
+                         values = mrank_palette ) +
     geom_text(aes(x = metric, y = label_pos, label = label),
               colour = "grey40", size = 6) +
     # geom_text(aes(label = calcsrank), colour = "grey40",
