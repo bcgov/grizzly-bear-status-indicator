@@ -77,7 +77,7 @@ grizz.df <- grizz.df %>%
 
 
 
-```{r cons_map, echo = FALSE, warning = FALSE, error = FALSE, message = FALSE, fig.cap = "Conservation Concern Ranking for Grizzly Bear Population units (GBPC)", results = 'asis', out.width='0.95\\linewidth', fig.align = 'center'}
+```{r cons_map, echo = FALSE, warning = FALSE, error = FALSE, message = FALSE, fig.cap = "Conservation Concern Ranking for Grizzly Bear Population units (GBPU)", results = 'asis', out.width='0.95\\linewidth', fig.align = 'center'}
 
 knitr::include_graphics("./cons_splot.png")
 
@@ -99,7 +99,7 @@ knitr::include_graphics("./pop_splot.png")
 
 ```
 
-Grizzly Bear population density ranged from 1 - 27 adults/1000 km^2^. North Selkirk
+Grizzly Bear population density ranged from 1 - 49 adults/1000 km^2^. North Selkirk
 GBPU had the highest population density.
 
 \newpage
