@@ -40,9 +40,6 @@ lapply(Packages, library, character.only = TRUE)
 
 data_path <- soe_path("Operations ORCS/Data - Working/plants_animals/grizzly/2019/Raw Data")
 
-# or temporary C drive data
-#data_path <- file.path("data")
-
 threat_calc <- read_xls(file.path(data_path, "Threat_Calc.xls")) %>%
   rename_all(tolower)
 
