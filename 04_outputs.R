@@ -148,14 +148,14 @@ rad_plot <- ggplot(cc_data, aes(x = metric, y = score)) +
     theme(plot.margin = unit(c(0,0,0,0), "lines"), strip.text = element_blank())
     #theme(plot.margin = unit(c(0,0,4,0), "lines"), strip.text = element_blank())
 
-rad_plot
+#rad_plot
 
 # add a legend and overall plot to explain positions
 # Note this is not showing on the exported files ? Need to add
 # as a user_font?
 
 library(grid)
-rad_plot
+#rad_plot
 grid.text("Population/Isolation", x = 0.60, y = 0.15, gp = gpar(fontsize = 8, col = "dark grey"))
 grid.text("Trend", x = 0.38, y = 0.15, gp = gpar(fontsize = 8, col = "dark grey"))
 grid.text("Threat", x = 0.45, y = 0.05, gp = gpar(fontsize = 8, col = "dark grey"))
