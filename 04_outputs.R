@@ -222,7 +222,7 @@ threat_smap <- ggplot(grizzdata_full)+
   coord_sf(datum = NA) +
   scale_fill_manual(values = palv, na.value = "light grey",
                     labels = c("Very High","High","Medium","Low","Negligible","Extirpated")) +
-  labs(fill = "Threat ", reverse = TRUE) +
+  labs(fill = "Threat Rank", reverse = TRUE) +
   theme_minimal() +
   theme(legend.position = c(0.1, 0.35))
 
