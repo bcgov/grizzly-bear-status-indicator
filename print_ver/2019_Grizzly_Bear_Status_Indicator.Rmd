@@ -122,11 +122,22 @@ The overall threat for GBPU was assessed from Very High to Negligible. Approxima
 Threat classifications are based on three factors; 1) population and isolation, 2) population trend and 3) overall threat. The influence of these three factors on the overall threat rank are show below.  
 
 
-```{r threat_detail, echo = FALSE, message=FALSE, fig.align='center', fig.cap = "Influence of three contributing factors to conservation concern ranking per GBPU. Contributing factors include population trend, population size and isolation and overall threat.", out.width='0.99\\linewidth'}
+```{r threat_detail, echo = FALSE, message=FALSE, fig.align='center', out.width='0.99\\linewidth'}
 
 knitr::include_graphics("./radar_plot.png")
 
+
 ```
+
+
+```{r radar_key, echo = FALSE, message=FALSE, fig.align='right', fig.cap = "Influence of three contributing factors to conservation concern ranking per GBPU. Contributing factors include population trend, population size and isolation and overall threat.", out.width='0.30\\linewidth'}
+
+knitr::include_graphics("./radar_plot_key.png")
+
+
+```
+
+
 
 \newpage
 
@@ -215,11 +226,11 @@ Environmental Reporting BC. `r format(Sys.Date(), "%Y")`. Grizzly Bear Populatio
 
 ```{r table 1, echo = FALSE}
 # output tables
-table1 <- dplyr::select(grizz.df, gbpu_name, threat_class,
-                               calcsrank, isolation, trend) %>%
+table1 <- dplyr::select(grizz.df, gbpu_name, con_stats, threat_class,
+                               isolation, trend) %>%
   rename("Population Name" = gbpu_name,
-         "Management Rank" = calcsrank,
-         "Overall Threat Score" = threat_class,
+         "Conservation Concern" = con_stats,
+         "Overall Threat" = threat_class,
          "Isolation" = isolation,
          "Trend" = trend)
 
@@ -235,11 +246,11 @@ knitr::kable(
 ## Table 2: Population Density Estimates per GBPU in B.C. Note extripated GBPUs not included.
 
 ```{r, echo = FALSE}
-table2 <- dplyr::select(grizz.df, gbpu_name, adults,
+table2 <- dplyr::select(grizz.df, gbpu_name, gbpu.pop,
                              pop_density, use_area_sq_km,
                              area_sq_km) %>%
   rename("Population Name" = gbpu_name,
-         "Population Size (Adults)" = adults,
+         "Population Size (Adults)" = gbpu.pop,
          "Population Density (Adults/1000 km^2)" = pop_density,
          "Area of Useable Habitat (km^2)" = use_area_sq_km,
          "Total Area of GBPU (km^2)" = area_sq_km) 
