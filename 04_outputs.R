@@ -56,14 +56,18 @@ overall_threat_plot <-
   theme_soe()
 
 ## Printing plots for web in SVG formats (and PNG)
-svg_px("./print_ver/othreat_plot.svg", width = 500, height = 400)
-plot(overall_threat_plot)
-dev.off()
 
-png_retina(filename = "./print_ver/othreat_plot.png", width = 500, height = 400,
-           units = "px", type = "cairo-png", antialias = "default")
-plot(overall_threat_plot)
-dev.off()
+multi_plot <- function(plotdata, filename) {
+  svg_px( paste0(filename,".svg"), width = 500, height = 400)
+  plot(plotdata)
+  dev.off()
+  png_retina(paste0(filename,".png"), width = 500, height = 400,
+             units = "px", type = "cairo-png", antialias = "default")
+  plot(plotdata)
+  dev.off()
+}
+
+multi_plot(overall_threat_plot, "./print_ver/othreat_plot")
 
 
 # generate sumary plot per threat
@@ -89,19 +93,11 @@ threat_sum_plot <-
   theme_soe()
 
 ## Printing plots for web in SVG formats (and PNG)
-svg_px("./print_ver/threat_sum_plot.svg", width = 500, height = 400)
-plot(threat_sum_plot)
-dev.off()
 
-png_retina(filename = "./print_ver/threat_sum_plot.png", width = 500, height = 400,
-           units = "px", type = "cairo-png", antialias = "default")
-plot(threat_sum_plot)
-dev.off()
+multi_plot(threat_sum_plot, "./print_ver/threat_sum_plot")
 
 
 # output radar plots for all gbpu units for static version
-# does not include extirpated GBPU
-
 cc_data <- grizz.df %>%
   mutate(trend_adj = as.numeric(trend) * -1) %>%
   select(gbpu_name, calcsrank, con_stats, trend_adj, popiso_rank_adj, threat_rank_adj) %>%
@@ -133,59 +129,31 @@ rad_plot <- ggplot(cc_data, aes(x = metric, y = score)) +
                   width = 0.1, colour = "grey40") +
     scale_colour_viridis_c(direction = -1, guide = "none") +
     scale_fill_viridis_c(direction = -1, guide = "none") +
-    #scale_fill_manual(values = palvn, na.value = "light grey",
-    #                labels = c("M1","M2","M3","M4","M5","Extirpated")) +
-
-    #scale_y_continuous(expand = expand_scale(mult = 0, add = 0)) +
-    #geom_text(aes(x = metric, y = label_pos, label = label),
-    #          colour = "grey40") +
-    #geom_text(aes(label = calcsrank, colour = as.numeric(str_extract(calcsrank, "\\d"))),
-    #          x = 0.5, y = 2, size = 4) +
     geom_text(aes(label = gbpu_name),
               x = 0.5, y = 4.5, size = 2.5, colour = "grey40") +
     coord_radar(clip = "off") +
     theme_void() +
     theme(plot.margin = unit(c(0,0,0,0), "lines"), strip.text = element_blank())
-    #theme(plot.margin = unit(c(0,0,4,0), "lines"), strip.text = element_blank())
 
-#rad_plot
 
-# add a legend and overall plot to explain positions
-# Note this is not showing on the exported files ? Need to add
-# as a user_font?
+# create a rad_plot Key
+cc_data_name <- cc_data %>%
+  filter(gbpu_name == "Taiga")
 
-library(grid)
-#rad_plot
-grid.text("Population/Isolation", x = 0.60, y = 0.15, gp = gpar(fontsize = 8, col = "dark grey"))
-grid.text("Trend", x = 0.38, y = 0.15, gp = gpar(fontsize = 8, col = "dark grey"))
-grid.text("Threat", x = 0.45, y = 0.05, gp = gpar(fontsize = 8, col = "dark grey"))
-
-grid.lines(x = unit(c(0.45, 0.45), "npc"),
-           y = unit(c(0.07, 0.12), "npc"),
-           default.units = "npc",
-           gp=gpar(col = "grey"), draw = TRUE, vp = NULL)
-
-grid.lines(x = unit(c(0.43, 0.45), "npc"),
-           y = unit(c(0.14, 0.12), "npc"),
-           default.units = "npc",
-           gp=gpar(col = "grey"), draw = TRUE, vp = NULL)
-
-grid.lines(x = unit(c(0.45, 0.51), "npc"),
-           y = unit(c(0.12, 0.17), "npc"),
-           default.units = "npc",
-           gp=gpar(col = "grey"), draw = TRUE, vp = NULL)
+# Create radar plot list
+rad_plot_key <- ggplot(cc_data_name, aes(x = metric, y = score)) +
+  geom_errorbar(aes(x = metric, ymin = 0, ymax = max_val),
+                width = 0.1, colour = "grey40") +
+  geom_text(aes(label = "Key"), colour = "grey40",
+                x = 0.5, y = 5, size = 11) +
+  geom_text(aes(x = metric, y = label_pos, label = label),
+            colour = "grey40", size = 6) +
+    coord_radar(clip = "off") +
+  theme_void()
 
 
 ## Printing plots for web in SVG formats (and PNG)
-svg_px("./print_ver/radar_plot.svg", width = 500, height = 400)
-plot(rad_plot)
-dev.off()
-
-png_retina(filename = "./print_ver/radar_plot.png", width = 500, height = 400,
-           units = "px", type = "cairo-png", antialias = "default")
-plot(rad_plot)
-dev.off()
-
+multi_plot(rad_plot, "./print_ver/radar_plot")
 
 ## Static Maps ----------------------------------------------------------------------------
 
@@ -228,33 +196,11 @@ threat_smap <- ggplot(grizzdata_full)+
 
 # save output maps
 
-png_retina(filename = "./print_ver/cons_splot.png",
-           width = 500, height = 400,
-           units = "px", type = "cairo-png",
-           antialias = "default")
-plot(cons_smap)
-dev.off()
+multi_plot(cons_smap, "./print_ver/cons_splot")
 
-svg_px("./print_ver/cons_splot.svg", width = 500, height = 400)
-plot(cons_smap)
-dev.off()
+multi_plot(pop_smap, "./print_ver/pop_splot")
 
-png_retina(filename = "./print_ver/pop_splot.png", width = 500, height = 400,
-           units = "px", type = "cairo-png", antialias = "default")
-plot(pop_smap)
-dev.off()
+multi_plot(threat_smap, "./print_ver/threat_splot")
 
-svg_px("./print_ver/pop_splot.svg", width = 500, height = 400)
-plot(pop_smap)
-dev.off()
-
-png_retina(filename = "./print_ver/threat_splot.png", width = 500, height = 400,
-           units = "px", type = "cairo-png", antialias = "default")
-plot(threat_smap)
-dev.off()
-
-svg_px("./print_ver/threat_splot.svg", width = 500, height = 400)
-plot(threat_smap)
-dev.off()
 
 
