@@ -31,12 +31,12 @@ grizzdata_full <- st_transform(grizzdata_full, crs = 4326) # convert to lat/long
 ## TEXT POPUPS
 
 # conservation status tab:
-popup_text1 <- dplyr::select(grizzdata_full, gbpu_name, rank_label, 
-                  threat_class, adults, isolation, trend) %>% 
+popup_text1 <- dplyr::select(grizzdata_full, gbpu_name, con_stats,
+                  threat_class, gbpu.pop, isolation, trend) %>% 
   rename("Population Name" = gbpu_name,
-         "Conservation Concern" = rank_label,
+         "Conservation Concern" = con_stats,
          "Overall Threat Score" = threat_class,
-         "Population Size" = adults,
+         "Population Size" = gbpu.pop,
          "Isolation" = isolation,
          "Trend" = trend) 
 
@@ -56,11 +56,11 @@ constatus_popup <- str_replace(constatus_popup, "</div></body></html>",
 
 
 # Popup for population tab
-popup_text2 <- dplyr::select(grizzdata_full, gbpu_name, adults, 
+popup_text2 <- dplyr::select(grizzdata_full, gbpu_name, gbpu.pop, 
                                pop_density, use_area_sq_km,
                               area_sq_km) %>% 
   rename("Population Name" = gbpu_name,
-         "Population Size (Adults)" = adults,
+         "Population Size (Adults)" = gbpu.pop,
          "Population Density (Adults/1000 km^2)" = pop_density,
          "Area of Useable Habitat (km^2)" = use_area_sq_km,
          "Total Area of GBPU (km^2)" = area_sq_km) 
@@ -122,8 +122,8 @@ lab3 <- lapply(seq(nrow(labs)), function(i) {
 })
 
 # Prep colour palettes
-palette1 <- colorFactor(palette = 'viridis', grizzdata_full$calcsrank, reverse = TRUE)
-palette1a <- colorFactor(palette = 'viridis', grizzdata_full$rank_label, reverse = TRUE)
+#palette1 <- colorFactor(palette = 'viridis', grizzdata_full$calcsrank, reverse = TRUE)
+palette1 <- colorFactor(palette = 'viridis', grizzdata_full$con_stats, reverse = TRUE)
 
 
 palette2 <- colorNumeric(palette = 'viridis', grizzdata_full$pop_density, reverse = TRUE)
@@ -149,7 +149,7 @@ grizzmap %>%
   addPolygons(data = grizzdata_full, group = "Conservation Status",
               stroke = T, weight = 1, color = "black", # Add border to polygons
               fillOpacity = 0.5, # Polygon fill
-              fillColor = ~palette1(grizzdata_full$calcsrank),
+              fillColor = ~palette1(grizzdata_full$con_stats),
               label = lapply(lab1, htmltools::HTML),
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
               popup = constatus_popup,
@@ -164,7 +164,7 @@ grizzmap %>%
                 weight = 3,
                 color = "yellow",
                 bringToFront = T)) %>%
-  addLegend("bottomright", pal = palette1a, values = grizzdata_full$rank_label,
+  addLegend("bottomright", pal = palette1, values = grizzdata_full$con_stats,
             title = "Conservation Concern", na.label = "Extirpated",
             opacity = 1) 
 ```
