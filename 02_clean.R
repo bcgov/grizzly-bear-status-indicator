@@ -132,7 +132,6 @@ grizzdata_full <- grizzdata_full %>%
             preadj_rank_number, rank_number, residential, residentialcalc,
             agriculture, energy, transportation, biouse , humanintrusion,
             climatechange, gbpu.pop))
-#[37] "popiso_rank_adj"     "threat_rank_adj"     "calc_rank_check"
 
 
 # Write grizzly data file to disk
