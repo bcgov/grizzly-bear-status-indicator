@@ -92,8 +92,7 @@ threat_sum_plot <-
   coord_flip() +
   theme_soe()
 
-## Printing plots for web in SVG formats (and PNG)
-
+#write out plots
 multi_plot(threat_sum_plot, "./print_ver/threat_sum_plot")
 
 
@@ -145,15 +144,22 @@ rad_plot_key <- ggplot(cc_data_name, aes(x = metric, y = score)) +
   geom_errorbar(aes(x = metric, ymin = 0, ymax = max_val),
                 width = 0.1, colour = "grey40") +
   geom_text(aes(label = "Key"), colour = "grey40",
-                x = 0.5, y = 5, size = 11) +
+                x = 0.5, y = 5, size = 4) +
   geom_text(aes(x = metric, y = label_pos, label = label),
-            colour = "grey40", size = 6) +
+            colour = "grey40", size = 2) +
     coord_radar(clip = "off") +
   theme_void()
 
 
+
 ## Printing plots for web in SVG formats (and PNG)
 multi_plot(rad_plot, "./print_ver/radar_plot")
+png_retina("./print_ver/radar_plot_key.png", width = 100, height = 100,
+           units = "px", type = "cairo-png", antialias = "default")
+plot(rad_plot_key)
+dev.off()
+
+
 
 ## Static Maps ----------------------------------------------------------------------------
 
