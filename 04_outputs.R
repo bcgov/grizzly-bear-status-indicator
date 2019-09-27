@@ -153,7 +153,17 @@ rad_plot_key <- ggplot(cc_data_name, aes(x = metric, y = score)) +
 
 
 ## Printing plots for web in SVG formats (and PNG)
-multi_plot(rad_plot, "./print_ver/radar_plot")
+
+
+svg_px("./print_ver/radar_plot.svg", width = 500, height = 400)
+plot(rad_plot)
+dev.off()
+
+png_retina(filename = "./print_ver/radar_plot.png", width = 500, height = 400,
+           units = "px", type = "cairo-png", antialias = "default")
+plot(rad_plot)
+dev.off()
+
 png_retina("./print_ver/radar_plot_key.png", width = 100, height = 100,
            units = "px", type = "cairo-png", antialias = "default")
 plot(rad_plot_key)
