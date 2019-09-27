@@ -37,26 +37,28 @@ lapply(Packages, library, character.only = TRUE)
 # Import grizzly bear threat calculator data from csv prior to the following steps
 # (Not yet in DataBC)
 # Threat calculator data not yet in databc warehouse
+
 data_path <- soe_path("Operations ORCS/Data - Working/plants_animals/grizzly/2019/Raw Data")
+
+# or temporary C drive data
+#data_path <- file.path("data")
 
 threat_calc <- read_xls(file.path(data_path, "Threat_Calc.xls")) %>%
   rename_all(tolower)
-
 
 # Import 2016 GBPU polygons (for now, until we get the newest ones)
 gbpu_2018 <- read_sf(file.path(data_path, "BC_Grizzly_Results_v1_Draft_April2016.gdb"),
                      layer = "GBPU_BC_edits_v2_20150601") %>%
   transform_bc_albers()
 
-
 # Import 2018 GBPU polygons (for now, until we get the newest ones)
 gbpu_hab <- read_sf(file.path(data_path, "Bear_Density_2018.gdb"),
                     layer = "GBPU_MU_LEH_2015_2018_bear_density_DRAFT") %>%
-  transform_bc_albers() %>%
-  select(c( "POPULATION" , "AREA_KM2" , "AREA_KM2_B" , "AREA_KM2_n", "EST_POP_21",
+    transform_bc_albers() %>%
+  select(c( "POPULATION" , "AREA_KM2" , "AREA_KM2_B" , "AREA_KM2_n", "EST_POP_20",
             "geometry")) %>%
   group_by(POPULATION) %>%
-  summarise(gbpu.pop = sum(EST_POP_21, na.rm = TRUE),
+  summarise(gbpu.pop = sum(EST_POP_20, na.rm = TRUE),
             H_area_km2 = sum(AREA_KM2, na.rm = TRUE),
             H_area_wice = sum(AREA_KM2_B, na.rm = TRUE),  # amount of water/ ice
             H_area_nowice = sum(AREA_KM2_n, na.rm = TRUE)) %>%
