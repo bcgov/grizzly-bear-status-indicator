@@ -129,9 +129,9 @@ grizzdata_full <- grizzdata_full %>%
   select(-c(display_name, grizzly_bear_pop_unit_id, grizzly_bear_population_tag,
             display_name,within_bc_ind, version_name, version_year_modified,
             h_area_km2, h_area_wice , h_area_nowice, calc_rank_check, expertrank, expertoverallthreat,
-            preadj_rank_number, rank_number, residential, residentialcalc,
+            preadj_rank_number, rank_number, residential,
             agriculture, energy, transportation, biouse , humanintrusion,
-            climatechange, gbpu.pop))
+            climatechange))
 
 
 # Write grizzly data file to disk
