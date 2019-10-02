@@ -170,7 +170,7 @@ knitr::include_graphics("./threat_sum_plot.png")
 
 *British Columbia conservation Foundation's Bear Aware Program [Link](https://wildsafebc.com/grizzly-bear/)
 
-*British Columbia Ministry of Environment. 2016. British Columbia guide to recovery planning for species and ecosystems at risk. B.C. Ministry of Environment, Victoria, BC. [Download pdf](http://a100.gov.bc.ca/pub/eirs/finishDownloadDocument.do?subdocumentId=10332)
+*British Columbia Ministry of Environment. 2016. British Columbia guide to recovery planning for species and ecosystems at risk. B.C. Ministry of Environment, Victoria, BC. [PDF](http://a100.gov.bc.ca/pub/eirs/finishDownloadDocument.do?subdocumentId=10332)
 
 
 
@@ -180,15 +180,16 @@ knitr::include_graphics("./threat_sum_plot.png")
 
 \*By accessing these datasets, you agree to the licence associated with each file, as indicated in parentheses below.
 
-- [Indicator data: BC Grizzly Bear Habitat Classification and Rating](https://catalogue.data.gov.bc.ca/dataset/bc-grizzly-bear-habitat-classification-and-rating)
-
 - [Grizzly Bear Population Units](https://catalogue.data.gov.bc.ca/dataset/grizzly-bear-population-units)
 
-- [DataBC](https://catalogue.data.gov.bc.ca/dataset?download_audience=Public) – [Digital Road Atlas](https://www2.gov.bc.ca/gov/content/data/geographic-data-services/topographic-data/roads), mining and energy infrastructure , [BTM – urban and agriculture areas] (link)
+- [Grizzly Bear Threat Calculations](https::// TO BE UPLOADED)
+
+- [DataBC](https://catalogue.data.gov.bc.ca/dataset?download_audience=Public) 
+ –- [Digital Road Atlas](https://www2.gov.bc.ca/gov/content/data/geographic-data-services/topographic-data/roads), mining and energy infrastructure , [BTM – urban and agriculture areas] (link)
 -	[Statistic Canada](https://www150.statcan.gc.ca/n1//en/type/data?MM=1#tables) – human and livestock density
 -	FLNRORD Fish and Wildlife data – hunter day density, grizzly bear mortality
 -	Provincial Cumulative Effects data – Mid-seral forest, Front country
--	DFO NuSEDS – changes in salmon escapement
+-	Government of Canada - [Salmon escapement database](https://open.canada.ca/data/en/dataset/c48669a3-045b-400d-b730-48aafe8c5ee6#targetText=The%20Salmon%20Escapement%20Database%20(NuSEDS,freshwater%20location%20and%20run%20timing).
 
 
 
