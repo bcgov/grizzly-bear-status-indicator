@@ -24,6 +24,9 @@ library(envreportutils)
 grizzdata_full <- read_rds(here("data/grizzdata_full.rds")) %>% 
   ms_simplify(keep = 0.05)
 grizzdata_full <- st_transform(grizzdata_full, crs = 4326) # convert to lat/long
+grizzdata_full$con_stats <- factor(grizzdata_full$con_stats, ordered = TRUE,
+                                levels = c("Extreme", "High", "Moderate", "Low","Negligible"))
+
 
 ```
 
@@ -89,7 +92,7 @@ popup_options <-  popupOptions(maxWidth = 400, minWidth = 400, maxHeight = 300,
 
 ``` {r labels and palettes, include=FALSE, warning=FALSE}
 # Define polygon labels in leaflet
-labs <- dplyr::select(grizzdata_full, gbpu_name, pop_density, calcsrank, threat_class) %>%
+labs <- dplyr::select(grizzdata_full, gbpu_name, pop_density, calcsrank, threat_class, con_stats)%>%
   mutate(calcsrank = ifelse(is.na(calcsrank), "Extirpated", calcsrank))
 
 
@@ -97,7 +100,7 @@ st_geometry(labs) <- NULL # as df
 
 lab1 <- lapply(seq(nrow(labs)), function(i) {
   paste0( '<b>', labs[i, "gbpu_name"], ', ',  
-          labs[i, "calcsrank"], '</b>') 
+          labs[i, "con_stats"], '</b>') 
 })
 
 lab2 <- lapply(seq(nrow(labs)), function(i) {
@@ -123,9 +126,9 @@ lab3 <- lapply(seq(nrow(labs)), function(i) {
 
 # Prep colour palettes
 #palette1 <- colorFactor(palette = 'viridis', grizzdata_full$calcsrank, reverse = TRUE)
+
+
 palette1 <- colorFactor(palette = 'viridis', grizzdata_full$con_stats, reverse = TRUE)
-
-
 palette2 <- colorNumeric(palette = 'viridis', grizzdata_full$pop_density, reverse = TRUE)
 palette3 <- colorFactor(palette = 'viridis', grizzdata_full$threat_class, reverse = TRUE)
 
