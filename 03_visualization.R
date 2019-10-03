@@ -64,7 +64,6 @@ names(radar_plot_list) <- gbpu_list
 Radar_Plots <- function(data, name) {
   p <- ggplot(data, aes(x = metric, y = score)) +
     geom_polygon(aes(group = NA,
-
                      fill = calcsrank,
                      colour = calcsrank),
                  alpha = 0.7, size = 4) +
@@ -103,10 +102,7 @@ plots <- for (n in gbpu_list) {
 }
 
 
-
-## ----------------------------------------------------------------------------
-## THREAT POPUP MAPPING
-## ----------------------------------------------------------------------------
+# THREAT POPUP MAPPING ------------------------------------------------------
 
 threat_calc <- threat_calc %>%
   select(gbpu_name, ends_with("calc")) %>%
