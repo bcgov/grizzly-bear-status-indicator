@@ -37,7 +37,7 @@ grizzdata_full$con_stats <- factor(grizzdata_full$con_stats, ordered = TRUE,
 popup_text1 <- dplyr::select(grizzdata_full, gbpu_name, con_stats,
                   threat_class, gbpu.pop, isolation, trend) %>% 
   rename("Population Name" = gbpu_name,
-         "Conservation Concern" = con_stats,
+         "Conservation Ranking" = con_stats,
          "Overall Threat Score" = threat_class,
          "Population Size" = gbpu.pop,
          "Isolation" = isolation,
@@ -145,11 +145,11 @@ grizzmap <- leaflet(width = "900px", height = "600px",
 
 ```
 
-## Conservation Concern
+## Conservation Ranking
 
 ```{r, warning=FALSE, echo=FALSE}
 grizzmap %>% 
-  addPolygons(data = grizzdata_full, group = "Conservation Status",
+  addPolygons(data = grizzdata_full, group = "Conservation Ranking",
               stroke = T, weight = 1, color = "black", # Add border to polygons
               fillOpacity = 0.5, # Polygon fill
               fillColor = ~palette1(grizzdata_full$con_stats),
@@ -168,7 +168,7 @@ grizzmap %>%
                 color = "yellow",
                 bringToFront = T)) %>%
   addLegend("bottomright", pal = palette1, values = grizzdata_full$con_stats,
-            title = "Conservation Concern", na.label = "Extirpated",
+            title = "Conservation Ranking", na.label = "Extirpated",
             opacity = 1) 
 ```
 
