@@ -180,7 +180,7 @@ cons_smap <- ggplot(grizzdata_full) +
   coord_sf(datum = NA) +
   scale_fill_manual(values = palvn, na.value = "light grey",
                     labels = c("Extreme","High","Moderate","Low","Negligible","Extirpated")) +
-  labs(fill = "Conservation Concern") +
+  labs(fill = "Conservation Ranking") +
   theme_minimal() +
   theme(legend.position = c(0.1, 0.35))
 
