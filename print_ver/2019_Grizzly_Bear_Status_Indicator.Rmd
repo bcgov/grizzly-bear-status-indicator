@@ -1,7 +1,7 @@
 ---
 topic: "plants-and-animals"
 title: "Grizzly Bear Population Ranking Indicator"
-output: envreportutils.internal::print_ver
+output: word_document #envreportutils.internal::print_ver
 params:
   draft: TRUE
 header-includes:
@@ -104,7 +104,6 @@ knitr::include_graphics("./threat_splot.png")
 Approximately half of the GBPU (23 GBPUs) were idenitified as having an overall threat of Low or Negligible. Yahk GBPU, located in the Kooteney-Boundary, had the highest overall threat due to combined risks of Agriculture, Human intrusion, Residential, Transportation and Biological Use. 
 
 
-
 ```{r threat_detail, echo = FALSE, message=FALSE, fig.align='center', out.width='0.99\\linewidth'}
 
 knitr::include_graphics("./radar_plot.png")
@@ -113,7 +112,7 @@ knitr::include_graphics("./radar_plot.png")
 ```
 
 
-```{r radar_key, echo = FALSE, message=FALSE, fig.align='right', fig.cap = "Contribution of three criteria (Trend, Threat, Population/Isolation) to the overall ranking per GBPU. Each arm represents the maximum value per contribution to the overall rank. For example: Population/Isolation can range from 0-4, Threat (0-2) and Trend (1). The more coloured area represent the higher the factor influences the overall ranking. Colours correspond to conservation ranking." , out.width='0.30\\linewidth'}
+```{r radar_key, echo = FALSE, message=FALSE, fig.align='right', fig.cap = "Contribution of criteria (Trend, Threat, Population/Isolation) to the overall GBPU ranking. Each arm represents the relative contribution of each factor. For example: Population/Isolation (0-4), Threat (0-2) and Trend (1). Coloured areas represent the influence of each factor to the overall ranking. For example greater area coloured represents greather threat to grizzly GBPU and ultimately increase in ranking from low to extreme." , out.width='0.30\\linewidth'}
 
 knitr::include_graphics("./radar_plot_key.png")
 
@@ -160,9 +159,15 @@ knitr::include_graphics("./threat_sum_plot.png")
 
 ## References and Other Useful Links
 
-*^1^ 2019 Ranking the Conservation Concern of Grizzly Bear Population Units report[add link].
 
-*^2^ NatureServe. 2015. [NatureServe Element Occurrence Viability Calculator Version 1](http://www.natureserve.org/conservation-tools/conservation-rank-calculator). NatureServe, Arlington, VA.
+*^1^ [Species at Risk Act, 2002](https://species-registry.canada.ca/index-en.html#/species/158-530)
+
+*^2^ [Provincial Conservation Status Ranks](https://www2.gov.bc.ca/gov/content/environment/plants-animals-ecosystems/conservation-data-centre/explore-cdc-data/status-ranks)
+
+*^3^ NatureServe. 2015. [NatureServe Element Occurrence Viability Calculator Version 1](http://www.natureserve.org/conservation-tools/conservation-rank-calculator). NatureServe, Arlington, VA.
+
+*^4^ 2019 Ranking the Conservation Concern of Grizzly Bear Population Units report[add link].
+
 
 *British Columbia conservation Foundation's Bear Aware Program [Link](https://wildsafebc.com/grizzly-bear/)
 
