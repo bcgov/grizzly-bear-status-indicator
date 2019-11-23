@@ -124,7 +124,7 @@ grizzdata_full$trend <- grizzdata_full$trend %>% replace_na("Data Deficient")
 # Simplify vertices of GBPU polygons
 grizzdata_full <- ms_simplify(grizzdata_full, keep = 0.25) # reduce number of vertices
 
-# create spatial subset to add to mortality dataset
+# create mortality data set with matching gbpu_id's
 grizz_morts <- grizzdata_full %>%
   select(grizzly_bear_pop_unit_id, grizzly_bear_population_tag,
          gbpu_name, display_name, status, geometry) %>%
@@ -144,9 +144,5 @@ grizzdata_full <- grizzdata_full %>%
 if (!dir.exists("data")) dir.create("data")
 saveRDS(grizzdata_full, file = "data/grizzdata_full.rds")
 saveRDS(grizz_morts, file = "data/grizz_morts.rds")
-
-# Create mortality dataset with common naming convention
-
-#
 
 
