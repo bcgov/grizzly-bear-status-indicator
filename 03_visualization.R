@@ -166,7 +166,6 @@ plots <- for (n in gbpu_list) {
 
 # mortality popup plots ------------------------------------------------------
 
-grizz_morts
 mort_sum <- grizz_morts %>%
   st_drop_geometry() %>%
   group_by(gbpu_name, HUNT_YEAR, KILL_CODE) %>%
@@ -182,7 +181,7 @@ mort_Plots <- function(mdata, name) {
     geom_bar(stat = "identity") + # Add bar for each threat variable
   #  scale_fill_manual(values = palv) +
     labs(x = "Year", y = "Number of Grizzlies killed") +
-    ggtitle(paste0("Historic Grizzly Bear Mortality (1976 - 2017) for the ", name, " GBPU")) +
+    ggtitle(paste0("Historic Grizzly Bear Mortality (1976 - 2017) for ", n ," GBPU")) +
     theme_soe() + theme(plot.title = element_text(hjust = 0.5), # Centre title
                         plot.caption = element_text(hjust = 0)) +  # L-align caption
     theme(legend.position = "top", legend.title = element_blank())
