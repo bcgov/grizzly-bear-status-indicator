@@ -12,6 +12,7 @@
 library(dplyr)
 
 if (!exists("grizzdata_full")) load("data/grizzdata_full.rds")
+if (!exists("grizz_morts")) load("data/grizz_morts.rds")
 
 if (!exists("dataviz/leaflet/concern_plots/"))
 dir.create("dataviz/leaflet/concern_plots/", showWarnings = FALSE)
@@ -160,5 +161,51 @@ plots <- for (n in gbpu_list) {
   ggsave(p, file = paste0("dataviz/leaflet/threat_plots/", n, ".svg"))
   }
   threat_plot_list[[n]] <- p
+}
+
+
+# mortality popup plots ------------------------------------------------------
+
+grizz_morts
+mort_sum <- grizz_morts %>%
+  st_drop_geometry() %>%
+  group_by(gbpu_name, HUNT_YEAR, KILL_CODE) %>%
+  summarise(count = n())
+
+
+# Create list of GBPU
+gbpu_list <- unique(grizzdata_full$gbpu_name)
+
+# Create plotting function
+mort_Plots <- function(mdata, name) {
+  make_mplot <- ggplot(mdata, aes(y = count, x = HUNT_YEAR, fill = KILL_CODE)) +
+    geom_bar(stat = "identity") + # Add bar for each threat variable
+  #  scale_fill_manual(values = palv) +
+    labs(x = "Year", y = "Number of Grizzlies killed") +
+    ggtitle(paste0("Historic Grizzly Bear Mortality (1976 - 2017) for the ", name, " GBPU")) +
+    theme_soe() + theme(plot.title = element_text(hjust = 0.5), # Centre title
+                        plot.caption = element_text(hjust = 0)) +  # L-align caption
+    theme(legend.position = "top", legend.title = element_blank())
+
+   make_mplot
+
+}
+
+# Create list for plots
+mort_plot_list <- vector(length = length(gbpu_list), mode = "list")
+names(mort_plot_list) <- gbpu_list
+
+# Create ggplot graph loop
+plots <- for (n in gbpu_list) {
+  #n = gbpu_list[1]
+  print(n)
+  mdata <- mort_sum %>% filter(gbpu_name == n)
+ # if(length(data$gbpu_name) == 0) {
+#    p = NA
+#  } else {
+    p <- mort_Plots(mdata, name)
+    ggsave(p, file = paste0("dataviz/leaflet/mort_plots/", n, ".svg"))
+  #}
+  mort_plot_list[[n]] <- p
 }
 
