@@ -197,15 +197,14 @@ names(mort_plot_list) <- gbpu_list
 
 # Create ggplot graph loop
 plots <- for (n in gbpu_list) {
-  #n = gbpu_list[1]
   print(n)
   mdata <- mort_sum %>% filter(gbpu_name == n)
- # if(length(data$gbpu_name) == 0) {
-#    p = NA
-#  } else {
+  if(length(mdata$gbpu_name) == 0) {
+    p = NA
+  } else {
     p <- mort_Plots(mdata, name)
     ggsave(p, file = paste0("dataviz/leaflet/mort_plots/", n, ".svg"))
-  #}
+  }
   mort_plot_list[[n]] <- p
 }
 
