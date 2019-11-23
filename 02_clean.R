@@ -143,7 +143,7 @@ grizzdata_full <- grizzdata_full %>%
 # Write grizzly data file to disk
 if (!dir.exists("data")) dir.create("data")
 saveRDS(grizzdata_full, file = "data/grizzdata_full.rds")
-saveRDS(grizz_morts, file = "data/grizzdata_morts.rds")
+saveRDS(grizz_morts, file = "data/grizz_morts.rds")
 
 # Create mortality dataset with common naming convention
 
