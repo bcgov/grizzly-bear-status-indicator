@@ -34,6 +34,10 @@ lapply(Packages, library, character.only = TRUE)
 ## Data is released under the Open Government Licence - British Columbia
 ## https://www2.gov.bc.ca/gov/content?id=A519A56BC2BF44E4A008B33FCF527F61
 
+
+# Import threat calculation table :
+
+
 # Import grizzly bear threat calculator data from csv prior to the following steps
 # (Not yet in DataBC)
 # Threat calculator data not yet in databc warehouse
@@ -65,18 +69,9 @@ gbpu_hab <- read_sf(file.path(data_path, "Bear_Density_2018.gdb"),
 
 gbpu_2018 <- left_join(gbpu_2018, gbpu_hab)
 
+
 # import mortality data set from the data catalogue ( )
-# bcdc_search("grizzly")
 
 morts <- bcdc_get_data("4bc13aa2-80c9-441b-8f46-0b9574109b93")
 
 
-# morts.check <- morts %>%
-#   group_by(GBPU_ID, GBPU_NAME) %>%
-#   summarise(count = n())
-#
-# data.check <- gbpu_2018 %>%
-#   select(c(GRIZZLY_BEAR_POP_UNIT_ID, GRIZZLY_BEAR_POPULATION_TAG, POPULATION_NAME,
-#            DISPLAY_NAME))
-#
-# data.check <- left_join(data.check, morts.check, by = c("GRIZZLY_BEAR_POPULATION_TAG" = "GBPU_ID"))
