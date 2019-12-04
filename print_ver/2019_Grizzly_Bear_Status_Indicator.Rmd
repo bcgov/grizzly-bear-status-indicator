@@ -1,7 +1,7 @@
 ---
 topic: "plants-and-animals"
 title: "Grizzly Bear Population Ranking Indicator"
-output: word_document #envreportutils.internal::print_ver
+output: envreportutils.internal::print_ver
 params:
   draft: TRUE
 header-includes:
@@ -51,9 +51,9 @@ grizz.df <- grizz.df %>%
 * **Grizzly bears are an important part of the British Columbia landscape.** 
   + They are a symbol of ecological integrity that represents much of what British Columbians and visitors alike appreciate about B.C.’s natural beauty.
   +	B.C. is host to some of North America’s last remaining places where large predators and their prey play out their millennia-old roles. Grizzly bears are a key part of these systems.
-  + Grizzly bears are listed as a ‘Species of Concern’ under federal legislation^1^ and ranked as S3 (Vulnerable Uncertain) provincially^2^. 
+  + Grizzly bears are listed as a species of ‘Special Concern’ under federal legislation^1^ and ranked as S3 (Vulnerable Uncertain) provincially^2^. 
 
-* **Grizzly bears are divided into 55 Grizzly Bear Population Units (GBPUs) across B.C.** These units range from 2,670 km^2^ to 49,578 km^2^. They enable managers to identify local conservation concerns, track grizzly bear population trends and apply specific management practices.
+* **Grizzly bears are divided into 55 Grizzly Bear Population Units (GBPUs) across B.C.** These units range from 2,670 km^2^ to 49,578 km^2^ and mostly follow Wildlife Management Unit boundaries. Very few of these units are isolated enough to be considered discrete populations. These units help managers to identify local conservation concerns, track grizzly bear population trends and apply specific management practices.
 
 * **GBPUs are rated from low to extreme conservation ranking.** Rankings are determined using internationally recognized methods developed by NatureServe^2^ and IUCN. GBPU conservation rankings are based on; 1) population size and isolation,  2) population trend, and 3) level of threat to bears or bear habitat. The level of threat considered seven sub-categories, including Residential, Agriculture, Energy, Transportation, Biological Use, Human intrusion and Climate Change. See below for detailed methodology^3^. 
 
@@ -112,7 +112,7 @@ knitr::include_graphics("./radar_plot.png")
 ```
 
 
-```{r radar_key, echo = FALSE, message=FALSE, fig.align='right', fig.cap = "Contribution of criteria (Trend, Threat, Population/Isolation) to the overall GBPU ranking. Each arm represents the relative contribution of each factor. For example: Population/Isolation (0-4), Threat (0-2) and Trend (1). Coloured areas represent the influence of each factor to the overall ranking. For example greater area coloured represents greather threat to grizzly GBPU and ultimately increase in ranking from low to extreme." , out.width='0.30\\linewidth'}
+```{r radar_key, echo = FALSE, message=FALSE, fig.align='right', fig.cap = "Contribution of criteria (Trend, Threat, Population/Isolation) to the overall GBPU ranking. Each arm represents the relative contribution of each factor. For example: Population/Isolation (0-4), Threat (0-2) and Trend (1). Coloured areas represent the influence of each factor to the overall ranking. For example greater area coloured represents greather threat to grizzly GBPU and ultimately increase in ranking from low to extreme. The colours reflect conservation rank (extreme (yellow), high (green), moderate (teal), low(blue), negligible (purple)" , out.width='0.30\\linewidth'}
 
 knitr::include_graphics("./radar_plot_key.png")
 
@@ -144,15 +144,13 @@ knitr::include_graphics("./threat_sum_plot.png")
 
 * Conservation ranks were calculated based on NatureServe’s ‘Element Rank Calculator’^2^ in conjunction with Provincial bear biologists. This ensured rankings were consistent with  international standards (B.C. Conservation Data Centre, NatureServe, and IUCN). 
 
+* Each GBPU was assigned a rank based on population size and trend, genetic and demographic isolation, and overall threat to grizzly bears and bear habitat. GBPUs started with a score of 5 (no conservation concern) with points reduced for 1) declining population trend, 2) small and/or isolated population, and 3) increasing overall threat.
 
-* Each GBPU was assigned a rank based on population size and trend, genetic and demographic isolation, and overall threat to grizzly bears and bear habitat. GBPUs started with a score of 5 (no conservation concern) with points deduced for 1) declining population trend, 2) small and/or isolated population, and 3) increasing overall threat.
-
-
-* Population trend was measured over 3 generations (~30 years). If the population decreased by more than 25% the overall score was reduced, leading to increased concern ranking. 
+* Population trend was measured over 3 generations (~30 years). If the population decreased by more than 25% the overall score was reduced, leading to a lower conservation ranking. 
 
 *	Population size and isolation are combined such that smaller isolated population’s rank scores can be reduced by as much as 4 points, whereas large well connected populations are not downgraded.
 
-*	We determined threats using categories identified by IUCN-CMP (Conservation Measures Partnership) . Threats were quantified using published spatial data, including Statistics Canada, B.C.’s Baseline Thematic Mapping, Digital Road Atlas, Fish and Wildlife hunter and mortality data and Federal Department of Fisheries and Oceans’ Salmon escapement. The NatureServe calculator combined individual threats into an overall threat class.[The NatureServe calculator](https://www.natureserve.org/conservation-tools/conservation-rank-calculator) combined individual threats into an overall threat class.
+*	We determined threats using categories identified by IUCN-CMP (Conservation Measures Partnership) . Threats were quantified using published spatial data, including Statistics Canada, B.C.’s Baseline Thematic Mapping, Digital Road Atlas, Fish and Wildlife hunter and mortality data and Federal Department of Fisheries and Oceans’ Salmon escapement. The [NatureServe calculator](https://www.natureserve.org/conservation-tools/conservation-rank-calculator) combined individual threats into an overall threat class.
 
 
 \newpage
