@@ -35,17 +35,35 @@ lapply(Packages, library, character.only = TRUE)
 ## https://www2.gov.bc.ca/gov/content?id=A519A56BC2BF44E4A008B33FCF527F61
 
 
-# Import threat calculation table :
+# Import threat calculation table : To be added to BC warehouse
+
+data_path <- soe_path("Operations ORCS/Data - Working/plants_animals/grizzly/2019/Raw Data")
+
+#threat_calc <- read_xls(file.path(data_path, "Threat_Calc.xls")) %>%
+#  rename_all(tolower)
+
+threat_calc <- read_xls(file.path(data_path, "ThreatwFail_SoE.xls")) %>%
+  rename_all(tolower) %>%
+  rename(gbpu_name = gbpu,
+         gbpu.pop = popnest2018,
+         threat_class = overal_threat)
+
+# Import gbpu units polygons
+
+
+# Import population data / density
+
+
+# import mortality data set from the data catalogue ( )
+morts <- bcdc_get_data("4bc13aa2-80c9-441b-8f46-0b9574109b93")
+
+
+
+# temporary data source:
 
 
 # Import grizzly bear threat calculator data from csv prior to the following steps
 # (Not yet in DataBC)
-# Threat calculator data not yet in databc warehouse
-
-data_path <- soe_path("Operations ORCS/Data - Working/plants_animals/grizzly/2019/Raw Data")
-
-threat_calc <- read_xls(file.path(data_path, "Threat_Calc.xls")) %>%
-  rename_all(tolower)
 
 # Import 2016 GBPU polygons (for now, until we get the newest ones)
 gbpu_2018 <- read_sf(file.path(data_path, "BC_Grizzly_Results_v1_Draft_April2016.gdb"),
@@ -59,7 +77,7 @@ gbpu_hab <- read_sf(file.path(data_path, "Bear_Density_2018.gdb"),
   select(c( "POPULATION" , "AREA_KM2" , "AREA_KM2_B" , "AREA_KM2_n", "EST_POP_20",
             "geometry")) %>%
   group_by(POPULATION) %>%
-  summarise(gbpu.pop = sum(EST_POP_20, na.rm = TRUE),
+  summarise(#gbpu.pop = sum(EST_POP_20, na.rm = TRUE),
             H_area_km2 = sum(AREA_KM2, na.rm = TRUE),
             H_area_wice = sum(AREA_KM2_B, na.rm = TRUE),  # amount of water/ ice
             H_area_nowice = sum(AREA_KM2_n, na.rm = TRUE)) %>%
@@ -70,8 +88,5 @@ gbpu_hab <- read_sf(file.path(data_path, "Bear_Density_2018.gdb"),
 gbpu_2018 <- left_join(gbpu_2018, gbpu_hab)
 
 
-# import mortality data set from the data catalogue ( )
-
-morts <- bcdc_get_data("4bc13aa2-80c9-441b-8f46-0b9574109b93")
 
 

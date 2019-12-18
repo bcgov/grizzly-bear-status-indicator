@@ -102,7 +102,6 @@ grizzdata_full <- mutate(grizzdata_full,
                            str_detect(calcsrank, "5") ~ "Negligible")
 )
 
-
 # Add population density column
 grizzdata_full <- mutate(grizzdata_full,
                          area_sq_km = round(as.numeric(set_units(st_area(geometry), km2)), digits = 0),
@@ -133,11 +132,9 @@ grizz_morts <- grizzdata_full %>%
 # remove extra columns:
 grizzdata_full <- grizzdata_full %>%
   select(-c(display_name, grizzly_bear_pop_unit_id, grizzly_bear_population_tag,
-            display_name,within_bc_ind, version_name, version_year_modified,
-            h_area_km2, h_area_wice , h_area_nowice, calc_rank_check, expertrank, expertoverallthreat,
-            preadj_rank_number, rank_number, residential,
-            agriculture, energy, transportation, biouse , humanintrusion,
-            climatechange))
+            within_bc_ind, version_name, version_year_modified,
+            h_area_km2, h_area_wice , h_area_nowice, calc_rank_check,
+            rank_number))
 
 
 # Write grizzly data file to disk
