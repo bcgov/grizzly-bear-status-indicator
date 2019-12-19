@@ -43,6 +43,25 @@ threat_table <- tribble(
   "Negligible", 0
 )
 
+threat_sub_table <- tribble(
+  ~threat_sub, ~threat_sub_name,
+  "residential_1a_subtfail", "Urban & Industrial",
+  "residential_1b_subtfail", "Human Density",
+  "agriculture_2.1_subtfail", "Agriculture",
+  "agriculture_2.3b_subtfail", "Livestock Density",
+  "energy_3.1_subtfail", "Oil & Gas",
+  "energy_3.2_subtfail", "Mining",
+  "energy_3.3_subtfail", "Renewable",
+  "energy_3all_subtfail", "NA",
+  "transport_4.1_subtfail", "Road and Rail",
+  "biouse_5.1a_subtfail" , "Mortality",
+  "biouse_5.1b_subtfail", "Hunting days",
+  "biouse_5.3_subtfail", "Mid-Seral forest",
+  "humanintrusion_6_subtfail", "Recreation use",
+  "climatechange_11_subtfail", "Habitat alteration"
+)
+
+
 threat_calc <- threat_calc %>%
   left_join(popiso_table, by = "popiso") %>%
   left_join(threat_table, by = "threat_class") %>%
@@ -129,17 +148,18 @@ grizz_morts <- grizzdata_full %>%
          gbpu_name, display_name, status, geometry) %>%
   left_join(morts, by = c("grizzly_bear_population_tag" = "GBPU_ID"))
 
-# remove extra columns:
-grizzdata_full <- grizzdata_full %>%
-  select(-c(display_name, grizzly_bear_pop_unit_id, grizzly_bear_population_tag,
-            within_bc_ind, version_name, version_year_modified,
-            h_area_km2, h_area_wice , h_area_nowice, calc_rank_check,
-            rank_number))
+# create subthreat data set with matching gbpu's
+
+threat_sub <- threat_calc %>%
+  select(gbpu_name, ends_with("subTFail")) %>%
+  pivot_longer(cols = ends_with("subTFail"),
+               names_to = "threat_sub",
+               values_to = "rank") %>%
+  left_join(threat_sub_table) %>%
+  mutate(catergory = sub("_.*", "", threat_sub))
 
 
 # Write grizzly data file to disk
 if (!dir.exists("data")) dir.create("data")
 saveRDS(grizzdata_full, file = "data/grizzdata_full.rds")
 saveRDS(grizz_morts, file = "data/grizz_morts.rds")
-
-
