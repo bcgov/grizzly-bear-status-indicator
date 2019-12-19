@@ -154,7 +154,6 @@ rad_plot_key <- ggplot(cc_data_name, aes(x = metric, y = score)) +
 
 ## Printing plots for web in SVG formats (and PNG)
 
-
 svg_px("./print_ver/radar_plot.svg", width = 500, height = 400)
 plot(rad_plot)
 dev.off()
@@ -221,6 +220,20 @@ multi_plot(threat_smap, "./print_ver/threat_splot")
 
 # Static Mortality Plots --------------------------------------------------
 
-#TO ADD once finalised
+pal_mort <- c("Road Kill*" = "#332288", "Rail Kill*" = "#88CCEE" ,
+              "Pick Up (post-2004)*" = "#44AA99", "Pick Up (pre-2004)*" = "#117733" ,
+              "Hunter Kill" = "#DDCC77", "Illegal" = "#CC6677", "Animal Control" = "#882255" )
 
+
+# Create plotting function
+make_mplot <- ggplot(mort_sum, aes(y = count, x = hunt_year, fill = kill_code)) +
+    facet_wrap(~gbpu_name) +
+    geom_bar(stat = "identity") + # Add bar for each threat variable
+    scale_fill_manual(values = pal_mort) +
+    labs(x = "Year", y = "Number of Grizzlies killed")+
+    geom_text(aes(label = gbpu_name),
+           x = 0.5, y = 4.5, size = 1.5, colour = "grey40") +
+    scale_y_discrete(limits = c(1976, 2018)) # add breaks
+
+make_mplot
 
