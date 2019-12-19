@@ -18,7 +18,6 @@ if (!exists("dataviz/leaflet/concern_plots/"))
 dir.create("dataviz/leaflet/concern_plots/", showWarnings = FALSE)
 dir.create("dataviz/leaflet/threat_plots/", showWarnings = FALSE)
 
-
 # Create list of GBPU
 gbpu_list <- unique(grizzdata_full$gbpu_name)
 
@@ -36,7 +35,10 @@ mrank_palette <- c(
   "NA" = "#808080"
 )
 
-# Create Conservation Concern Popup Plots ---------------------------------
+
+
+## Create Conservation Concern Popup Plots ---------------------------------
+
 grizz.df <- as.data.frame(grizzdata_full)
 
 cc_data <- grizz.df %>%
@@ -56,6 +58,7 @@ coord_radar <- function (theta = "x", start = 0, direction = 1, clip = "on") {
           clip = clip,
           is_linear = function(coord) TRUE)
 }
+
 
 # Create radar plot list
 radar_plot_list <- vector(length = length(gbpu_list), mode = "list")
@@ -87,23 +90,25 @@ Radar_Plots <- function(data, name) {
 }
 
 # Create ggplot graph loop
-plots <- for (n in gbpu_list) {
-  print(n)
-  data <- filter(cc_data, gbpu_name == n)
-  if(length(data$gbpu_name) == 0) {
-    p = NA
-  } else {
-  p <- Radar_Plots(data, n)
-  ggsave(p, file = paste0("dataviz/leaflet/concern_plots/", n, ".svg"),
-         width = unit(6, "in"), height = unit(5, "in"))
+ plots <- for (n in gbpu_list) {
+   print(n)
+   data <- filter(cc_data, gbpu_name == n)
+   if(length(data$gbpu_name) == 0) {
+     p = NA
+   } else {
+   p <- Radar_Plots(data, n)
+   ggsave(p, file = paste0("dataviz/leaflet/concern_plots/", n, ".svg"),
+          width = unit(6, "in"), height = unit(5, "in"))
 
-}
-  radar_plot_list[[n]] <- p
+ }
+   radar_plot_list[[n]] <- p
 
-}
+ }
 
 
 # THREAT POPUP MAPPING ------------------------------------------------------
+
+# Subplot 1: Overall plots
 
 threat_calc <- threat_calc %>%
   select(gbpu_name, ends_with("calc")) %>%
@@ -122,10 +127,12 @@ total_threats <- gather(threat_calc, key = "threat", value = "ranking",
                         'Biological Use', 'Human Intrusion', 'Climate Change') %>%
   select(gbpu_name, threat, ranking)
 
+
 total_threats$ranking <- factor(total_threats$ranking, ordered = TRUE,
                                 levels = c("Negligible", "Low", "Medium", "High", "Very High"))
 
 saveRDS(total_threats, file = "dataviz/leaflet/threat_plots/total_threats.rds")
+
 
 # Create list for plots
 threat_plot_list <- vector(length = length(gbpu_list), mode = "list")
@@ -158,17 +165,79 @@ plots <- for (n in gbpu_list) {
     p = NA
   } else {
   p <- Threat_Plots(data, n)
-  ggsave(p, file = paste0("dataviz/leaflet/threat_plots/", n, ".svg"))
+  ggsave(p, file = paste0("dataviz/leaflet/threat_plots/", n, "_threat.svg"))
   }
   threat_plot_list[[n]] <- p
 }
 
 
+
+# other sub plots for more than one sub-catergory
+
+subplot_cats <- c("residential",  "agriculture", "energy")
+
+threat_sub <- threat_sub %>%
+  filter(catergory %in% subplot_cats) %>%
+  filter(threat_sub_name != "NA")
+
+
+threat_sub_plot_list <- vector(length = length(gbpu_list), mode = "list")
+names(threat_sub_plot_list) <- gbpu_list
+
+
+# Create ggplot graph loop
+plots <- for (n in gbpu_list) {
+  print(n)
+
+  threat_sub_data <-  filter(threat_sub, gbpu_name == n)
+
+  if(length(threat_sub_data$gbpu_name) == 0) {
+    p = NA
+  } else {
+
+    # loop through the catergories
+    for (cat in subplot_cats) {
+
+      cat_data <- filter(threat_sub_data, catergory == cat)
+      print(cat)
+
+      cat_plot <- ggplot(cat_data, aes(x = threat_sub_name, y = rank,
+                                       fill = rank, alpha = 0.95)) +
+        geom_bar(stat = "identity") + # Add bar for each threat variable
+        scale_fill_manual(values = palv) +
+        labs(x = "Sub threat", y = "Threat Ranking",
+             fill = "Ranking") +
+        ggtitle(paste0(n,": ", cat, " sub threats")) +
+        theme(legend.position = "none") +
+        theme_soe() + theme(plot.title = element_text(hjust = 0.5), # Centre title
+                            legend.position = "none",
+                            plot.caption = element_text(hjust = 0)) +  # L-align caption
+        scale_y_discrete(limits = c("Negligible", "Low", "Medium"),
+                         drop = FALSE, na.translate = FALSE)
+
+      cat_plot <- cat_plot + coord_flip()
+
+      ggsave(cat_plot, file = paste0("dataviz/leaflet/threat_plots/", n, "_",cat,".svg"))
+
+    }
+    threat_sub_plot_list[[n]] <- cat_plot
+  }
+
+}
+
+
+
 # mortality popup plots ------------------------------------------------------
 
+
+pal_mort <- c("Road Kill*" = "#332288", "Rail Kill*" = "#88CCEE" ,
+              "Pick Up (post-2004)*" = "#44AA99", "Pick Up (pre-2004)*" = "#117733" ,
+              "Hunter Kill" = "#DDCC77", "Illegal" = "#CC6677", "Animal Control" = "#882255" )
+
 mort_sum <- grizz_morts %>%
+  rename_all(tolower) %>%
   st_drop_geometry() %>%
-  group_by(gbpu_name, HUNT_YEAR, KILL_CODE) %>%
+  group_by(gbpu_name, hunt_year, kill_code) %>%
   summarise(count = n())
 
 
@@ -177,9 +246,9 @@ gbpu_list <- unique(grizzdata_full$gbpu_name)
 
 # Create plotting function
 mort_Plots <- function(mdata, name) {
-  make_mplot <- ggplot(mdata, aes(y = count, x = HUNT_YEAR, fill = KILL_CODE)) +
+  make_mplot <- ggplot(mdata, aes(y = count, x = hunt_year, fill = kill_code)) +
     geom_bar(stat = "identity") + # Add bar for each threat variable
-  #  scale_fill_manual(values = palv) +
+    scale_fill_manual(values = pal_mort) +
     labs(x = "Year", y = "Number of Grizzlies killed") +
     ggtitle(paste0("Historic Grizzly Bear Mortality (1976 - 2017) for ", n ," GBPU")) +
     theme_soe() + theme(plot.title = element_text(hjust = 0.5), # Centre title
@@ -187,7 +256,6 @@ mort_Plots <- function(mdata, name) {
     theme(legend.position = "top", legend.title = element_blank())
 
    make_mplot
-
 }
 
 # Create list for plots
@@ -202,8 +270,7 @@ plots <- for (n in gbpu_list) {
     p = NA
   } else {
     p <- mort_Plots(mdata, name)
-    ggsave(p, file = paste0("dataviz/leaflet/mort_plots/", n, ".svg"))
+    ggsave(p, file = paste0("dataviz/leaflet/threat_plots/", n, "_mort.svg"))
   }
   mort_plot_list[[n]] <- p
 }
-
