@@ -77,13 +77,31 @@ population_popup <- leafpop::popupTable(popup_text2,
 # Threat popups
 threat_popups <- paste0("<img src = ", 
                         paste0("./threat_plots/", 
-                               gsub("\\s+", "%20", grizzdata_full$gbpu_name), ".svg"), 
+                               gsub("\\s+", "%20", grizzdata_full$gbpu_name), "_threat.svg"), 
+                        ">")
+
+# Residential popups
+res_popups <- paste0("<img src = ", 
+                        paste0("./threat_plots/", 
+                               gsub("\\s+", "%20", grizzdata_full$gbpu_name), "_residential.svg"), 
+                        ">")
+
+# Energy popups
+energy_popups <- paste0("<img src = ", 
+                        paste0("./threat_plots/", 
+                               gsub("\\s+", "%20", grizzdata_full$gbpu_name), "_energy.svg"), 
+                        ">")
+
+# Agriculture popups
+agri_popups <- paste0("<img src = ", 
+                        paste0("./threat_plots/", 
+                               gsub("\\s+", "%20", grizzdata_full$gbpu_name), "_agriculture.svg"), 
                         ">")
 
 # Mortality Pop-ups 
 mort_popups <- paste0("<img src = ", 
-                        paste0("./mort_plots/", 
-                               gsub("\\s+", "%20", grizzdata_full$gbpu_name), ".svg"), 
+                        paste0("./threat_plots/", 
+                               gsub("\\s+", "%20", grizzdata_full$gbpu_name), "_mort.svg"), 
                         ">")
 
 
@@ -222,13 +240,16 @@ grizzmap %>%
                 weight = 3,
                 color = "yellow",
                 bringToFront = T)) %>%
+    addLegend("bottomright", pal = palette3, values = grizzdata_full$threat_class,
+            title = "Threat Rank", na.label = "Extirpated",
+            opacity = 1) %>%
 
   addPolygons(data = grizzdata_full,
               stroke = T, weight = 1, color = "black", # Add border to polygons
               fillOpacity = 0.5, # Polygon fill
               fillColor = ~palette3(grizzdata_full$transportationcalc),
-              popup = threat_popups,
-              popupOptions = popup_options,
+             # popup = threat_popups,
+             # popupOptions = popup_options,
               group = "Transportation",
               label = lapply(lab3, htmltools::HTML),
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
@@ -236,11 +257,12 @@ grizzmap %>%
                 weight = 3,
                 color = "yellow",
                 bringToFront = T)) %>%
+  
   addPolygons(data = grizzdata_full,
               stroke = T, weight = 1, color = "black",
               fillOpacity = 0.5,
               fillColor = ~palette3(grizzdata_full$energycalc),
-              popup = threat_popups,
+              popup = energy_popups,
               popupOptions = popup_options,
               group = "Energy",
               label = lapply(lab3, htmltools::HTML),
@@ -253,8 +275,8 @@ grizzmap %>%
               stroke = T, weight = 1, color = "black",
               fillOpacity = 0.5,
               fillColor = ~palette3(grizzdata_full$humanintrusioncalc),
-              popup = threat_popups,
-              popupOptions = popup_options,
+              #popup = threat_popups,
+              #popupOptions = popup_options,
               group = "Human Intrusion",
               label = lapply(lab3, htmltools::HTML),
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
@@ -266,7 +288,7 @@ grizzmap %>%
               stroke = T, weight = 1, color = "black",
               fillOpacity = 0.5,
               fillColor = ~palette3(grizzdata_full$residentialcalc),
-              popup = threat_popups,
+              popup = res_popups,
               popupOptions = popup_options,
               group = "Residential",
               label = lapply(lab3, htmltools::HTML),
@@ -279,7 +301,7 @@ grizzmap %>%
               stroke = T, weight = 1, color = "black",
               fillOpacity = 0.5,
               fillColor = ~palette3(grizzdata_full$agriculturecalc),
-              popup = threat_popups,
+              popup = agri_popups,
               popupOptions = popup_options,
               group = "Agriculture",
               label = lapply(lab3, htmltools::HTML),
@@ -305,8 +327,8 @@ grizzmap %>%
               stroke = T, weight = 1, color = "black",
               fillOpacity = 0.5,
               fillColor = ~palette3(grizzdata_full$climatechangecalc),
-              popup = threat_popups,
-              popupOptions = popup_options,
+              #popup = threat_popups,
+              #popupOptions = popup_options,
               group = "Climate Change",
               label = lapply(lab3, htmltools::HTML),
               labelOptions = labelOptions(direction = "auto", textsize = "12px"),
@@ -316,9 +338,9 @@ grizzmap %>%
                 bringToFront = T)) %>%
   addLayersControl(
     baseGroups = c("Overall Threat","Transportation", "Residential","Human Intrusion", "Energy",  "Climate Change","Biological Use", "Agriculture"),
-    options = layersControlOptions(collapsed = FALSE)) %>%
-  addLegend("bottomright", pal = palette3, values = grizzdata_full$threat_class,
-            title = "Threat Rank", na.label = "Extirpated",
-            opacity = 1)
+    options = layersControlOptions(collapsed = FALSE)) #%>%
+  #addLegend("bottomright", pal = palette3, values = grizzdata_full$threat_class,
+  #          title = "Threat Rank", na.label = "Extirpated",
+  #          opacity = 1)
 
 ```
