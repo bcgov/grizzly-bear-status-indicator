@@ -209,15 +209,15 @@ threat_smap <- ggplot(grizzdata_full)+
   theme(legend.position = c(0.1, 0.35))
 
 # map 4 : mortality map
-
 mort_splot <- ggplot(mort_sum, aes(y = count, x = hunt_year, fill = kill_code)) +
   facet_wrap(~gbpu_name) +
   geom_bar(stat = "identity") + # Add bar for each threat variable
   scale_fill_manual(values = pal_mort) +
   labs(x = "Year", y = "Number of Grizzlies killed")+
-  geom_text(aes(label = gbpu_name),
-            x = 0.5, y = 4.5, size = 1.5, colour = "grey40") +
-  scale_y_discrete(limits = c(1976, 2018)) # add breaks
+  scale_x_continuous(limits = c(1976, 2018), breaks = seq(1970,2018,20)) +
+  scale_y_continuous(limits = c(0, 50), breaks = seq(0,50,25)) +
+  theme(strip.text.x = element_text(size = 6),
+        axis.text=element_text(size=6))
 
 mort_splot
 
@@ -230,6 +230,15 @@ multi_plot(pop_smap, "./print_ver/pop_splot")
 
 multi_plot(threat_smap, "./print_ver/threat_splot")
 
-multi_plot(mort_splot, "./print_ver/mort_splot")
+#multi_plot(mort_splot, "./print_ver/mort_splot")
 
+
+svg_px("./print_ver/mort_splot.svg", width = 550, height = 700)
+plot(mort_splot)
+dev.off()
+
+png_retina(filename = "./print_ver/mort_splot.png", width = 550, height = 800,
+           units = "px", type = "cairo-png", antialias = "default")
+plot(mort_splot)
+dev.off()
 
