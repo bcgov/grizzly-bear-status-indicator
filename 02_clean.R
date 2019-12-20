@@ -54,9 +54,9 @@ threat_sub_table <- tribble(
   "energy_3.3_subtfail", "Renewable",
   "energy_3all_subtfail", "NA",
   "transport_4.1_subtfail", "Road and Rail",
-  "biouse_5.1a_subtfail" , "Mortality",
-  "biouse_5.1b_subtfail", "Hunting days",
-  "biouse_5.3_subtfail", "Mid-Seral forest",
+  "biouse_5.1a_subtfail" , "Female Mortality",
+  "biouse_5.1b_subtfail", "Hunting Pressure",
+  "biouse_5.3_subtfail", "Forest Age",
   "humanintrusion_6_subtfail", "Recreation use",
   "climatechange_11_subtfail", "Habitat alteration"
 )
