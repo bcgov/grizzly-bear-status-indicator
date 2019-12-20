@@ -172,9 +172,10 @@ plots <- for (n in gbpu_list) {
 
 
 
-# other sub plots for more than one sub-catergory
+# other sub plots
 
-subplot_cats <- c("residential",  "agriculture", "energy")
+subplot_cats <- c("residential",  "agriculture", "energy", "transport",
+                  "biouse","humanintrusion","climatechange")
 
 threat_sub <- threat_sub %>%
   filter(catergory %in% subplot_cats) %>%
@@ -229,10 +230,32 @@ plots <- for (n in gbpu_list) {
 
 # mortality popup plots ------------------------------------------------------
 
+#pal_mort <- c("Road Kill*" = "#332288",
+#              "Rail Kill*" = "#88CCEE" ,
+#             "Pick Up (post-2004)*" = "#44AA99",
+#             "Pick Up (pre-2004)*" = "#117733" ,
+#              "Hunter Kill" = "#DDCC77",
+#              "Illegal" = "#CC6677",
+#              "Animal Control" = "#882255" )
 
-pal_mort <- c("Road Kill*" = "#332288", "Rail Kill*" = "#88CCEE" ,
-              "Pick Up (post-2004)*" = "#44AA99", "Pick Up (pre-2004)*" = "#117733" ,
-              "Hunter Kill" = "#DDCC77", "Illegal" = "#CC6677", "Animal Control" = "#882255" )
+pal_mort <- c("Road Kill*" = "#77AADD",
+              "Rail Kill*" = "#EE8866" ,
+              "Pick Up (post-2004)*" = "#EEDD88",
+              "Pick Up (pre-2004)*" = "#FFAABB" ,
+              "Hunter Kill" = "#44BB99",
+              "Illegal" = "#99DDFF",
+              "Animal Control" = "#AAAA00" )
+
+#c("light" = "#77AADD",
+#  "orange" = "#EE8866",
+#  "light" = "#EEDD88",
+#  "pink" = "#FFAABB",
+#  "light" = "#99DDFF",
+#  "mint" = "#44BB99",
+#  "pear" = "#BBCC33",
+#  "olive" = "#AAAA00",
+#  "pale" = "#DDDDDD")
+
 
 mort_sum <- grizz_morts %>%
   rename_all(tolower) %>%
