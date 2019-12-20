@@ -108,7 +108,6 @@ cc_data <- grizz.df %>%
   #left_join(colour_table) %>%
   filter(!is.na(calcsrank))
 
-
 coord_radar <- function (theta = "x", start = 0, direction = 1, clip = "on") {
   theta <- match.arg(theta, c("x", "y"))
   r <- if (theta == "x") "y" else "x"
@@ -209,6 +208,20 @@ threat_smap <- ggplot(grizzdata_full)+
   theme_minimal() +
   theme(legend.position = c(0.1, 0.35))
 
+# map 4 : mortality map
+
+mort_splot <- ggplot(mort_sum, aes(y = count, x = hunt_year, fill = kill_code)) +
+  facet_wrap(~gbpu_name) +
+  geom_bar(stat = "identity") + # Add bar for each threat variable
+  scale_fill_manual(values = pal_mort) +
+  labs(x = "Year", y = "Number of Grizzlies killed")+
+  geom_text(aes(label = gbpu_name),
+            x = 0.5, y = 4.5, size = 1.5, colour = "grey40") +
+  scale_y_discrete(limits = c(1976, 2018)) # add breaks
+
+mort_splot
+
+
 # save output maps
 
 multi_plot(cons_smap, "./print_ver/cons_splot")
@@ -217,23 +230,6 @@ multi_plot(pop_smap, "./print_ver/pop_splot")
 
 multi_plot(threat_smap, "./print_ver/threat_splot")
 
+multi_plot(mort_splot, "./print_ver/mort_splot")
 
-# Static Mortality Plots --------------------------------------------------
-
-pal_mort <- c("Road Kill*" = "#332288", "Rail Kill*" = "#88CCEE" ,
-              "Pick Up (post-2004)*" = "#44AA99", "Pick Up (pre-2004)*" = "#117733" ,
-              "Hunter Kill" = "#DDCC77", "Illegal" = "#CC6677", "Animal Control" = "#882255" )
-
-
-# Create plotting function
-make_mplot <- ggplot(mort_sum, aes(y = count, x = hunt_year, fill = kill_code)) +
-    facet_wrap(~gbpu_name) +
-    geom_bar(stat = "identity") + # Add bar for each threat variable
-    scale_fill_manual(values = pal_mort) +
-    labs(x = "Year", y = "Number of Grizzlies killed")+
-    geom_text(aes(label = gbpu_name),
-           x = 0.5, y = 4.5, size = 1.5, colour = "grey40") +
-    scale_y_discrete(limits = c(1976, 2018)) # add breaks
-
-make_mplot
 
