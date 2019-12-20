@@ -121,6 +121,26 @@ knitr::include_graphics("./radar_plot_key.png")
 
 \newpage
 
+## Historic Mortality (1976-1980)
+
+
+
+```{r mort plot, echo = FALSE, message=FALSE, fig.align='centre', fig.cap = "Historic Mortality (1976 - 2017)" , out.width='0.99\\linewidth'}
+
+knitr::include_graphics("./mort_splot.png")
+
+```
+
+
+
+
+
+
+
+
+
+\newpage
+
 ## Summary of threats to Grizzly Bears
 
 
@@ -182,6 +202,8 @@ knitr::include_graphics("./threat_sum_plot.png")
 - [Grizzly Bear Population Units](https://catalogue.data.gov.bc.ca/dataset/grizzly-bear-population-units)
 
 - [Grizzly Bear Threat Calculations](https::// TO BE UPLOADED)
+
+- [Grizzly Bear Historic Mortality](https://catalogue.data.gov.bc.ca/dataset/history-of-grizzly-bear-mortalities/resource/c5fc42c7-67d3-4669-b281-61dc50fdef22)
 
 - [DataBC](https://catalogue.data.gov.bc.ca/dataset?download_audience=Public) 
  –- [Digital Road Atlas](https://www2.gov.bc.ca/gov/content/data/geographic-data-services/topographic-data/roads), mining and energy infrastructure , [BTM – urban and agriculture areas] (link)
