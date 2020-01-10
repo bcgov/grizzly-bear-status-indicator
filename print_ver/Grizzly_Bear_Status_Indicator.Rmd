@@ -123,9 +123,7 @@ knitr::include_graphics("./radar_plot_key.png")
 
 ## Historic Mortality (1976-1980)
 
-
-
-```{r mort plot, echo = FALSE, message=FALSE, fig.align='centre', fig.cap = "Historic Mortality (1976 - 2017)" , out.width='0.99\\linewidth'}
+```{r mort plot, echo = FALSE, message=FALSE, fig.align='centre' , out.width='0.95\\linewidth'}
 
 knitr::include_graphics("./mort_splot.png")
 
@@ -134,15 +132,9 @@ knitr::include_graphics("./mort_splot.png")
 
 
 
-
-
-
-
-
 \newpage
 
 ## Summary of threats to Grizzly Bears
-
 
 
 ```{r image-ref-for-in-text, echo = FALSE, message=FALSE, fig.align='center', out.width='0.70\\linewidth'}
@@ -205,13 +197,7 @@ knitr::include_graphics("./threat_sum_plot.png")
 
 - [Grizzly Bear Historic Mortality](https://catalogue.data.gov.bc.ca/dataset/history-of-grizzly-bear-mortalities/resource/c5fc42c7-67d3-4669-b281-61dc50fdef22)
 
-- [DataBC](https://catalogue.data.gov.bc.ca/dataset?download_audience=Public) 
- –- [Digital Road Atlas](https://www2.gov.bc.ca/gov/content/data/geographic-data-services/topographic-data/roads), mining and energy infrastructure , [BTM – urban and agriculture areas] (link)
--	[Statistic Canada](https://www150.statcan.gc.ca/n1//en/type/data?MM=1#tables) – human and livestock density
--	FLNRORD Fish and Wildlife data – hunter day density, grizzly bear mortality
--	Provincial Cumulative Effects data – Mid-seral forest, Front country
--	Government of Canada - [Salmon escapement database](https://open.canada.ca/data/en/dataset/c48669a3-045b-400d-b730-48aafe8c5ee6#targetText=The%20Salmon%20Escapement%20Database%20(NuSEDS,freshwater%20location%20and%20run%20timing).
-
+- other data? 
 
 
 ----
