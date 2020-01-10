@@ -215,7 +215,9 @@ Environmental Reporting BC. `r format(Sys.Date(), "%Y")`. Grizzly Bear Populatio
 
 # Appendices
 
-### Table 1: Conservation Ranking for Grizzly Bear Population Units. Note extirpated GBPUs are not included.  
+### Table 1: Conservation Ranking for Grizzly Bear Population Units. Note extirpated GBPUs are not included.
+
+\small
 
 ```{r table 1, echo = FALSE}
 # output tables
@@ -230,13 +232,62 @@ table1 <- dplyr::select(grizz.df, gbpu_name, con_stats, threat_class,
 knitr::kable(
   table1 
 )
-
 ```
+
+
+\small
+
+```{r table, eval = FALSE, echo = FALSE, warning = FALSE, error = FALSE, message = FALSE, results = 'asis'}
+
+out.table <- attr_wells[,c("REGION_NAME", "Well_Num", "start_date", "last_date",  
+                            "trend_line_slope", "sig", "state")]
+
+out.table$date_range <- paste(year(out.table$start_date), "-", 
+                              year(out.table$last_date))
+
+out.table <- arrange(out.table, REGION_NAME, as.numeric(Well_Num))
+
+out.table$trend_line_slope <- -out.table$trend_line_slope
+
+out.table <- out.table %>%
+  select(REGION_NAME, Well_Num, date_range, sig, trend_line_slope,  state)
+
+names(out.table) <- c("Region", "Well", "Date Range", 
+                      "Sig", "Slope (m/yr)", "Category")
+
+out.table$Sig <- ifelse(out.table$Sig < 0.05, "p < 0.05", 
+                        round(out.table$Sig,2))
+
+out.table$Well <- round(as.numeric(out.table$Well), 0)
+
+x.table <- xtable(out.table, digits = c(0,0,0,0,3,3,0))
+
+# Set the slope column as fixed width
+align(x.table) <- c('l', rep('l', 4), 'p{0.5in}', rep('l', 1))
+
+# Define colours of rows based on state
+HL_col <- ifelse(out.table$Category == "Large Rate of Decline", "\\rowcolor{large}", 
+                 ifelse(out.table$Category == "Moderate Rate of Decline", 
+                        "\\rowcolor{moderate}", "\\rowcolor{stable}"))
+HL_rows <- seq(0, length(HL_col)-1, by = 1)
+HL_col[1] <- paste0("\\hline ", HL_col[1]) # Hack to get a hline below headings
+
+print(x.table, tabular.environment = 'longtable', floating = FALSE,
+      hline.after = c(-1,nrow(x.table)), 
+      add.to.row = list(pos = list(as.list(HL_rows))[[1]], 
+                        command = HL_col), 
+      booktabs = TRUE, 
+      include.rownames = FALSE, sanitize.colnames.function = NULL, 
+      sanitize.text.function = NULL, comment = FALSE)
+```
+
 
 
 \newpage 
 
 ## Table 2: Population Density Estimates by GBPU in 2018. Note extripated GBPUs not included.
+
+\small
 
 ```{r, echo = FALSE}
 table2 <- dplyr::select(grizz.df, gbpu_name, gbpu.pop,
@@ -258,6 +309,7 @@ knitr::kable(
 
 ## Table 3: Threat Level for threat catergories per GBPU. Threats rank from Very High to Negligible. Note extirpated GBPUs are not include. 
 
+\small
 ```{r table3, echo = FALSE, warnings = FALSE }
 
 table3 <- grizz.df %>%
