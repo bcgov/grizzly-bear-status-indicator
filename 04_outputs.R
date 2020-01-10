@@ -21,6 +21,7 @@ library(ggplot2)
 library(sf)
 library(purrr)
 library(forcats)
+library(envreportutils)
 
 if (!exists("grizzdata_full")) load("data/grizzdata_full.rds")
 
@@ -213,13 +214,14 @@ mort_splot <- ggplot(mort_sum, aes(y = count, x = hunt_year, fill = kill_code)) 
   facet_wrap(~gbpu_name) +
   geom_bar(stat = "identity") + # Add bar for each threat variable
   scale_fill_manual(values = pal_mort) +
-  labs(x = "Year", y = "Number of Grizzlies killed")+
-  scale_x_continuous(limits = c(1976, 2018), breaks = seq(1970,2018,20)) +
+  labs(x = NULL, y = "Number of Grizzlies killed")+
+  scale_x_continuous(limits = c(1976, 2018), breaks = seq(1970,2018,15)) +
   scale_y_continuous(limits = c(0, 50), breaks = seq(0,50,25)) +
-  theme(strip.text.x = element_text(size = 6),
-        axis.text=element_text(size=6))
+  theme(strip.text.x = element_text(size = 5),
+        axis.text=element_text(size=6),
+        legend.position = "bottom", legend.title =element_blank())
 
-mort_splot
+#mort_splot
 
 
 # save output maps
@@ -229,8 +231,6 @@ multi_plot(cons_smap, "./print_ver/cons_splot")
 multi_plot(pop_smap, "./print_ver/pop_splot")
 
 multi_plot(threat_smap, "./print_ver/threat_splot")
-
-#multi_plot(mort_splot, "./print_ver/mort_splot")
 
 
 svg_px("./print_ver/mort_splot.svg", width = 550, height = 700)
