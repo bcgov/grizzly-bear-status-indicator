@@ -36,8 +36,7 @@ library(mapview)
 library(DT)
 library(envreportutils)
 library(envreportutils.internal)
-library(stargazer)
-
+library(xtable)
 
 #if (!exists("threat_sum_plot")) load(here("tmp", "plots.RData"))
 grizzdata_full <- read_rds(here("data/grizzdata_full.rds"))
@@ -243,7 +242,7 @@ knitr::kable(
 
 \small
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, results = 'asis'}
 table2 <- dplyr::select(grizz.df, gbpu_name, gbpu.pop,
                              pop_density, use_area_sq_km,
                              area_sq_km) %>%
@@ -253,9 +252,14 @@ table2 <- dplyr::select(grizz.df, gbpu_name, gbpu.pop,
          "Area of Useable Habitat (km^2)" = use_area_sq_km,
          "Total Area of GBPU (km^2)" = area_sq_km) 
 
-knitr::kable(
-  table2 
-)
+
+x.table = xtable(table2)
+print(x.table, tabular.environment = 'longtable', floating = FALSE,
+       booktabs = TRUE, 
+       include.rownames = FALSE, sanitize.colnames.function = NULL, 
+       sanitize.text.function = NULL, comment = FALSE,
+        size="\\fontsize{8pt}{9pt}\\selectfont")
+
 
 ```
 
@@ -288,7 +292,7 @@ table3 <- grizz.df %>%
     . == "High" ~ "H",
     . == "Very High"  ~ "VH")))
 
-library(xtable)
+
 
 x.table = xtable(table3)
 print(x.table, tabular.environment = 'longtable', floating = FALSE,
@@ -300,8 +304,6 @@ print(x.table, tabular.environment = 'longtable', floating = FALSE,
        include.rownames = FALSE, sanitize.colnames.function = NULL, 
        sanitize.text.function = NULL, comment = FALSE,
         size="\\fontsize{8pt}{9pt}\\selectfont")
-
-
 
 
 ```
