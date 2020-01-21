@@ -163,3 +163,13 @@ threat_sub <- threat_calc %>%
 if (!dir.exists("data")) dir.create("data")
 saveRDS(grizzdata_full, file = "data/grizzdata_full.rds")
 saveRDS(grizz_morts, file = "data/grizz_morts.rds")
+
+#write out temp griz file
+
+#check <- as.data.frame(grizzdata_full) %>%
+#  select( grizzly_bear_pop_unit_id, grizzly_bear_population_tag,    gbpu_name,
+#          display_name, status, within_bc_ind, version_name,
+#          h_area_km2, h_area_wice, h_area_nowice, gbpu.pop, female_popn_2018,
+#          area_sq_km,use_area_sq_km, pop_density)
+#write.csv(check, file = "tmp/griz_stats.csv")
+
