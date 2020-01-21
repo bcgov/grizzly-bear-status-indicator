@@ -57,7 +57,7 @@ threat_calc <- read_xls(file.path(data_path, "ThreatwFail_SoE.xls")) %>%
 # import mortality data set from the data catalogue ( )
 morts <- bcdc_get_data("4bc13aa2-80c9-441b-8f46-0b9574109b93")
 
-
+## ADD the 2012
 
 # temporary data source:
 
@@ -70,11 +70,14 @@ gbpu_2018 <- read_sf(file.path(data_path, "BC_Grizzly_Results_v1_Draft_April2016
                      layer = "GBPU_BC_edits_v2_20150601") %>%
   transform_bc_albers()
 
+# go back and add the GBPU : / geopackage ?
+# shoudul be EST_POP_22
+
 # Import 2018 GBPU polygons (for now, until we get the newest ones)
 gbpu_hab <- read_sf(file.path(data_path, "Bear_Density_2018.gdb"),
                     layer = "GBPU_MU_LEH_2015_2018_bear_density_DRAFT") %>%
     transform_bc_albers() %>%
-  select(c( "POPULATION" , "AREA_KM2" , "AREA_KM2_B" , "AREA_KM2_n", "EST_POP_20",
+  select(c( "POPULATION" , "AREA_KM2" , "AREA_KM2_B" , "AREA_KM2_n", "EST_POP_21",
             "geometry")) %>%
   group_by(POPULATION) %>%
   summarise(#gbpu.pop = sum(EST_POP_20, na.rm = TRUE),
