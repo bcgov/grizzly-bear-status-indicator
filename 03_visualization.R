@@ -230,14 +230,6 @@ plots <- for (n in gbpu_list) {
 
 # mortality popup plots ------------------------------------------------------
 
-#pal_mort <- c("Road Kill*" = "#332288",
-#              "Rail Kill*" = "#88CCEE" ,
-#             "Pick Up (post-2004)*" = "#44AA99",
-#             "Pick Up (pre-2004)*" = "#117733" ,
-#              "Hunter Kill" = "#DDCC77",
-#              "Illegal" = "#CC6677",
-#              "Animal Control" = "#882255" )
-
 pal_mort <- c("Road Kill*" = "#77AADD",
               "Rail Kill*" = "#EE8866" ,
               "Pick Up (post-2004)*" = "#EEDD88",
@@ -246,23 +238,11 @@ pal_mort <- c("Road Kill*" = "#77AADD",
               "Illegal" = "#99DDFF",
               "Animal Control" = "#AAAA00" )
 
-#c("light" = "#77AADD",
-#  "orange" = "#EE8866",
-#  "light" = "#EEDD88",
-#  "pink" = "#FFAABB",
-#  "light" = "#99DDFF",
-#  "mint" = "#44BB99",
-#  "pear" = "#BBCC33",
-#  "olive" = "#AAAA00",
-#  "pale" = "#DDDDDD")
-
-
 mort_sum <- grizz_morts %>%
   rename_all(tolower) %>%
   st_drop_geometry() %>%
   group_by(gbpu_name, hunt_year, kill_code) %>%
   summarise(count = n())
-
 
 # Create list of GBPU
 gbpu_list <- unique(grizzdata_full$gbpu_name)
@@ -272,6 +252,7 @@ mort_Plots <- function(mdata, name) {
   make_mplot <- ggplot(mdata, aes(y = count, x = hunt_year, fill = kill_code)) +
     geom_bar(stat = "identity") + # Add bar for each threat variable
     scale_fill_manual(values = pal_mort) +
+    xlim(1976, 2017) +
     labs(x = "Year", y = "Number of Grizzlies killed") +
     ggtitle(paste0("Historic Grizzly Bear Mortality (1976 - 2017) for ", n ," GBPU")) +
     theme_soe() + theme(plot.title = element_text(hjust = 0.5), # Centre title
