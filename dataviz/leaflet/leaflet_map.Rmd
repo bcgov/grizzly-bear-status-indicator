@@ -132,7 +132,7 @@ mort_popups <- paste0("<img src = ",
 
 
 # Define popup options
-popup_options <-  popupOptions(maxWidth = 400, minWidth = 400, maxHeight = 300,
+popup_options <-  popupOptions(maxWidth = 350, minWidth = 350, maxHeight = 250,
                                autoPan = TRUE,
                                keepInView = TRUE,
                                closeOnClick = TRUE,
@@ -373,14 +373,14 @@ grizzmap %>%
 
 
 
-## Historic Mortality
+## Historic Mortality*
 
 ``` {r, warning=FALSE, echo=FALSE}
 grizzmap %>% 
     addPolygons(data = grizzdata_full,
               stroke = T, weight = 1, color = "black", 
               fillOpacity = 0.5, # Polygon fill
-              fillColor = ~palette3(grizzdata_full$threat_class),
+              fillColor = ~palette3(grizzdata_full$biousecalc),
               popup = mort_popups,
               popupOptions = popup_options,
               group = "Overall Threat",
@@ -391,7 +391,7 @@ grizzmap %>%
                 color = "yellow",
                 bringToFront = T)) %>%
     addLegend("bottomright", pal = palette3, values = grizzdata_full$threat_class,
-            title = "Threat Rank", na.label = "Extirpated",
+            title = "Biological Use Threat", na.label = "Extirpated",
             opacity = 1)
 
 ```
