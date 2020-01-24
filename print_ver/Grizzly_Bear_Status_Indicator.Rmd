@@ -121,7 +121,7 @@ knitr::include_graphics("./radar_plot_key.png")
 
 \newpage
 
-## Historic Mortality (1976-1980)
+## Historic Mortality (1976-1980)*
 
 ```{r mort plot, echo = FALSE, message=FALSE, fig.align='centre' , out.width='0.95\\linewidth'}
 
@@ -129,7 +129,7 @@ knitr::include_graphics("./mort_splot.png")
 
 ```
 
-
+*Historic mortality based on GBPU boundaries from 2012 dataset. 
 
 
 \newpage
