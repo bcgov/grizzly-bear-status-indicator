@@ -59,10 +59,10 @@ overall_threat_plot <-
 ## Printing plots for web in SVG formats (and PNG)
 
 multi_plot <- function(plotdata, filename) {
-  svg_px( paste0(filename,".svg"), width = 500, height = 400)
+  svg_px( paste0(filename,".svg"), width = 400, height = 300)
   plot(plotdata)
   dev.off()
-  png_retina(paste0(filename,".png"), width = 500, height = 400,
+  png_retina(paste0(filename,".png"), width = 400, height = 300,
              units = "px", type = "cairo-png", antialias = "default")
   plot(plotdata)
   dev.off()
@@ -241,4 +241,5 @@ png_retina(filename = "./print_ver/mort_splot.png", width = 550, height = 800,
            units = "px", type = "cairo-png", antialias = "default")
 plot(mort_splot)
 dev.off()
+
 
