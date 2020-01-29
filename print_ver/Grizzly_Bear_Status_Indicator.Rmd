@@ -1,6 +1,6 @@
 ---
 topic: "plants-and-animals"
-title: "Grizzly Bear Population Ranking Indicator"
+title: "Grizzly Bear Conservation Ranking in B.C."
 output: envreportutils.internal::print_ver
 params:
   draft: TRUE
@@ -53,9 +53,9 @@ grizz.df <- grizz.df %>%
   +	B.C. is host to some of North America’s last remaining places where large predators and their prey play out their millennia-old roles. Grizzly bears are a key part of these systems.
   + Grizzly bears are listed as a species of ‘Special Concern’ under federal legislation^1^ and ranked as S3 (Vulnerable Uncertain) provincially^2^. 
 
-* **Grizzly bears are divided into 55 Grizzly Bear Population Units (GBPUs) across B.C.** These units range from 2,670 km^2^ to 49,578 km^2^ and mostly follow Wildlife Management Unit boundaries. Very few of these units are isolated enough to be considered discrete populations. These units help managers to identify local conservation concerns, track grizzly bear population trends and apply specific management practices.
+* **Grizzly bears are divided into 55 Grizzly Bear Population Units (GBPUs) across B.C.** These units range in area from 2,670 km^2^ to 49,578 km^2^ and mostly follow Wildlife Management Unit boundaries. Very few of these units are isolated enough to be considered discrete populations. These units help managers to identify local conservation concerns, track grizzly bear population trends and apply specific management practices.
 
-* **GBPUs are rated from low to extreme conservation ranking.** Rankings are determined using internationally recognized methods developed by NatureServe^2^ and IUCN. GBPU conservation rankings are based on; 1) population size and isolation,  2) population trend, and 3) level of threat to bears or bear habitat. The level of threat considered seven sub-categories, including Residential, Agriculture, Energy, Transportation, Biological Use, Human intrusion and Climate Change. See below for detailed methodology^3^. 
+* **GBPUs are rated from low to extreme conservation ranking.** Rankings are determined using internationally recognized methods developed by NatureServe^3^ and IUCN. GBPU conservation rankings are based on; 1) population size and isolation,  2) population trend, and 3) level of threat to bears or bear habitat. The level of threat considered seven sub-categories, including Residential, Agriculture, Energy, Transportation, Biological Use, Human intrusion and Climate Change. See below for detailed methodology^4^. 
 
 * **Human development is the greatest threat to Grizzly bears in B.C.** Development can impact bears directly by increasing the frequency of bear and human conflict, leading to higher mortality and indirectly by reducing habitat availability due to human-caused disturbance and avoidance by bears. The expansion of human settlements and agriculture can lead to isolation of grizzly bear populations which reduces the movement of bears into the area to compensate for local mortalities.
   
@@ -73,7 +73,7 @@ knitr::include_graphics("./cons_splot.png")
 ```
 
 
-Of the 55 Grizzly Bear Population units (GBPU), conservation rank is rated as extreme for three GBPUs, high for 14 GBPUs and moderate for 14 GBPUs with the remainder of lower conservation rank. Refer to Appendices for full dataset.
+Of the 55 Grizzly Bear Population units (GBPU), conservation ranking was extreme for three GBPUs, high for 14 GBPUs and moderate for 14 GBPUs with the remainder of lower conservation rank. Refer to Appendices for full dataset.
 
 
 \newpage
@@ -88,12 +88,10 @@ knitr::include_graphics("./pop_splot.png")
 
 ```
 
-Estimated Grizzly Bear population density ranged from 1 - 49 adults/1000 km^2^ in 2012. North Selkirk GBPU had the highest population density.
+Grizzly Bear population density are estimated between from 1 - 49 adults/1000 km^2^. North Selkirk GBPU had the highest population density.
 \newpage
 
 ### Threat Classification
-
-
 
 ``` {r threat map, warning=FALSE, echo = FALSE, error = FALSE, message = FALSE, results = 'asis', fig.cap = "Overall Grizzly bear GBPU threat classification", out.width='0.95\\linewidth', fig.align = 'center'}
 
@@ -101,7 +99,7 @@ knitr::include_graphics("./threat_splot.png")
 
 ```
 
-Approximately half of the GBPU (23 GBPUs) were idenitified as having an overall threat of Low or Negligible. Yahk GBPU, located in the Kooteney-Boundary, had the highest overall threat due to combined risks of Agriculture, Human intrusion, Residential, Transportation and Biological Use. 
+Approximately half of all GBPUs (23 GBPUs) had an overall threat of Low or Negligible. Yahk GBPU, located in the Kooteney-Boundary, had the highest overall threat due to combined risks of Agriculture, Human intrusion, Residential, Transportation and Biological Use. 
 
 
 ```{r threat_detail, echo = FALSE, message=FALSE, fig.align='center', out.width='0.99\\linewidth'}
@@ -121,15 +119,14 @@ knitr::include_graphics("./radar_plot_key.png")
 
 \newpage
 
-## Historic Mortality (1976-1980)*
-
-```{r mort plot, echo = FALSE, message=FALSE, fig.align='centre' , out.width='0.95\\linewidth'}
+```{r mort plot, echo = FALSE, message=FALSE, fig.align='centre', fig.cap = "Historic Grizzly Bear Mortality (1976 - 2018)*", out.width='0.95\\linewidth'}
 
 knitr::include_graphics("./mort_splot.png")
 
 ```
 
-*Historic mortality based on GBPU boundaries from 2012 dataset. 
+
+*Historic mortality data is based on historic Grizzly Bear Management Units defined in 2012. 
 
 
 \newpage
@@ -154,15 +151,15 @@ knitr::include_graphics("./threat_sum_plot.png")
 
 ## Methods
 
-* Conservation ranks were calculated based on NatureServe’s ‘Element Rank Calculator’^2^ in conjunction with Provincial bear biologists. This ensured rankings were consistent with  international standards (B.C. Conservation Data Centre, NatureServe, and IUCN). 
+* Conservation ranks were calculated based on NatureServe’s ['Element Rank Calculater'](https://www.natureserve.org/conservation-tools/conservation-rank-calculator) in conjunction with Provincial bear biologists. This ensured rankings were consistent with international standards (B.C. Conservation Data Centre, NatureServe, IUCN). 
 
 * Each GBPU was assigned a rank based on population size and trend, genetic and demographic isolation, and overall threat to grizzly bears and bear habitat. GBPUs started with a score of 5 (no conservation concern) with points reduced for 1) declining population trend, 2) small and/or isolated population, and 3) increasing overall threat.
 
 * Population trend was measured over 3 generations (~30 years). If the population decreased by more than 25% the overall score was reduced, leading to a lower conservation ranking. 
 
-*	Population size and isolation are combined such that smaller isolated population’s rank scores can be reduced by as much as 4 points, whereas large well connected populations are not downgraded.
+*	Population size and isolation are combined such that smaller isolated population’s rank scores could be reduced by as much as 4 points, whereas large well connected populations are not downgraded.
 
-*	We determined threats using categories identified by IUCN-CMP (Conservation Measures Partnership) . Threats were quantified using published spatial data, including Statistics Canada, B.C.’s Baseline Thematic Mapping, Digital Road Atlas, Fish and Wildlife hunter and mortality data and Federal Department of Fisheries and Oceans’ Salmon escapement. The [NatureServe calculator](https://www.natureserve.org/conservation-tools/conservation-rank-calculator) combined individual threats into an overall threat class.
+*	We determined threats using categories identified by [IUCN-CMP](https://www.conservationgateway.org/ExternalLinks/Pages/iucn-cmp-unified-classifi.aspx). Threats were quantified using published spatial data, including Statistics Canada, B.C.’s Baseline Thematic Mapping, Digital Road Atlas, Fish and Wildlife hunter and mortality data and Federal Department of Fisheries and Oceans’ Salmon escapement. The [NatureServe calculator](https://www.natureserve.org/conservation-tools/conservation-rank-calculator) combined individual threats into an overall threat class.
 
 
 \newpage
