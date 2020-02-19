@@ -132,7 +132,7 @@ mort_popups <- paste0("<img src = ",
 
 
 # Define popup options
-popup_options <-  popupOptions(maxWidth = 350, minWidth = 350, maxHeight = 250,
+popup_options <-  popupOptions(maxWidth = 500, minWidth = 500, maxHeight = 350,
                                autoPan = TRUE,
                                keepInView = TRUE,
                                closeOnClick = TRUE,

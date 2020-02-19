@@ -148,9 +148,13 @@ Threat_Plots <- function(data, name) {
          fill = "Ranking") +
     ggtitle(name) +
     theme(legend.position = "none") +
-    theme_soe() + theme(plot.title = element_text(hjust = 0.5), # Centre title
+    theme_soe() +
+    theme(plot.title = element_text(hjust = 0.5, size = 14), # Centre title
                        legend.position = "none",
-                      plot.caption = element_text(hjust = 0)) +  # L-align caption
+                      plot.caption = element_text(hjust = 0),
+          legend.text = element_text(size = 9),
+          axis.text = element_text(size = 12),
+          axis.title = element_text(size = 14)) +  # L-align caption
    scale_y_discrete(limits = c("Negligible", "Low", "Medium", "High"),
                     drop = FALSE, na.translate = FALSE)
   make_plot + coord_flip()
@@ -165,7 +169,10 @@ plots <- for (n in gbpu_list) {
     p = NA
   } else {
   p <- Threat_Plots(data, n)
-  ggsave(p, file = paste0("dataviz/leaflet/threat_plots/", n, "_threat.svg"))
+  svg_px(file = paste0("dataviz/leaflet/threat_plots/", n, "_threat.svg"),
+         width = 480, height = 480)
+  print(p)
+  dev.off()
   }
   threat_plot_list[[n]] <- p
 }
@@ -252,12 +259,17 @@ mort_Plots <- function(mdata, name) {
   make_mplot <- ggplot(mdata, aes(y = count, x = hunt_year, fill = kill_code)) +
     geom_bar(stat = "identity") + # Add bar for each threat variable
     scale_fill_manual(values = pal_mort) +
-    xlim(1976, 2017) +
+    scale_x_continuous(limits = c(1976, 2017), expand = c(0,0)) +
     labs(x = "Year", y = "Number of Grizzlies killed") +
-    ggtitle(paste0("Historic Grizzly Bear Mortality (1976 - 2017) for ", n ," GBPU")) +
-    theme_soe() + theme(plot.title = element_text(hjust = 0.5), # Centre title
-                        plot.caption = element_text(hjust = 0)) +  # L-align caption
-    theme(legend.position = "top", legend.title = element_blank())
+    ggtitle(paste0(strwrap(
+      paste0("Historic Grizzly Bear Mortality (1976-2017) for ", n ," GBPU"), 65),
+      collapse = "\n")) +
+    theme_soe() +  # L-align caption
+    theme(legend.position = "top", legend.title = element_blank(),
+          title = element_text(size = 12),
+          legend.text = element_text(size = 10),
+          axis.text = element_text(size = 12),
+          axis.title = element_text(size = 14))
 
    make_mplot
 }
@@ -274,7 +286,13 @@ plots <- for (n in gbpu_list) {
     p = NA
   } else {
     p <- mort_Plots(mdata, name)
-    ggsave(p, file = paste0("dataviz/leaflet/threat_plots/", n, "_mort.svg"))
+
+    svg_px(file = paste0("dataviz/leaflet/threat_plots/", n, "_mort.svg"),
+          width = 480, height = 330)
+    print(p)
+    dev.off()
+
   }
   mort_plot_list[[n]] <- p
 }
+
