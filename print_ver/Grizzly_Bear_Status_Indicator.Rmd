@@ -247,7 +247,8 @@ table2 <- dplyr::select(grizz.df, gbpu_name, gbpu.pop,
          "Population Size (Adults)" = gbpu.pop,
          "Population Density (Adults/1000 km^2)" = pop_density,
          "Area of Useable Habitat (km^2)" = use_area_sq_km,
-         "Total Area of GBPU (km^2)" = area_sq_km) 
+         "Total Area of GBPU (km^2)" = area_sq_km) %>% 
+  mutate_if(is.numeric, ~ format(.x, big.mark = ","))
 
 
 x.table = xtable(table2)
