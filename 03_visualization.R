@@ -260,7 +260,7 @@ mort_Plots <- function(mdata, name) {
     geom_bar(stat = "identity") + # Add bar for each threat variable
     scale_fill_manual(values = pal_mort) +
     scale_x_continuous(limits = c(1976, 2017), expand = c(0,0)) +
-    labs(x = "Year", y = "Number of Grizzlies killed") +
+    labs(x = "Year", y = "Number of Grizzly Bear Mortalities") +
     ggtitle(paste0(strwrap(
       paste0("Historic Grizzly Bear Mortality (1976-2017) for ", n ," GBPU"), 65),
       collapse = "\n")) +

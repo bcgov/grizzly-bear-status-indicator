@@ -110,7 +110,7 @@ knitr::include_graphics("./radar_plot.png")
 ```
 
 
-```{r radar_key, echo = FALSE, message=FALSE, fig.align='right', fig.cap = "Contribution of criteria (Trend, Threat, Population/Isolation) to the overall GBPU ranking. Each arm represents the relative contribution of each factor. For example: Population/Isolation (0-4), Threat (0-2) and Trend (1). Coloured areas represent the influence of each factor to the overall ranking. For example greater area coloured represents greather threat to grizzly GBPU and ultimately increase in ranking from low to extreme. The colours reflect conservation rank (extreme (yellow), high (green), moderate (teal), low(blue), negligible (purple)" , out.width='0.30\\linewidth'}
+```{r radar_key, echo = FALSE, message=FALSE, fig.align='right', fig.cap = "Contribution of different factors to the overall rank for each GBPU. Each arm represents the relative contribution of each factor: Population/Isolation (0-4), Threat (0-2) and Trend (0-1). The coloured area represents the influence of each of the factors on the overall ranking. A larger coloured area represents greather risk to the GBPU and thus an increase in ranking. The colours reflect conservation rank (extreme (yellow), high (green), moderate (teal), low(blue), negligible (purple)" , out.width='0.30\\linewidth'}
 
 knitr::include_graphics("./radar_plot_key.png")
 
