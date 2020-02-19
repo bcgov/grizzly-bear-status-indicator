@@ -3,3 +3,22 @@
 div.info.legend.leaflet-control br {
   clear: both;
 }
+
+.mortNote {
+  width: 350px;
+}
+
+.mortNote p {
+  margin: 0;
+}
+
+.radarNote {
+  width: 350px;
+  background-color: rgba(255,255,255,0.8);
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.radarNote p {
+  margin: 0;
+}

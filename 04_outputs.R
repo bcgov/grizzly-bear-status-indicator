@@ -214,7 +214,7 @@ mort_splot <- ggplot(mort_sum, aes(y = count, x = hunt_year, fill = kill_code)) 
   facet_wrap(~gbpu_name) +
   geom_bar(stat = "identity") + # Add bar for each threat variable
   scale_fill_manual(values = pal_mort) +
-  labs(x = NULL, y = "Number of Grizzlies killed")+
+  labs(x = NULL, y = "Number of Grizzly Bear Mortalities")+
   scale_x_continuous(limits = c(1976, 2018), breaks = seq(1970,2018,15)) +
   scale_y_continuous(limits = c(0, 50), breaks = seq(0,50,25)) +
   theme(strip.text.x = element_text(size = 5),

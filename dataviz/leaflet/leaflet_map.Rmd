@@ -66,7 +66,8 @@ popup_text2 <- dplyr::select(grizzdata_full, gbpu_name, gbpu.pop,
          "Population Size (Adults)" = gbpu.pop,
          "Population Density (Adults/1000 km^2)" = pop_density,
          "Area of Useable Habitat (km^2)" = use_area_sq_km,
-         "Total Area of GBPU (km^2)" = area_sq_km) 
+         "Total Area of GBPU (km^2)" = area_sq_km) %>% 
+  mutate_if(is.numeric, ~ format(.x, big.mark = ","))
 
 st_geometry(popup_text2) <- NULL 
 
@@ -132,7 +133,7 @@ mort_popups <- paste0("<img src = ",
 
 
 # Define popup options
-popup_options <-  popupOptions(maxWidth = 350, minWidth = 350, maxHeight = 250,
+popup_options <-  popupOptions(maxWidth = 500, minWidth = 500, maxHeight = 350,
                                autoPan = TRUE,
                                keepInView = TRUE,
                                closeOnClick = TRUE,
@@ -221,7 +222,8 @@ grizzmap %>%
                 bringToFront = T)) %>%
   addLegend("bottomright", pal = palette1, values = grizzdata_full$con_stats,
             title = "Conservation Ranking", na.label = "Extirpated",
-            opacity = 1) 
+            opacity = 1) %>% 
+  addControl("<p>Popups show the contribution of different factors to the overall rank for each GBPU. Each arm represents the relative contribution of each factor: Population/Isolation (0-4), Threat (0-2) and Trend (0-1). The coloured area represents the influence of each of the factors on the overall ranking. A larger coloured area represents greather risk to the GBPU and thus an increase in ranking. The colour represents the rank as shown in the map legend.</p>", position = "bottomleft", className = "radarNote")
 ```
 
 ## Population Density Estimate
@@ -373,7 +375,7 @@ grizzmap %>%
 
 
 
-## Historic Mortality*
+## Historic Mortality
 
 ``` {r, warning=FALSE, echo=FALSE}
 grizzmap %>% 
@@ -392,6 +394,7 @@ grizzmap %>%
                 bringToFront = T)) %>%
     addLegend("bottomright", pal = palette3, values = grizzdata_full$threat_class,
             title = "Biological Use Threat", na.label = "Extirpated",
-            opacity = 1)
+            opacity = 1) %>% 
+  addControl("<p>*Historic mortality data is based on Grizzly Bear Management Units defined in 2012.</p><p>*Prior to 2004, road and rail kills were not distinguished and were documented with 'Pick Ups'</p>", position = "bottomleft", className = "mortNote")
 
 ```
