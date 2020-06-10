@@ -72,11 +72,12 @@ threat_calc <- threat_calc %>%
 
 # Find centroid of polygons (for labelling)
 # Note: BC Albers CRS used because lat/long not accepted by st_centroid
-popcentroid <- st_centroid(st_geometry(gbpu_2018)) %>%
+popcentroid <- st_centroid(st_geometry(gbpu_data)) %>%
   st_transform(popcentroid, crs = 4326)
 
+
 # Spatial join
-grizzdata_full <- cbind(gbpu_2018,
+grizzdata_full <- cbind(gbpu_data,
                         st_coordinates(popcentroid)) # cbind coords and polygons
 
 # Rename lat and lng columns
@@ -85,8 +86,7 @@ grizzdata_full <- rename(grizzdata_full, lng = X, lat = Y) %>%
 
 # Rename 'population name' column
 grizzdata_full <- grizzdata_full %>%
-  rename_all(tolower) %>%
-  rename(gbpu_name = population_name)
+  rename_all(tolower)
 
 # Join GBPU polygons (popunits) and threat classification data
 grizzdata_full <- left_join(grizzdata_full, threat_calc, by = "gbpu_name")
