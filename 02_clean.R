@@ -119,12 +119,13 @@ grizzdata_full <- mutate(grizzdata_full,
 )
 
 
+
 # Add population density column
 grizzdata_full <- mutate(grizzdata_full,
-                        # area_sq_km = round(as.numeric(set_units(st_area(geometry), km2)), digits = 0),
-                        # use_area_sq_km = round(as.numeric(h_area_nowice),digits = 0),
-                         pop_density = round(as.numeric(gbpu.pop / pop_area * 1000), digits = 0))
-#)
+                         area_sq_km = round(as.numeric(set_units(st_area(geometry), km2)), digits = 0),
+                         use_area_sq_km = round(pop_area, digits = 0),
+                         pop_density = round(as.numeric(gbpu.pop / use_area_sq_km * 1000), digits = 0))
+
 
 # Change threat class column to ordered factor
 grizzdata_full <- grizzdata_full %>%
@@ -139,6 +140,8 @@ grizzdata_full$trend <- grizzdata_full$trend %>% replace_na("Data Deficient")
 
 # Simplify vertices of GBPU polygons
 grizzdata_full <- ms_simplify(grizzdata_full, keep = 0.25) # reduce number of vertices
+
+
 
 # create mortality data set with matching gbpu_id's
 grizz_morts <- grizzdata_full %>%
