@@ -14,19 +14,15 @@
 
 Packages <- c("sf", "tidyverse", "maptools", "devtools","bcmaps",
               "leaflet", "rmapshaper", "envreportutils",
-              "viridis", #"ggmap", "ggspatial",
-              "here", "readxl",
-              #"ggrepel",
-              "svglite", "Cairo", "shiny", "htmltools",
-              "units", "bcdata")
+              "viridis", "here", "readxl","bcdata", "units",
+              "svglite", "Cairo", "shiny", "htmltools")
 lapply(Packages, library, character.only = TRUE)
 
 #remotes::install_github("ateucher/rmapshaper")
 #remotes::install_github("bcgov/bcdata")
-remotes::install_github("bcgov/envreportutils")
+#remotes::install_github("bcgov/envreportutils")
 #devtools::install_github("dkahle/ggmap", force = T)
 #remotes::install_github("bcgov/bcmaps")
-
 
 
 ## Data Download -------------------------------------------------------
@@ -47,14 +43,14 @@ threat_calc <- bcdc_get_data(record = 'e08876a1-3f9c-46bf-b69a-3d88de1da725',
          threat_class = overal_threat)
 
 
-# 2) mport grizzly bear population unite (gbpu) spatial data
+# 2) Import grizzly bear population unite (gbpu) spatial data
 
 gbpu_poly_raw <- bcdc_get_data("https://catalogue.data.gov.bc.ca/dataset/caa22f7a-87df-4f31-89e0-d5295ec5c725")
 
 gbpu_poly <- gbpu_poly_raw %>%
   filter(VERSION_NAME == 2018) %>%
-  select(-c(id, VERSION_NAME, VERSION_YEAR_MODIFIED, STATUS,
-            SE_ANNO_CAD_DATA, FEATURE_AREA_SQM, FEATURE_LENGTH_M,
+  select(-c(id, VERSION_NAME, VERSION_YEAR_MODIFIED,
+            SE_ANNO_CAD_DATA, FEATURE_LENGTH_M,
             WITHIN_BC_IND)) %>%
   mutate(gbpu_name = POPULATION_NAME)
 
