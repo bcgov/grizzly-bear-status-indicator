@@ -144,7 +144,8 @@ grizzdata_full <- ms_simplify(grizzdata_full, keep = 0.25) # reduce number of ve
 grizz_morts <- grizzdata_full %>%
   select(grizzly_bear_pop_unit_id, grizzly_bear_population_tag,
          gbpu_name, display_name, status, geometry) %>%
-  left_join(morts, by = c("grizzly_bear_population_tag" = "GBPU_ID"))
+  left_join(morts, by = c("grizzly_bear_population_tag" = "GBPU_ID")) %>%
+  select(-GBPU_NAME)
 
 # create subthreat data set with matching gbpu's
 
