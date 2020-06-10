@@ -42,8 +42,8 @@ library(xtable)
 grizzdata_full <- read_rds(here("data/grizzdata_full.rds"))
 grizzdata_full <- st_transform(grizzdata_full, crs = 4326) 
 grizz.df <- as.data.frame(grizzdata_full)
-grizz.df <- grizz.df %>%
-  filter(status == "Viable")
+#grizz.df <- grizz.df %>%
+#  filter(status == "Viable")
 
 
 ```
@@ -279,11 +279,11 @@ table3 <- grizz.df %>%
     "Transportation" = transportationcalc,
     "Biological Use" = biousecalc,
     "Human Intrusion" = humanintrusioncalc,
-    "Climate Change" = climatechangecalc ) %>% 
+    "Climate Change" = climatechangecalc ) %>%
   mutate_at(
     vars(`Overall`,Residential,Agriculture, Energy,Transportation,
                 `Biological Use`, `Human Intrusion`, `Climate Change`),
-    funs(case_when(
+    ~(case_when(
     . == "Low"  ~ "L",
     . == "Negligible" ~ "N",
     . == "Medium"  ~ "M",
