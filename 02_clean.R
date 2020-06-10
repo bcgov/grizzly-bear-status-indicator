@@ -84,9 +84,6 @@ grizzdata_full <- cbind(gbpu_data,
 grizzdata_full <- rename(grizzdata_full, lng = X, lat = Y) %>%
   st_transform(4326) # convert to lat/long
 
-# Rename 'population name' column
-grizzdata_full <- grizzdata_full %>%
-  rename_all(tolower)
 
 # Join GBPU polygons (popunits) and threat classification data
 grizzdata_full <- left_join(grizzdata_full, threat_calc, by = "gbpu_name")
@@ -121,12 +118,13 @@ grizzdata_full <- mutate(grizzdata_full,
                            str_detect(calcsrank, "5") ~ "Negligible")
 )
 
+
 # Add population density column
 grizzdata_full <- mutate(grizzdata_full,
-                         area_sq_km = round(as.numeric(set_units(st_area(geometry), km2)), digits = 0),
-                         use_area_sq_km = round(as.numeric(h_area_nowice),digits = 0),
-                         pop_density = round(as.numeric(gbpu.pop / use_area_sq_km * 1000), digits = 0)
-)
+                        # area_sq_km = round(as.numeric(set_units(st_area(geometry), km2)), digits = 0),
+                        # use_area_sq_km = round(as.numeric(h_area_nowice),digits = 0),
+                         pop_density = round(as.numeric(gbpu.pop / pop_area * 1000), digits = 0))
+#)
 
 # Change threat class column to ordered factor
 grizzdata_full <- grizzdata_full %>%
