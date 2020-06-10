@@ -13,15 +13,17 @@
 # Loading R libraries ---------------------------------------------------
 
 Packages <- c("sf", "tidyverse", "maptools", "devtools","bcmaps",
-              "leaflet", "rmapshaper", "bcdata", "envreportutils",
-              "viridis", "ggmap", "ggspatial", "here", "readxl",
-              "ggrepel", "svglite", "Cairo", "shiny", "htmltools",
+              "leaflet", "rmapshaper", "envreportutils",
+              "viridis", #"ggmap", "ggspatial",
+              "here", "readxl",
+              #"ggrepel",
+              "svglite", "Cairo", "shiny", "htmltools",
               "units", "bcdata")
 lapply(Packages, library, character.only = TRUE)
 
 #remotes::install_github("ateucher/rmapshaper")
 #remotes::install_github("bcgov/bcdata")
-#remotes::install_github("bcgov/envreportutils")
+remotes::install_github("bcgov/envreportutils")
 #devtools::install_github("dkahle/ggmap", force = T)
 #remotes::install_github("bcgov/bcmaps")
 
@@ -29,66 +31,60 @@ lapply(Packages, library, character.only = TRUE)
 
 ## Data Download -------------------------------------------------------
 
-## Get British Columbia grizzly bear population unit boundaries from B.C. Data Catalogue
-## from https://catalogue.data.gov.bc.ca/dataset/2bf91935-9158-4f77-9c2c-4310480e6c29
+## Get British Columbia grizzly bear data from B.C. Data Catalogue
 ## Data is released under the Open Government Licence - British Columbia
-## https://www2.gov.bc.ca/gov/content?id=A519A56BC2BF44E4A008B33FCF527F61
 
 
-# Import threat calculation table : To be added to BC warehouse
+# 1) Import conservation ranking table:
+# https://catalogue.data.gov.bc.ca/dataset/e08876a1-3f9c-46bf-b69a-3d88de1da725
 
-data_path <- soe_path("Operations ORCS/Data - Working/plants_animals/grizzly/2019/Raw Data")
 
-#threat_calc <- read_xls(file.path(data_path, "Threat_Calc.xls")) %>%
-#  rename_all(tolower)
-
-threat_calc <- read_xls(file.path(data_path, "ThreatwFail_SoE.xls")) %>%
+threat_calc <- bcdc_get_data(record = 'e08876a1-3f9c-46bf-b69a-3d88de1da725',
+                             resource = '7282667b-185a-4f08-9d99-13a2e5ada1d4') %>%
   rename_all(tolower) %>%
   rename(gbpu_name = gbpu,
          gbpu.pop = popnest2018,
          threat_class = overal_threat)
 
-# Import gbpu units polygons
+
+# 2) mport grizzly bear population unite (gbpu) spatial data
+
+gbpu_poly_raw <- bcdc_get_data("https://catalogue.data.gov.bc.ca/dataset/caa22f7a-87df-4f31-89e0-d5295ec5c725")
+
+gbpu_poly <- gbpu_poly_raw %>%
+  filter(VERSION_NAME == 2018) %>%
+  select(-c(id, VERSION_NAME, VERSION_YEAR_MODIFIED, STATUS,
+            SE_ANNO_CAD_DATA, FEATURE_AREA_SQM, FEATURE_LENGTH_M,
+            WITHIN_BC_IND)) %>%
+  mutate(gbpu_name = POPULATION_NAME)
+
+names(gbpu_poly) <- tolower(names(gbpu_poly))
 
 
-# Import population data / density
+# 3) Import population data from data catalogue
 
+# NOTE: (currently pulling 2012 data - will need to update this once they
+# are posted - Rob and Sasha to let me know when this happens - 09-06-2020)
 
-# import mortality data set from the data catalogue ( )
+pop.raw <- bcdc_get_data("https://catalogue.data.gov.bc.ca/dataset/2bf91935-9158-4f77-9c2c-4310480e6c29")
+
+pop <- pop.raw %>%
+  group_by(GBPU) %>%
+  summarise(pop_est = sum(Estimate), pop_area = sum(Total_Area)) %>%
+  rename(gbpu_name = GBPU) %>%
+  # temporary fix to consolidate names in 2012 data set (remove once updated population data is used)
+  mutate(gbpu_name = case_when(
+    gbpu_name == "Central Purcells" ~ "Central-South Purcells",
+    gbpu_name == "North Purcell" ~ "North Purcells",
+    TRUE ~ gbpu_name
+  ))
+
+gbpu_data <-  left_join(gbpu_poly, pop)
+
+# 4. Import mortality data set
+# (https://catalogue.data.gov.bc.ca/dataset/history-of-grizzly-bear-mortalities)
+
 morts <- bcdc_get_data("4bc13aa2-80c9-441b-8f46-0b9574109b93")
-
-## ADD the 2012
-
-# temporary data source:
-
-
-# Import grizzly bear threat calculator data from csv prior to the following steps
-# (Not yet in DataBC)
-
-# Import 2016 GBPU polygons (for now, until we get the newest ones)
-gbpu_2018 <- read_sf(file.path(data_path, "BC_Grizzly_Results_v1_Draft_April2016.gdb"),
-                     layer = "GBPU_BC_edits_v2_20150601") %>%
-  transform_bc_albers()
-
-# go back and add the GBPU : / geopackage ?
-# shoudul be EST_POP_22
-
-# Import 2018 GBPU polygons (for now, until we get the newest ones)
-gbpu_hab <- read_sf(file.path(data_path, "Bear_Density_2018.gdb"),
-                    layer = "GBPU_MU_LEH_2015_2018_bear_density_DRAFT") %>%
-    transform_bc_albers() %>%
-  select(c( "POPULATION" , "AREA_KM2" , "AREA_KM2_B" , "AREA_KM2_n", "EST_POP_21",
-            "geometry")) %>%
-  group_by(POPULATION) %>%
-  summarise(#gbpu.pop = sum(EST_POP_20, na.rm = TRUE),
-            H_area_km2 = sum(AREA_KM2, na.rm = TRUE),
-            H_area_wice = sum(AREA_KM2_B, na.rm = TRUE),  # amount of water/ ice
-            H_area_nowice = sum(AREA_KM2_n, na.rm = TRUE)) %>%
-  mutate(POPULATION_NAME  = POPULATION) %>%
-  st_drop_geometry() %>%
-  as.data.frame()
-
-gbpu_2018 <- left_join(gbpu_2018, gbpu_hab)
 
 
 
