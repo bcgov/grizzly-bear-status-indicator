@@ -42,9 +42,6 @@ library(xtable)
 grizzdata_full <- read_rds(here("data/grizzdata_full.rds"))
 grizzdata_full <- st_transform(grizzdata_full, crs = 4326) 
 grizz.df <- as.data.frame(grizzdata_full)
-#grizz.df <- grizz.df %>%
-#  filter(status == "Viable")
-
 
 ```
 
@@ -126,7 +123,9 @@ knitr::include_graphics("./mort_splot.png")
 ```
 
 
-*Historic mortality data is based on historic Grizzly Bear Management Units defined in 2012. 
+* Historic mortality data is based on historic Grizzly Bear Management Units defined in 2012.
+* Prior to 2004, road and rail kills were not distinguished and were documented with 'Pick Ups'.
+* Grizzly Bear Hunting was banned in B.C. in 2017.
 
 
 \newpage
