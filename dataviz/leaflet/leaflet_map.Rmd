@@ -126,6 +126,9 @@ trans_popups <- paste0("<img src = ",
                                gsub("\\s+", "%20", grizzdata_full$gbpu_name), "_transport.svg"), 
                         ">")
 
+
+
+
 # human intrusion popups
 human_popups <- paste0("<img src = ", 
                         paste0("./threat_plots/", 
@@ -156,7 +159,8 @@ popup_options <-  popupOptions(maxWidth = 500, minWidth = 500, maxHeight = 350,
 labs <- dplyr::select(grizzdata_full, gbpu_name, pop_density, calcsrank, threat_class, con_stats) %>%
   mutate(calcsrank = ifelse(is.na(calcsrank), "Extirpated", calcsrank),
          con_stats = ifelse(is.na(as.character(con_stats)), "Extirpated", as.character(con_stats)),
-         threat_class = ifelse(is.na(as.character(threat_class)), "Extirpated", as.character(threat_class)))
+         threat_class = ifelse(is.na(as.character(threat_class)), "Extirpated", as.character(threat_class)))# %>% 
+#  distinct()
 
 
 st_geometry(labs) <- NULL # as df
@@ -166,19 +170,18 @@ lab1 <- lapply(seq(nrow(labs)), function(i) {
           labs[i, "con_stats"], '</b>') 
 })
 
-lab2 <- lapply(seq(nrow(labs)), function(i) {
-  ifelse(labs[i,"pop_density"] > 1,  
-    paste0( '<b>', labs[i, "gbpu_name"], ', ',  
-    labs[i, "pop_density"]," Adults/1000km",'<sup>2</sup>','</b>'),
-        ifelse(labs[i,"pop_density"] == 1,  
-          paste0( '<b>', labs[i, "gbpu_name"], ', ',  
-          labs[i, "pop_density"]," Adult/1000km2",'</b>'),
-              ifelse(labs[i,"calcsrank"] == "Extirpated",  
-                  paste0( '<b>', labs[i, "gbpu_name"], ', ',"Extirpated",'</b>'),
-        ifelse(labs[i,"pop_density"] == 0,  
-          paste0( '<b>', labs[i, "gbpu_name"], ', ', 
+labs2 <- labs 
+lab2 <- lapply(seq(nrow(labs2)), function(i) {
+  ifelse(is.na(labs2[i,"pop_density"]),  
+    paste0( '<b>', labs2[i, "gbpu_name"], ', ',"Extirpated",'</b>'),
+  ifelse(labs2[i,"pop_density"] > 1,  
+    paste0( '<b>', labs2[i, "gbpu_name"], ', ', labs[i, "pop_density"]," Adults/1000km",'<sup>2</sup>','</b>'),
+  ifelse(labs2[i,"pop_density"] == 1,  
+          paste0( '<b>', labs2[i, "gbpu_name"], ', ',  labs[i, "pop_density"]," Adult/1000km2",'</b>'),
+       ifelse(labs2[i,"pop_density"] == 0,  
+          paste0( '<b>', labs2[i, "gbpu_name"], ', ', 
           "< 1 Adults/1000km2",'</b>'),
-  "NA"))))
+  NA))))
 })
   
 
@@ -188,8 +191,6 @@ lab3 <- lapply(seq(nrow(labs)), function(i) {
 })
 
 # Prep colour palettes
-#palette1 <- colorFactor(palette = 'viridis', grizzdata_full$calcsrank, reverse = TRUE)
-
 
 palette1 <- colorFactor(palette = 'viridis', grizzdata_full$con_stats, reverse = TRUE)
 palette2 <- colorNumeric(palette = 'viridis', grizzdata_full$pop_density, reverse = TRUE)
@@ -233,7 +234,7 @@ grizzmap %>%
   addLegend("bottomright", pal = palette1, values = grizzdata_full$con_stats,
             title = "Conservation Ranking", na.label = "Extirpated",
             opacity = 1) %>% 
-  addControl("<p>Popups show the contribution of different factors to the overall rank for each GBPU. Each arm represents the relative contribution of each factor: Population/Isolation (0-4), Threat (0-2) and Trend (0-1). The coloured area represents the influence of each of the factors on the overall ranking. A larger coloured area represents greather risk to the GBPU and thus an increase in ranking. The colour represents the rank as shown in the map legend.</p>", position = "bottomleft", className = "radarNote")
+  addControl("<p> Click on each GBPU to view which factors contribute to the overall GBPU rank. Each plot arm represents the relative contribution of Population/Isolation (0-4), Threat (0-2) and Trend (0-1). The coloured area represents the influence of each of the factors on the overall ranking. A larger coloured area represents greater risk to the GBPU and thus an increase in ranking. The colour represents the rank as shown in the map legend.</p>", position = "bottomleft", className = "radarNote")
 ```
 
 ## Population Density Estimate
@@ -405,7 +406,7 @@ grizzmap %>%
     addLegend("bottomright", pal = palette3, values = grizzdata_full$threat_class,
             title = "Biological Use Threat", na.label = "Extirpated",
             opacity = 1) %>% 
-  addControl("<p>*Historic mortality data is based on Grizzly Bear Management Units defined in 2012.</p><p>*Prior to 2004, road and rail kills were not distinguished and were documented with 'Pick Ups'</p><p>*Grizzly Bear Hunting was banned in B.C. in 2017</p>", position = "bottomleft", className = "mortNote")
+  addControl("<p>*Historic mortality data is based on Grizzly Bear Management Units defined in 2012.</p><p>*Prior to 2004, road and rail kills were not distinguished and were documented with 'Pick Ups'</p><p>*Grizzly Bear hunting was banned in B.C. in 2017</p>", position = "bottomleft", className = "mortNote")
 
 
 ```
