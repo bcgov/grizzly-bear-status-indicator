@@ -176,12 +176,12 @@ knitr::include_graphics("./threat_sum_plot.png")
 
 *^3^ NatureServe. 2015. [NatureServe Element Occurrence Viability Calculator Version 1](http://www.natureserve.org/conservation-tools/conservation-rank-calculator). NatureServe, Arlington, VA.
 
-*^4^ [Province of British Columbia. 2019. Ranking the Conservation of Grizzly Bear Population Units]()
+*^4^ [Province of British Columbia. 2019. Ranking the Conservation of Grizzly Bear Population Units](https://www2.gov.bc.ca/gov/content?id=D0FF8688D69741C89256271034E2251D)).
 
 
-*British Columbia conservation Foundation's Bear Aware Program [Link](https://wildsafebc.com/grizzly-bear/)
+*British Columbia Conservation Foundation's [Bear Aware Program](https://wildsafebc.com/grizzly-bear/).
 
-*British Columbia Ministry of Environment. 2016. British Columbia guide to recovery planning for species and ecosystems at risk. B.C. Ministry of Environment, Victoria, BC. [PDF](http://a100.gov.bc.ca/pub/eirs/finishDownloadDocument.do?subdocumentId=10332)
+*British Columbia Ministry of Environment. 2016. British Columbia guide to recovery planning for species and ecosystems at risk. B.C. Ministry of Environment, Victoria, BC. [PDF](http://a100.gov.bc.ca/pub/eirs/finishDownloadDocument.do?subdocumentId=10332).
 
 
 
