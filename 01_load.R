@@ -68,12 +68,7 @@ pop <- pop.raw %>%
          pop_est = gbpu_est_pop_2018,
          pop_area = gbpu_area_km2_nowaterice) %>%
   select(c(population_name, pop_area, pop_est))
-# temporary fix to consolidate names in 2012 data set (remove once updated population data is used)
- # mutate(gbpu_name = case_when(
-#    gbpu_name == "Central Purcells" ~ "Central-South Purcells",
-#    gbpu_name == "North Purcell" ~ "North Purcells",
-#    TRUE ~ gbpu_name
-#  ))
+
 
 gbpu_data <-  left_join(gbpu_poly, pop, by = "population_name")
 
