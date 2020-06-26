@@ -167,13 +167,14 @@ knitr::include_graphics("./threat_sum_plot.png")
 ## References and Other Useful Links
 
 
-*^1^ [Species at Risk Act, 2002](https://species-registry.canada.ca/index-en.html#/species/158-530)
+*^1^ [Species at Risk Act, (2002)](https://species-registry.canada.ca/index-en.html#/species/158-530)
 
 *^2^ [Provincial Conservation Status Ranks](https://www2.gov.bc.ca/gov/content/environment/plants-animals-ecosystems/conservation-data-centre/explore-cdc-data/status-ranks)
 
 *^3^ NatureServe. 2015. [NatureServe Element Occurrence Viability Calculator Version 1](http://www.natureserve.org/conservation-tools/conservation-rank-calculator). NatureServe, Arlington, VA.
 
-*^4^ 2019 Ranking the Conservation Concern of Grizzly Bear Population Units report[add link].
+*^4^ [Province of British Columbia. 2019. Ranking the Conservation of Grizzly Bear Population Units]()
+
 
 
 *British Columbia conservation Foundation's Bear Aware Program [Link](https://wildsafebc.com/grizzly-bear/)
@@ -188,18 +189,19 @@ knitr::include_graphics("./threat_sum_plot.png")
 
 \*By accessing these datasets, you agree to the licence associated with each file, as indicated in parentheses below.
 
-- [Grizzly Bear Population Units](https://catalogue.data.gov.bc.ca/dataset/grizzly-bear-population-units)
+- [Grizzly Bear Population Units](https://catalogue.data.gov.bc.ca/dataset/caa22f7a-87df-4f31-89e0-d5295ec5c725)
 
-- [Grizzly Bear Threat Calculations](https::// TO BE UPLOADED)
+- [BC Grizzly Bear Conservation Ranking Results](https://catalogue.data.gov.bc.ca/dataset/e08876a1-3f9c-46bf-b69a-3d88de1da725)
+
+- [BC Grizzly Bear Population Estimates](https://catalogue.data.gov.bc.ca/dataset/2bf91935-9158-4f77-9c2c-4310480e6c29)
 
 - [Grizzly Bear Historic Mortality](https://catalogue.data.gov.bc.ca/dataset/history-of-grizzly-bear-mortalities/resource/c5fc42c7-67d3-4669-b281-61dc50fdef22)
 
-- other data? 
 
 
 ----
 
-Published and Available On-Line at Environmental Reporting BC (January `r format(Sys.Date(), "%Y")`):  
+Published and Available On-Line at Environmental Reporting BC (June `r format(Sys.Date(), "%Y")`):  
 <http://www.env.gov.bc.ca/soe/indicators/plants-and-animals/grizzly-bears.html>
 
 Email correspondence to: envreportbc@gov.bc.ca
