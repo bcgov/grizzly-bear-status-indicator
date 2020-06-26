@@ -43,7 +43,7 @@ grizzdata_full <- grizzdata_full %>%
 
 # conservation status tab:
 popup_text1 <- dplyr::select(grizzdata_full, gbpu_name, con_stats,
-                  threat_class, gbpu.pop, isolation, trend, trend_desc) %>% 
+                  threat_class, gbpu.pop, isolation, trend_desc) %>% 
   rename("Population Name" = gbpu_name,
          "Conservation Ranking" = con_stats,
          "Overall Threat Score" = threat_class,
