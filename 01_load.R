@@ -59,23 +59,23 @@ names(gbpu_poly) <- tolower(names(gbpu_poly))
 
 # 3) Import population data from data catalogue
 
-# NOTE: (currently pulling 2012 data - will need to update this once they
-# are posted - Rob and Sasha to let me know when this happens - 09-06-2020)
-
-pop.raw <- bcdc_get_data("https://catalogue.data.gov.bc.ca/dataset/2bf91935-9158-4f77-9c2c-4310480e6c29")
+pop.raw <- bcdc_get_data("https://catalogue.data.gov.bc.ca/dataset/2bf91935-9158-4f77-9c2c-4310480e6c29",
+                         resource = '6406840f-9525-4544-9c36-e725fb2e399a')
 
 pop <- pop.raw %>%
-  group_by(GBPU) %>%
-  summarise(pop_est = sum(Estimate), pop_area = sum(Total_Area)) %>%
-  rename(gbpu_name = GBPU) %>%
-  # temporary fix to consolidate names in 2012 data set (remove once updated population data is used)
-  mutate(gbpu_name = case_when(
-    gbpu_name == "Central Purcells" ~ "Central-South Purcells",
-    gbpu_name == "North Purcell" ~ "North Purcells",
-    TRUE ~ gbpu_name
-  ))
+  rename_all(tolower) %>%
+  rename(population_name = population_name,
+         pop_est = gbpu_est_pop_2018,
+         pop_area = gbpu_area_km2_nowaterice) %>%
+  select(c(population_name, pop_area, pop_est))
+# temporary fix to consolidate names in 2012 data set (remove once updated population data is used)
+ # mutate(gbpu_name = case_when(
+#    gbpu_name == "Central Purcells" ~ "Central-South Purcells",
+#    gbpu_name == "North Purcell" ~ "North Purcells",
+#    TRUE ~ gbpu_name
+#  ))
 
-gbpu_data <-  left_join(gbpu_poly, pop)
+gbpu_data <-  left_join(gbpu_poly, pop, by = "population_name")
 
 # 4. Import mortality data set
 # (https://catalogue.data.gov.bc.ca/dataset/history-of-grizzly-bear-mortalities)
