@@ -48,7 +48,7 @@ grizz.df <- as.data.frame(grizzdata_full)
 * **Grizzly bears are an important part of the British Columbia landscape.** 
   + They are a symbol of ecological integrity that represents much of what British Columbians and visitors alike appreciate about B.C.’s natural beauty.
   +	B.C. is host to some of North America’s last remaining places where large predators and their prey play out their millennia-old roles. Grizzly bears are a key part of these systems.
-  + Grizzly bears are listed as a species of ‘Special Concern’ under federal legislation^1^ and ranked as S3 (Vulnerable Uncertain) provincially^2^. 
+  + Grizzly bears are listed as a species of ‘Special Concern’ under federal legislation^1^ and ranked as S3? (Vulnerable Uncertain) provincially^2^. 
 
 * **Grizzly bears are divided into 55 Grizzly Bear Population Units (GBPUs) across B.C.** These units range in area from 2,670 km^2^ to 49,578 km^2^ and mostly follow Wildlife Management Unit boundaries. Very few of these units are isolated enough to be considered discrete populations. These units help managers to identify local conservation concerns, track grizzly bear population trends and apply specific management practices.
 
@@ -125,7 +125,7 @@ knitr::include_graphics("./mort_splot.png")
 
 * Historic mortality data is based on historic Grizzly Bear Management Units defined in 2012.
 * Prior to 2004, road and rail kills were not distinguished and were documented with 'Pick Ups'.
-* Grizzly Bear Hunting was banned in B.C. in 2017.
+* Grizzly Bear hunting was banned in B.C. in 2017.
 
 
 \newpage
@@ -158,7 +158,11 @@ knitr::include_graphics("./threat_sum_plot.png")
 
 *	Population size and isolation are combined such that smaller isolated population’s rank scores could be reduced by as much as 4 points, whereas large well connected populations are not downgraded.
 
-*	We determined threats using categories identified by [IUCN-CMP](https://www.conservationgateway.org/ExternalLinks/Pages/iucn-cmp-unified-classifi.aspx). Threats were quantified using published spatial data, including Statistics Canada, B.C.’s Baseline Thematic Mapping, Digital Road Atlas, Fish and Wildlife hunter and mortality data and Federal Department of Fisheries and Oceans’ Salmon escapement. The [NatureServe calculator](https://www.natureserve.org/conservation-tools/conservation-rank-calculator) combined individual threats into an overall threat class.
+*	We determined threats using categories identified by [IUCN-CMP](https://www.conservationgateway.org/ExternalLinks/Pages/iucn-cmp-unified-classifi.aspx). Threats were quantified using published spatial data, including Statistics Canada, B.C.’s Baseline Thematic Mapping, Digital Road Atlas, Fish and Wildlife hunter and mortality data and Federal Department of Fisheries and Oceans’ Salmon escapement. The NatureServe calculator combined individual threats into an overall threat class.
+
+* The full ranking report^4^ detailing ranking methodology and results can be viewed on the [B.C. Grizzly Bear webpage](https://www2.gov.bc.ca/gov/content?id=D0FF8688D69741C89256271034E2251D)
+
+* The [R]("http://www.r-project.org") code for creating the charts and maps presented on this page is [available on Github](https://github.com/bcgov/grizzly-bear-status-indicator)
 
 
 \newpage
