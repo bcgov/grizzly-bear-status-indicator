@@ -24,8 +24,16 @@ library(envreportutils)
 grizzdata_full <- read_rds(here("data/grizzdata_full.rds")) %>% 
   ms_simplify(keep = 0.05)
 grizzdata_full <- st_transform(grizzdata_full, crs = 4326) # convert to lat/long
+
 grizzdata_full$con_stats <- factor(grizzdata_full$con_stats, ordered = TRUE,
                                 levels = c("Extreme", "High", "Moderate", "Low","Negligible"))
+
+grizzdata_full <- grizzdata_full %>% 
+  mutate(trend_desc = case_when(
+    trend == "0" ~ "No change",
+    trend == "-1" ~ "Declining",
+    trend == "Data Deficient" ~ "Data Deficient"
+  ))
 
 
 ```
@@ -35,13 +43,13 @@ grizzdata_full$con_stats <- factor(grizzdata_full$con_stats, ordered = TRUE,
 
 # conservation status tab:
 popup_text1 <- dplyr::select(grizzdata_full, gbpu_name, con_stats,
-                  threat_class, gbpu.pop, isolation, trend) %>% 
+                  threat_class, gbpu.pop, isolation, trend, trend_desc) %>% 
   rename("Population Name" = gbpu_name,
          "Conservation Ranking" = con_stats,
          "Overall Threat Score" = threat_class,
          "Population Size" = gbpu.pop,
          "Isolation" = isolation,
-         "Trend" = trend) 
+         "Trend" = trend_desc) 
 
 st_geometry(popup_text1) <- NULL # as df
 
@@ -64,9 +72,9 @@ popup_text2 <- dplyr::select(grizzdata_full, gbpu_name, gbpu.pop,
                               area_sq_km) %>% 
   rename("Population Name" = gbpu_name,
          "Population Size (Adults)" = gbpu.pop,
-         "Population Density (Adults/1000 km^2)" = pop_density,
-         "Area of Useable Habitat (km^2)" = use_area_sq_km,
-         "Total Area of GBPU (km^2)" = area_sq_km) %>% 
+         "Population Density (Adults/1000 km<sup>2</sup>)" = pop_density,
+         "Area of Useable Habitat (km<sup>2</sup>)" = use_area_sq_km,
+         "Total Area of GBPU (km<sup>2</sup>)" = area_sq_km) %>% 
   mutate_if(is.numeric, ~ format(.x, big.mark = ","))
 
 st_geometry(popup_text2) <- NULL 
@@ -145,8 +153,10 @@ popup_options <-  popupOptions(maxWidth = 500, minWidth = 500, maxHeight = 350,
 
 ``` {r labels and palettes, include=FALSE, warning=FALSE}
 # Define polygon labels in leaflet
-labs <- dplyr::select(grizzdata_full, gbpu_name, pop_density, calcsrank, threat_class, con_stats)%>%
-  mutate(calcsrank = ifelse(is.na(calcsrank), "Extirpated", calcsrank))
+labs <- dplyr::select(grizzdata_full, gbpu_name, pop_density, calcsrank, threat_class, con_stats) %>%
+  mutate(calcsrank = ifelse(is.na(calcsrank), "Extirpated", calcsrank),
+         con_stats = ifelse(is.na(as.character(con_stats)), "Extirpated", as.character(con_stats)),
+         threat_class = ifelse(is.na(as.character(threat_class)), "Extirpated", as.character(threat_class)))
 
 
 st_geometry(labs) <- NULL # as df
@@ -159,7 +169,7 @@ lab1 <- lapply(seq(nrow(labs)), function(i) {
 lab2 <- lapply(seq(nrow(labs)), function(i) {
   ifelse(labs[i,"pop_density"] > 1,  
     paste0( '<b>', labs[i, "gbpu_name"], ', ',  
-    labs[i, "pop_density"]," Adults/1000km2",'</b>'),
+    labs[i, "pop_density"]," Adults/1000km",'<sup>2</sup>','</b>'),
         ifelse(labs[i,"pop_density"] == 1,  
           paste0( '<b>', labs[i, "gbpu_name"], ', ',  
           labs[i, "pop_density"]," Adult/1000km2",'</b>'),
@@ -216,7 +226,7 @@ grizzmap %>%
                                           closeOnClick = TRUE,
                                           autoPanPaddingTopLeft = c(120, 20),
                                           autoPanPaddingBottomRight = c(150,20)),
-              highlightOptions = highlightOptions( # Highlight interaction for mouse hover
+              highlightOptions = highlightOptions( 
                 weight = 3,
                 color = "yellow",
                 bringToFront = T)) %>%
@@ -395,6 +405,7 @@ grizzmap %>%
     addLegend("bottomright", pal = palette3, values = grizzdata_full$threat_class,
             title = "Biological Use Threat", na.label = "Extirpated",
             opacity = 1) %>% 
-  addControl("<p>*Historic mortality data is based on Grizzly Bear Management Units defined in 2012.</p><p>*Prior to 2004, road and rail kills were not distinguished and were documented with 'Pick Ups'</p>", position = "bottomleft", className = "mortNote")
+  addControl("<p>*Historic mortality data is based on Grizzly Bear Management Units defined in 2012.</p><p>*Prior to 2004, road and rail kills were not distinguished and were documented with 'Pick Ups'</p><p>*Grizzly Bear Hunting was banned in B.C. in 2017</p>", position = "bottomleft", className = "mortNote")
+
 
 ```
