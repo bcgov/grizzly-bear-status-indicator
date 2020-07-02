@@ -150,7 +150,7 @@ knitr::include_graphics("./threat_sum_plot.png")
 
 ## Methods
 
-* Conservation ranks were calculated based on NatureServe’s ['Element Rank Calculator'](https://www.natureserve.org/conservation-tools/conservation-rank-calculator) in conjunction with Provincial bear biologists. This ensured rankings were consistent with international standards (B.C. Conservation Data Centre, NatureServe, IUCN). 
+* Conservation ranks were calculated based on NatureServe’s 'Element Rank [Calculator'](https://www.natureserve.org/conservation-tools/conservation-rank-calculator) in conjunction with Provincial bear biologists. This ensured rankings were consistent with international standards (B.C. Conservation Data Centre, NatureServe, IUCN). 
 
 * Each GBPU was assigned a rank based on population size and trend, genetic and demographic isolation, and overall threat to grizzly bears and bear habitat. GBPUs started with a score of 5 (no conservation concern) with points reduced for 1) declining population trend, 2) small and/or isolated population, and 3) increasing overall threat.
 
@@ -202,7 +202,7 @@ knitr::include_graphics("./threat_sum_plot.png")
 
 ----
 
-Published and Available On-Line at Environmental Reporting BC (June `r format(Sys.Date(), "%Y")`):  
+Published and Available On-Line at Environmental Reporting BC (July `r format(Sys.Date(), "%Y")`):  
 <http://www.env.gov.bc.ca/soe/indicators/plants-and-animals/grizzly-bears.html>
 
 Email correspondence to: envreportbc@gov.bc.ca
@@ -227,7 +227,8 @@ table1 <- dplyr::select(grizz.df, gbpu_name, con_stats, threat_class,
          "Conservation Rank" = con_stats,
          "Overall Threat" = threat_class,
          "Isolation" = isolation,
-         "Trend" = trend)
+         "Trend" = trend) %>%
+  distinct()
 
 knitr::kable(
   table1 
@@ -251,7 +252,10 @@ table2 <- dplyr::select(grizz.df, gbpu_name, gbpu.pop,
          "Population Density (Adults/1000 km^2)" = pop_density,
          "Area of Useable Habitat (km^2)" = use_area_sq_km,
          "Total Area of GBPU (km^2)" = area_sq_km) %>% 
-  mutate_if(is.numeric, ~ format(.x, big.mark = ","))
+  mutate_if(is.numeric, ~ format(.x, big.mark = ",")) %>%
+  mutate('Area of Useable Habitat (km^2)' = case_when(
+    'Population Name' %in% c('Lower Mainland', 'Sunshine Coast', 'Northeast','Central Interior') ~ NA)) %>%
+  distinct()
 
 
 x.table = xtable(table2)
