@@ -52,7 +52,7 @@ grizz.df <- as.data.frame(grizzdata_full)
 
 * **Grizzly bears are divided into 55 Grizzly Bear Population Units (GBPUs) across B.C.** These units range in area from 2,670 km^2^ to 49,578 km^2^ and mostly follow Wildlife Management Unit boundaries. Very few of these units are isolated enough to be considered discrete populations. These units help managers to identify local conservation concerns, track grizzly bear population trends and apply specific management practices.
 
-* **GBPUs are rated from low to extreme conservation ranking.** Rankings are determined using internationally recognized methods developed by NatureServe^3^ and IUCN. GBPU conservation rankings are based on; 1) population size and isolation,  2) population trend, and 3) level of threat to bears or bear habitat. The level of threat considered seven sub-categories, including Residential, Agriculture, Energy, Transportation, Biological Use, Human intrusion and Climate Change. See below for detailed methodology^4^. 
+* **GBPUs are rated from low to extreme conservation ranking.** Rankings are determined using internationally recognized methods developed by NatureServe^3^ and the International Union for Conservation of Nature (IUCN). GBPU conservation rankings are based on; 1) population size and isolation,  2) population trend, and 3) level of threat to bears or bear habitat. The level of threat considered seven sub-categories; including Residential, Agriculture, Energy, Transportation, Biological Use, Human intrusion and Climate Change. See below for detailed methodology^4^. 
 
 * **Human development is the greatest threat to Grizzly bears in B.C.** Development can impact bears directly by increasing the frequency of bear and human conflict, leading to higher mortality and indirectly by reducing habitat availability due to human-caused disturbance and avoidance by bears. The expansion of human settlements and agriculture can lead to isolation of grizzly bear populations which reduces the movement of bears into the area to compensate for local mortalities.
   
@@ -150,13 +150,13 @@ knitr::include_graphics("./threat_sum_plot.png")
 
 ## Methods
 
-* Conservation ranks were calculated based on NatureServe’s ['Element Rank Calculater'](https://www.natureserve.org/conservation-tools/conservation-rank-calculator) in conjunction with Provincial bear biologists. This ensured rankings were consistent with international standards (B.C. Conservation Data Centre, NatureServe, IUCN). 
+* Conservation ranks were calculated based on NatureServe’s ['Element Rank Calculator'](https://www.natureserve.org/conservation-tools/conservation-rank-calculator) in conjunction with Provincial bear biologists. This ensured rankings were consistent with international standards (B.C. Conservation Data Centre, NatureServe, IUCN). 
 
 * Each GBPU was assigned a rank based on population size and trend, genetic and demographic isolation, and overall threat to grizzly bears and bear habitat. GBPUs started with a score of 5 (no conservation concern) with points reduced for 1) declining population trend, 2) small and/or isolated population, and 3) increasing overall threat.
 
 * Population trend was measured over 3 generations (~30 years). If the population decreased by more than 25% the overall score was reduced, leading to a lower conservation ranking. 
 
-*	Population size and isolation are combined such that smaller isolated population’s rank scores could be reduced by as much as 4 points, whereas large well connected populations are not downgraded.
+*	Population size and isolation are combined such that smaller isolated population’s rank scores could be reduced by as much as 4 points, whereas large well-connected populations are not downgraded.
 
 *	We determined threats using categories identified by [IUCN-CMP](https://www.conservationgateway.org/ExternalLinks/Pages/iucn-cmp-unified-classifi.aspx). Threats were quantified using published spatial data, including Statistics Canada, B.C.’s Baseline Thematic Mapping, Digital Road Atlas, Fish and Wildlife hunter and mortality data and Federal Department of Fisheries and Oceans’ Salmon escapement. The NatureServe calculator combined individual threats into an overall threat class.
 
