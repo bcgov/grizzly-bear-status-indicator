@@ -179,7 +179,7 @@ knitr::include_graphics("./threat_sum_plot.png")
 *^4^ [Province of British Columbia. 2019. Ranking the Conservation of Grizzly Bear Population Units](https://www2.gov.bc.ca/gov/content?id=D0FF8688D69741C89256271034E2251D)).
 
 
-*British Columbia Conservation Foundation's [Bear Aware Program](https://wildsafebc.com/grizzly-bear/).
+*British Columbia's [Bear Smart Program](https://www2.gov.bc.ca/gov/content/environment/plants-animals-ecosystems/wildlife/human-wildlife-conflict/staying-safe-around-wildlife/bears/bear-smart).
 
 *British Columbia Ministry of Environment. 2016. British Columbia guide to recovery planning for species and ecosystems at risk. B.C. Ministry of Environment, Victoria, BC. [PDF](http://a100.gov.bc.ca/pub/eirs/finishDownloadDocument.do?subdocumentId=10332).
 
