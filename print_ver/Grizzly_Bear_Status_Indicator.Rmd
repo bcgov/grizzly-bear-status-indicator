@@ -202,7 +202,7 @@ knitr::include_graphics("./threat_sum_plot.png")
 
 ----
 
-Published and Available On-Line at Environmental Reporting BC (July `r format(Sys.Date(), "%Y")`):  
+Published and Available On-Line at Environmental Reporting BC (`r format(Sys.Date(), "%B %Y")`):  
 <http://www.env.gov.bc.ca/soe/indicators/plants-and-animals/grizzly-bears.html>
 
 Email correspondence to: envreportbc@gov.bc.ca
